@@ -1,4 +1,8 @@
 import "./globals.css";
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  SidebarProvider,
+} from "@/components/ui/sidebar"
 
 export const metadata = {
   title: "Airi | Ai Desktop Assistant Agent",
@@ -12,7 +16,10 @@ export default function RootLayout({ children }) {
       <body
         className={`antialiased`}
       >
-        {children}
+        <SidebarProvider>
+          <AppSidebar />
+          {children}
+        </SidebarProvider>
       </body>
     </html>
   );
