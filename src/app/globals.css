@@ -1,8 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-@custom-variant dark (&:is(.dark *));
 @tailwind utilities;
 
 .titlebar {
@@ -145,13 +141,31 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    @apply bg-background text-foreground;
-  }
+/* 2. Position it relative to the button */
+#profilemenu {
+  /* Position it above the button, aligned to the left */
+  bottom: anchor(top);
+  left: anchor(left);
+  margin-bottom: 8px; /* Gap between button and menu */
+}
+
+/* Specific positioning for our chat menus */
+.chat-options-menu[popover] {
+  top: anchor(bottom);
+  left: anchor(right);
+  
+  /* Translates the menu so its right edge lines up with the right edge of the button, plus a little spacing below */
+  translate: -100% 4px; 
+}
+
+/* 3. Handle the sidebar 'close' state positioning */
+#sidebar[data-state="close"] #profilemenu {
+  left: anchor(right);
+  bottom: anchor(center);
+  margin-left: 12px;
+  margin-bottom: 0;
+}
+
+[popover] {
+  inset: auto;
 }

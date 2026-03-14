@@ -37,6 +37,7 @@
     "motion": "^12.34.0",
     "nanoid": "^5.1.6",
     "next": "16.1.6",
+    "node-base64-image": "^2.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-jsx-parser": "^2.4.1",
