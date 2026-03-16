@@ -51,6 +51,7 @@ pip install -r requirements.txt
 ### 3. Run Development Server
 
 ```bash
+.venv/Scripts/activate.bat
 npm run dev
 ```
 
