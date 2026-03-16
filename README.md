@@ -46,11 +46,13 @@ llama-server -hf Qwen/Qwen3-VL-2B-Instruct-GGUF:Q4_K_M
 python -m venv .venv
 .venv/Scripts/activate.bat
 pip install -r requirements.txt
+playwright install chromium
 ```
 
 ### 3. Run Development Server
 
 ```bash
+.venv/Scripts/activate.bat
 npm run dev
 ```
 
