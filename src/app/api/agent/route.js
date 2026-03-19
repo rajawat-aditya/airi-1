@@ -2,7 +2,7 @@ export async function POST(request) {
   try {
     const { prompt, userId, chatId } = await request.json();
 
-    const backendUrl = "http://localhost:11435/invocations";
+    const backendUrl = "http://localhost:11435/invoke";
 
     const response = await fetch(backendUrl, {
       method: "POST",

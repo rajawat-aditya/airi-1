@@ -169,3 +169,34 @@
 [popover] {
   inset: auto;
 }
+
+/* ── Streamdown / prose message styles ── */
+.prose.prose-invert p {
+  @apply whitespace-pre-wrap leading-7 text-[#e5ebfa];
+  font-variant-ligatures: none;
+}
+
+.prose.prose-invert pre {
+  @apply rounded-xl overflow-hidden border border-white/20 bg-transparent p-0 my-3;
+}
+
+.prose.prose-invert pre code {
+  @apply block font-mono text-sm px-4 pb-3 pt-4 overflow-x-auto whitespace-pre bg-[#1a1d2e] text-[#e5ebfa];
+  font-variant-ligatures: none;
+}
+
+.prose.prose-invert h1 { @apply text-2xl font-semibold text-[#e5ebfa] mt-6 mb-2; }
+.prose.prose-invert h2 { @apply text-xl font-semibold text-[#e5ebfa] mt-5 mb-2; }
+.prose.prose-invert h3 { @apply text-lg font-semibold text-[#e5ebfa] mt-4 mb-1; }
+
+.prose.prose-invert ul { @apply list-disc pl-5 space-y-1 text-[#e5ebfa]; }
+.prose.prose-invert ol { @apply list-decimal pl-5 space-y-1 text-[#e5ebfa]; }
+.prose.prose-invert li { @apply leading-7; }
+
+.prose.prose-invert strong { @apply font-semibold text-white; }
+.prose.prose-invert em { @apply italic; }
+
+.prose.prose-invert :not(pre) > code {
+  @apply bg-[#ffffff12] text-[#e5ebfa] rounded px-1.5 py-0.5 text-sm;
+  font-variant-ligatures: none;
+}

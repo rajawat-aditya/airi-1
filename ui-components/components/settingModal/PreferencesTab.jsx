@@ -5,7 +5,9 @@ import { VoiceLanguageDropdown } from "./VoiceLanguageDropdown";
 import { useTheme } from "../../hooks/useTheme";
 
 export function PreferencesTab() {
-  const {theme, setTheme} = useTheme() // theme hook
+  const newLocal = useTheme();
+  const {theme, setTheme} = newLocal // theme hook
+
   const [voiceLan, setVoiceLan] = useState("Auto-detect");
 
   return (

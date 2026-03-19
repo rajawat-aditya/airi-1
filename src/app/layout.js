@@ -1,9 +1,4 @@
 import "./globals.css";
-import { AppSidebar } from "@/components/app-sidebar"
-import {
-  SidebarProvider,
-} from "@/components/ui/sidebar"
-import { LoginForm } from "@/components/login-form";
 
 import { auth0 } from "@/lib/auth0";
 
