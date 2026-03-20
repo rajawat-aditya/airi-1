@@ -1,9 +1,10 @@
 "use client"
 import ChatInput from "@/component/chatInput/chatInput";
 import { useCallback, useState } from "react";
-import { callAgentAPI } from "@/lib/agent-api"; 
+import { callAgentAPI } from "@/lib/agent-api";
+import { ArrowCircleUpRight24Regular } from "@fluentui/react-icons";
 
-const ChatMain = ({ userId, chatId='test', user_name }) => {
+const ChatMain = ({ userId, chatId = 'test', user_name }) => {
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState("ready");
     const [streamingMessageId, setStreamingMessageId] = useState(null);
@@ -101,12 +102,26 @@ const ChatMain = ({ userId, chatId='test', user_name }) => {
         streamResponse(assistantMessageId, content);
     }, [streamResponse]);
 
+    const handleOpenOverlay = () => {
+        // Check if we are running inside Electron before calling the API
+        if (typeof window !== 'undefined' && window.electronAPI) {
+            window.electronAPI.openOverlay();
+        } else {
+            console.log("Running in browser, Electron API not available.");
+        }
+    };
+
     return (
         <main className="flex-1 h-screen overflow-hidden relative py-1.5 px-1.5">
             <div className="bg-[#151a28] h-[98vh] rounded-md border border-[#ffffff14] flex flex-col relative">
                 {/* Mobile Sidebar Toggle - Positioned Absolute */}
-                <div onClick={() => { const sidebar = document.getElementById("sidebar"); const newState = sidebar.getAttribute('data-state') === 'open' ? 'close' : 'open'; sidebar.setAttribute('data-state', newState); }} className="absolute top-2.5 left-2.5 md:hidden z-30 text-sm outline-offset-1 flex items-center justify-center hover:bg-[#ffffff14] transition-all duration-100 cursor-pointer bg-transparent text-[#c2cadf] font-semibold w-9 h-9 rounded-lg">
-                    <svg viewBox="0 0 24 24" fill="#e5ebfa" xmlns="http://www.w3.org/2000/svg" className="size-5"><path d="M3.75 8.5C3.75 8.08579 4.08579 7.75 4.5 7.75H5.75C6.16421 7.75 6.5 8.08579 6.5 8.5C6.5 8.91421 6.16421 9.25 5.75 9.25H4.5C4.08579 9.25 3.75 8.91421 3.75 8.5ZM3.75 12C3.75 11.5858 4.08579 11.25 4.5 11.25H5.75C6.16421 11.25 6.5 11.5858 6.5 12C6.5 12.4142 6.16421 12.75 5.75 12.75H4.5C4.08579 12.75 3.75 12.4142 3.75 12ZM3.75 15.5C3.75 15.0858 4.08579 14.75 4.5 14.75H5.75C6.16421 14.75 6.5 15.0858 6.5 15.5C6.5 15.9142 6.16421 16.25 5.75 16.25H4.5C4.08579 16.25 3.75 15.9142 3.75 15.5ZM4.25 3C2.45507 3 1 4.45507 1 6.25V17.75C1 19.5449 2.45508 21 4.25 21H19.75C21.5449 21 23 19.5449 23 17.75V6.25C23 4.45507 21.5449 3 19.75 3H4.25ZM19.75 19.5H9V4.5H19.75C20.7165 4.5 21.5 5.2835 21.5 6.25V17.75C21.5 18.7165 20.7165 19.5 19.75 19.5ZM4.25 4.5H7.5V19.5H4.25C3.2835 19.5 2.5 18.7165 2.5 17.75V6.25C2.5 5.2835 3.2835 4.5 4.25 4.5Z"></path></svg>
+                <div className="absolute top-2.5 left-2.5 z-30 flex gap-2 items-center">
+                    <div onClick={() => { const sidebar = document.getElementById("sidebar"); const newState = sidebar.getAttribute('data-state') === 'open' ? 'close' : 'open'; sidebar.setAttribute('data-state', newState); }} className="md:hidden text-sm outline-offset-1 flex items-center justify-center hover:bg-[#ffffff14] transition-all duration-100 cursor-pointer bg-transparent text-[#c2cadf] font-semibold w-9 h-9 rounded-lg">
+                        <svg viewBox="0 0 24 24" fill="#e5ebfa" xmlns="http://www.w3.org/2000/svg" className="size-5"><path d="M3.75 8.5C3.75 8.08579 4.08579 7.75 4.5 7.75H5.75C6.16421 7.75 6.5 8.08579 6.5 8.5C6.5 8.91421 6.16421 9.25 5.75 9.25H4.5C4.08579 9.25 3.75 8.91421 3.75 8.5ZM3.75 12C3.75 11.5858 4.08579 11.25 4.5 11.25H5.75C6.16421 11.25 6.5 11.5858 6.5 12C6.5 12.4142 6.16421 12.75 5.75 12.75H4.5C4.08579 12.75 3.75 12.4142 3.75 12ZM3.75 15.5C3.75 15.0858 4.08579 14.75 4.5 14.75H5.75C6.16421 14.75 6.5 15.0858 6.5 15.5C6.5 15.9142 6.16421 16.25 5.75 16.25H4.5C4.08579 16.25 3.75 15.9142 3.75 15.5ZM4.25 3C2.45507 3 1 4.45507 1 6.25V17.75C1 19.5449 2.45508 21 4.25 21H19.75C21.5449 21 23 19.5449 23 17.75V6.25C23 4.45507 21.5449 3 19.75 3H4.25ZM19.75 19.5H9V4.5H19.75C20.7165 4.5 21.5 5.2835 21.5 6.25V17.75C21.5 18.7165 20.7165 19.5 19.75 19.5ZM4.25 4.5H7.5V19.5H4.25C3.2835 19.5 2.5 18.7165 2.5 17.75V6.25C2.5 5.2835 3.2835 4.5 4.25 4.5Z"></path></svg>
+                    </div>
+                    <div onClick={handleOpenOverlay} className="text-sm outline-offset-1 flex items-center justify-center hover:bg-[#ffffff14] transition-all duration-100 cursor-pointer bg-transparent text-[#c2cadf] font-semibold w-9 h-9 rounded-lg">
+                        <ArrowCircleUpRight24Regular />
+                    </div>
                 </div>
 
                 {/* 1. MESSAGES CONTAINER */}
@@ -151,7 +166,7 @@ const ChatMain = ({ userId, chatId='test', user_name }) => {
                                                             <button className="p-1.5 cursor-pointer hover:bg-[#ffffff0a] rounded-lg text-[#c2cadf] transition-colors">
                                                                 <svg viewBox="0 0 20 20" fill="#c2cadf" xmlns="http://www.w3.org/2000/svg" className="size-5"><path fillRule="evenodd" clipRule="evenodd" d="M6 2C6.4075 2 6.77654 2.16302 7.04688 2.42676L7.05273 2.4248C7.70431 2.14511 8.40698 2 9.11816 2H14.7871C15.7302 2 16.5456 2.65891 16.7432 3.58105L17.9492 9.20801C17.9832 9.36686 18 9.52895 18 9.69141C18 10.9663 16.9663 12 15.6914 12H12.1904C12.3947 12.6629 12.5 13.3526 12.5 14.0469V14.668C12.5 15.6352 12.2133 16.581 11.6768 17.3857C11.4528 17.7215 11.0952 17.9399 10.7002 17.9893L10.5293 18H10.4775C9.66177 18 9 17.3382 9 16.5225V15.1719C8.9999 13.8855 8.54907 12.6397 7.72559 11.6514L6.91895 10.6836C6.66492 10.8811 6.34669 11 6 11H3.5C2.67157 11 2 10.3284 2 9.5V3.5C2 2.67157 2.67157 2 3.5 2H6ZM9.11816 3C8.55774 3 8.0038 3.11128 7.48828 3.32617C7.49488 3.38327 7.5 3.44114 7.5 3.5V9.5C7.5 9.59759 7.48948 9.69276 7.47168 9.78516L8.49316 11.0107C9.46653 12.1788 9.9999 13.6514 10 15.1719V16.5225C10 16.7859 10.2141 17 10.4775 17H10.5293L10.6221 16.9883C10.7122 16.9655 10.7919 16.9101 10.8447 16.8311C11.2717 16.1906 11.5 15.4377 11.5 14.668V14.0469C11.5 13.4073 11.3966 12.7718 11.1943 12.165L11.0254 11.6582C11.0223 11.6489 11.0211 11.6392 11.0186 11.6299C11.0142 11.6139 11.0105 11.5977 11.0078 11.5811C11.0046 11.5614 11.0028 11.542 11.002 11.5225C11.0016 11.515 11 11.5075 11 11.5C11 11.4948 11.0008 11.4896 11.001 11.4844C11.0016 11.4643 11.0038 11.4445 11.0068 11.4248C11.0089 11.4113 11.0106 11.3979 11.0137 11.3848C11.0179 11.3671 11.0242 11.3501 11.0303 11.333C11.0355 11.3184 11.0404 11.3039 11.0469 11.29C11.0531 11.2765 11.0609 11.2639 11.0684 11.251C11.077 11.236 11.0856 11.221 11.0957 11.207C11.1052 11.1939 11.1162 11.1821 11.127 11.1699C11.1369 11.1587 11.1463 11.147 11.1572 11.1367C11.17 11.1246 11.1841 11.1143 11.1982 11.1035C11.2105 11.0942 11.2223 11.0844 11.2354 11.0762C11.2399 11.0733 11.2443 11.0701 11.249 11.0674L11.3057 11.0391C11.3117 11.0365 11.318 11.0346 11.3242 11.0322C11.3301 11.03 11.3358 11.0274 11.3418 11.0254C11.3508 11.0224 11.3601 11.021 11.3691 11.0186C11.3852 11.0142 11.4014 11.0106 11.418 11.0078C11.4376 11.0045 11.457 11.0029 11.4766 11.002C11.4844 11.0016 11.4921 11 11.5 11H15.6914C16.414 11 17 10.414 17 9.69141C17 9.59931 16.99 9.50704 16.9707 9.41699L15.7656 3.79004C15.6667 3.32914 15.2585 3 14.7871 3H9.11816ZM3.5 3C3.22386 3 3 3.22386 3 3.5V9.5C3 9.77614 3.22386 10 3.5 10H6C6.27614 10 6.5 9.77614 6.5 9.5V3.5C6.5 3.22386 6.27614 3 6 3H3.5Z"></path></svg>
                                                             </button>
-                                                        
+
                                                             <button className="p-1.5 cursor-pointer hover:bg-[#ffffff0a] rounded-lg text-[#c2cadf] transition-colors">
                                                                 <svg viewBox="0 0 20 20" fill="#c2cadf" xmlns="http://www.w3.org/2000/svg" className="size-5"><path d="M8 2C6.89543 2 6 2.89543 6 4V14C6 15.1046 6.89543 16 8 16H14C15.1046 16 16 15.1046 16 14V4C16 2.89543 15.1046 2 14 2H8ZM7 4C7 3.44772 7.44772 3 8 3H14C14.5523 3 15 3.44772 15 4V14C15 14.5523 14.5523 15 14 15H8C7.44772 15 7 14.5523 7 14V4ZM4 6.00001C4 5.25973 4.4022 4.61339 5 4.26758V14.5C5 15.8807 6.11929 17 7.5 17H13.7324C13.3866 17.5978 12.7403 18 12 18H7.5C5.567 18 4 16.433 4 14.5V6.00001Z"></path></svg>
                                                             </button>
