@@ -2,7 +2,6 @@ import AppSideBar from "@/component/appsidebar";
 import ChatMain from "@/component/chatMain/chatMain";
 import {auth0} from "@/lib/auth0";
 import { redirect } from "next/navigation";
-
 import { encode } from 'node-base64-image';
 
 const UserDashboard = async() => {
@@ -14,7 +13,7 @@ const UserDashboard = async() => {
     }
     
     return (
-        <div className="h-screen bg-[#0e111b] flex">
+        <div className="h-screen bg-bg-app flex">
             <AppSideBar session={session} profilePicBase64={profilePicBase64} />
             <ChatMain user_name={session?.user?.given_name} userId={session?.user?.sub} />
         </div>
