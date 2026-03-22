@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ChatItem from "./chatItem/chatItem";
 import { SettingsModal } from "../../ui-components/components/SettingModal";
 import { useChatContext } from "@/context/ChatContext";
+import { Apps24Regular } from "@fluentui/react-icons";
 
 const AppSideBar = ({ session, profilePicBase64, userId }) => {
     const [settingsOpen, setSettingsOpen] = useState(false);
@@ -31,6 +32,10 @@ const AppSideBar = ({ session, profilePicBase64, userId }) => {
                         <button onClick={() => router.push(`/app/${crypto.randomUUID()}`)} className="group-data-[state=close]:w-9 group-data-[state=close]:h-9 flex w-full gap-2 h-10 items-center px-2 py-1.5 rounded-xl hover:bg-bg-hover cursor-pointer transition-all duration-100 ease-in-out">
                             <span className="text-text-primary"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-5"><path d="M21.7803 3.28033C22.0732 2.98744 22.0732 2.51256 21.7803 2.21967C21.4874 1.92678 21.0125 1.92678 20.7196 2.21967L10.7197 12.2197L10.25 13.75L11.7803 13.2803L21.7803 3.28033ZM6.25 3C4.45507 3 3 4.45508 3 6.25V17.75C3 19.5449 4.45507 21 6.25 21H17.75C19.5449 21 21 19.5449 21 17.75V9.75C21 9.33579 20.6642 9 20.25 9C19.8358 9 19.5 9.33579 19.5 9.75V17.75C19.5 18.7165 18.7165 19.5 17.75 19.5H6.25C5.2835 19.5 4.5 18.7165 4.5 17.75V6.25C4.5 5.2835 5.2835 4.5 6.25 4.5H14.25C14.6642 4.5 15 4.16421 15 3.75C15 3.33579 14.6642 3 14.25 3H6.25Z"></path></svg></span>
                             <span className="group-data-[state=close]:hidden flex min-h-6 w-full font-medium items-center gap-1.5 text-start text-[14px] text-text-primary">New chat</span>
+                        </button>
+                        <button onClick={() => router.push('/apps')} className="group-data-[state=close]:w-9 group-data-[state=close]:h-9 flex w-full gap-2 h-10 items-center px-2 py-1.5 rounded-xl hover:bg-bg-hover cursor-pointer transition-all duration-100 ease-in-out">
+                            <Apps24Regular />
+                            <span className="group-data-[state=close]:hidden flex min-h-6 w-full font-medium items-center gap-1.5 text-start text-[14px] text-text-primary">Apps</span>
                         </button>
                         <button className="group-data-[state=close]:w-9 group-data-[state=close]:h-9 flex w-full gap-2 h-10 items-center px-2 py-1.5 rounded-xl hover:bg-bg-hover cursor-pointer transition-all duration-100 ease-in-out">
                             <span className="text-text-primary">
