@@ -160,7 +160,7 @@ function startEmbeddingServer() {
 
 function startLlama() {
     llamaProcess = spawn("llama-server", [
-        "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M",
+        "-hf", "Qwen/Qwen3-VL-2B-Instruct-GGUF",
         "--ctx-size", "32768",
         "-np", "2",
         "--threads", "6",

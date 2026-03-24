@@ -101,7 +101,7 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
 
                 <div className="flex items-center justify-between p-3">
                     <div>
-                        <input type="file" multiple ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                        <input type="file" multiple accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.json" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                         <button
                             onClick={() => fileInputRef.current?.click()}
                             className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors"

@@ -3,7 +3,7 @@ export async function callAgentAPI({ prompt, history = [], userId, chatId, onTex
         ? "http://127.0.0.1:11435/v1/chat/completions"
         : "/api/agent";
 
-    // Build full conversation: prior history + current user message
+    // prompt already has "Attached files: ..." baked in when files are present (built in chatMain)
     const messages = [...history, { role: "user", content: prompt }];
 
     try {
@@ -13,7 +13,7 @@ export async function callAgentAPI({ prompt, history = [], userId, chatId, onTex
             body: JSON.stringify(
                 agentUrl.includes("11435")
                     ? { model: "airi", stream: true, messages, user_id: userId ?? "default_user", session_id: chatId ?? "default_session" }
-                    : { prompt, history, userId, chatId }
+                    : { messages, userId, chatId }
             ),
         });
 
@@ -29,7 +29,7 @@ export async function callAgentAPI({ prompt, history = [], userId, chatId, onTex
             if (done) break;
 
             buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split('\n');
+            const lines = buffer.split("\n");
             buffer = lines.pop() || "";
 
             for (const line of lines) {
@@ -44,7 +44,7 @@ export async function callAgentAPI({ prompt, history = [], userId, chatId, onTex
                     const content = parsed?.choices?.[0]?.delta?.content;
                     if (content) onTextChunk(content);
                 } catch {
-                    // incomplete chunk
+                    // incomplete chunk — wait for next read
                 }
             }
         }

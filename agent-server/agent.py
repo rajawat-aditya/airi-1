@@ -4,42 +4,84 @@ import json
 import time
 import asyncio
 import logging
-import subprocess
-import pyautogui
-import pyperclip
-import urllib.parse
+import concurrent.futures
 from contextvars import ContextVar
-from playwright.sync_api import sync_playwright
+from typing import Optional, List, Dict, Any
 
-# Force UTF-8 output so browser_use emoji logs don't crash on Windows cp1252
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)-8s | %(name)s | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+# ── Force UTF-8 output (Windows emoji fix) ────────────────────────────────────
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 if sys.stderr.encoding != 'utf-8':
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
-# Qwen Agent Framework
-from qwen_agent.agents import Assistant, VirtualMemoryAgent
-from qwen_agent.llm import get_chat_model
-from qwen_agent.tools.base import BaseTool, register_tool
-from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse
+# ── Set env vars before mem0 import ──────────────────────────────────────────
+os.environ.setdefault("OPENAI_API_KEY", "none")
+# Disable mem0 telemetry — prevents a second qdrant instance fighting over ~/.mem0 lock
+os.environ.setdefault("MEM0_TELEMETRY", "false")
 
+# ── Qwen Agent Framework Imports ─────────────────────────────────────────────
+from qwen_agent.agents import Assistant
+from qwen_agent.tools.base import BaseTool, register_tool
+from qwen_agent.llm.schema import Message, ContentItem
+
+# ── FastAPI Imports ──────────────────────────────────────────────────────────
+from fastapi import FastAPI, Request, UploadFile, File
+from fastapi.responses import StreamingResponse
+import shutil
+
+# ── Browser & LLM Imports ────────────────────────────────────────────────────
 from browser_use import Agent as BrowserAgent
 from browser_use.browser.service import Browser
 from langchain_openai import ChatOpenAI
 
+# ── Memory Import ────────────────────────────────────────────────────────────
 from mem0 import Memory
 
+# ── Local Windows Module ─────────────────────────────────────────────────────
 import win
 
-logger = logging.getLogger(__name__)
-modelName = "ibm-granite/granite-4.0-1b"
+# ── Model Configuration ──────────────────────────────────────────────────────
+modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF"
 
-# 1. Initialize Local Mem0 (fully local — no OpenAI key needed)
+# ── Mem0 DB dim-mismatch guard ────────────────────────────────────────────────
+_MEM0_DB   = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".mem0_db")
+_EMBED_DIMS = 768  # embeddinggemma-300m-Q4_0
+
+def _check_and_fix_mem0_db():
+    """Wipe the qdrant collection if it was created with wrong embedding dims."""
+    meta_path = os.path.join(_MEM0_DB, "meta.json")
+    if not os.path.exists(meta_path):
+        return
+    try:
+        with open(meta_path) as f:
+            meta = json.load(f)
+        size = (meta.get("collections", {})
+                    .get("airi_memory", meta.get("collections", {}).get("mem0", {}))
+                    .get("vectors", {})
+                    .get("size"))
+        if size is not None and size != _EMBED_DIMS:
+            logger.warning(f"[mem0] DB dim={size} != expected {_EMBED_DIMS}. Recreating DB.")
+            shutil.rmtree(_MEM0_DB, ignore_errors=True)
+    except Exception as e:
+        logger.warning(f"[mem0] Could not check DB dims: {e}")
+
+_check_and_fix_mem0_db()
+
+# ── Mem0 Configuration (Fully Local) ─────────────────────────────────────────
 mem0_config = {
     "vector_store": {
         "provider": "qdrant",
-        "config": {"path": os.path.join(os.path.dirname(os.path.abspath(__file__)), ".mem0_db")}
+        "config": {
+            "path": _MEM0_DB,
+            "collection_name": "airi_memory",
+        }
     },
     "llm": {
         "provider": "openai",
@@ -47,6 +89,8 @@ mem0_config = {
             "model": "default",
             "openai_base_url": "http://127.0.0.1:11434/v1",
             "api_key": "none",
+            "temperature": 0.1,
+            "max_tokens": 2000,
         }
     },
     "embedder": {
@@ -55,39 +99,110 @@ mem0_config = {
             "model": "embeddinggemma-300m-Q4_0",
             "openai_base_url": "http://127.0.0.1:11445/v1",
             "api_key": "none",
+            "embedding_dims": _EMBED_DIMS,
         }
     }
 }
 
 mem_client = Memory.from_config(mem0_config)
 
-# Request-scoped context vars — set per request so tools can read them without kwargs
-_current_user_id: ContextVar[str] = ContextVar('user_id', default='default_user')
+# ── Request-Scoped Context Variables ─────────────────────────────────────────
+_current_user_id:    ContextVar[str] = ContextVar('user_id',    default='default_user')
 _current_session_id: ContextVar[str] = ContextVar('session_id', default='default_session')
 
+# ── File Extension Sets ──────────────────────────────────────────────────────
+_RAG_EXTS = {'.pdf', '.docx', '.pptx', '.txt', '.csv', '.tsv', '.xlsx', '.xls', '.html'}
+_IMG_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'}
+
+# ── Active Sessions Tracker ──────────────────────────────────────────────────
+ACTIVE_SESSIONS: Dict[str, Any] = {}
+
+# ── Helper Functions ─────────────────────────────────────────────────────────
 def _parse(params):
     """Safely parse params: dict, JSON string, Python repr, or raw primitive."""
     if isinstance(params, (dict, list)):
         return params
+    if params is None:
+        return {}
     try:
-        result = json.loads(params)
-        return result
+        return json.loads(params)
     except (json.JSONDecodeError, TypeError):
         try:
             import ast
             return ast.literal_eval(params)
         except Exception:
-            return params  # raw string/value fallback
+            return params
 
-def _get(params, key):
-    """Get a named param, handling the case where Qwen passes the value directly."""
+def _get(params, key, default=None):
+    """Safely get a value from parsed params."""
     parsed = _parse(params)
     if isinstance(parsed, dict):
-        return parsed.get(key)
-    # Qwen passed the value directly (e.g. "dir" instead of {"command": "dir"})
-    return parsed
+        return parsed.get(key, default)
+    return default
 
-app = FastAPI()
+def _build_messages(raw_messages: list) -> list[Message]:
+    """Convert plain OpenAI-style dicts into proper Qwen-Agent Message objects.
+
+    - image extensions  → ContentItem(image=path)
+    - doc extensions    → ContentItem(file=path)  — triggers built-in RAG
+    - plain text        → ContentItem(text=text)
+    - parses "Attached files: ..." suffix appended by agent-api.js
+    """
+    result = []
+    for m in raw_messages:
+        role        = m.get("role", "user")
+        raw_content = m.get("content", "")
+
+        # ── List content (already multimodal) ────────────────────────────────
+        if isinstance(raw_content, list):
+            items = []
+            for c in raw_content:
+                if not isinstance(c, dict):
+                    continue
+                if c.get("text"):
+                    items.append(ContentItem(text=c["text"]))
+                elif c.get("image"):
+                    items.append(ContentItem(image=c["image"]))
+                elif c.get("file"):
+                    items.append(ContentItem(file=c["file"]))
+                elif c.get("type") == "text":
+                    items.append(ContentItem(text=c.get("text", "")))
+                elif c.get("type") == "image_url":
+                    img_url = c.get("image_url", {})
+                    url = img_url.get("url", "") if isinstance(img_url, dict) else str(img_url)
+                    items.append(ContentItem(image=url))
+            result.append(Message(role=role, content=items if items else ""))
+            continue
+
+        # ── String content ────────────────────────────────────────────────────
+        text_part  = str(raw_content) if raw_content else ""
+        file_items: list[ContentItem] = []
+
+        if "\nAttached files: " in text_part:
+            idx       = text_part.index("\nAttached files: ")
+            paths_str = text_part[idx + len("\nAttached files: "):]
+            text_part = text_part[:idx].strip()
+            for path in [p.strip() for p in paths_str.split(",") if p.strip()]:
+                ext = os.path.splitext(path)[1].lower()
+                if ext in _IMG_EXTS:
+                    file_items.append(ContentItem(image=path))
+                else:
+                    file_items.append(ContentItem(file=path))
+
+        if file_items:
+            items = ([ContentItem(text=text_part)] if text_part else []) + file_items
+            result.append(Message(role=role, content=items))
+        else:
+            result.append(Message(role=role, content=text_part))
+
+    return result
+
+# ── FastAPI App ──────────────────────────────────────────────────────────────
+app = FastAPI(
+    title="Airi Agent API",
+    description="Friendly Windows Desktop AI Assistant powered by Qwen3-VL-2B",
+    version="2.0.0"
+)
 
 from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
@@ -95,35 +210,37 @@ app.add_middleware(
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
-# --- 1. LLM CONFIGURATION (Optimized for Qwen3-VL-2B) ---
+# ── LLM Configuration ────────────────────────────────────────────────────────
 llm_cfg = {
     "model": "default",
     "model_server": "http://127.0.0.1:11434/v1",
     "generate_cfg": {
-        "temperature": 0.3,      
-        "top_p": 0.85,
-        "top_k": 15,             
-        "presence_penalty": 1.2,
-        "max_tokens": 1536,
+        "temperature": 0.5,
+        "top_p": 0.9,
+        "top_k": 20,            # auto-moved to extra_body by qwen-agent
+        "presence_penalty": 0.5,
+        "max_tokens": 2048,
+        "repetition_penalty": 1.1,  # auto-moved to extra_body by qwen-agent
+        # enable_thinking must go in extra_body — the OpenAI client rejects it as a top-level kwarg
+        "extra_body": {"enable_thinking": True},
     }
 }
 
-
-CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+# ── Chrome Browser Configuration ─────────────────────────────────────────────
+CHROME_PATH      = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 CHROME_USER_DATA = r"C:\Users\anshv\AppData\Local\Google\Chrome\User Data Airi"
 
 class ChromeBrowser(Browser):
-    """Launches system Chrome with real user profile + stealth to avoid bot detection."""
+    """Launches system Chrome with real user profile + stealth mode."""
 
     async def _initialize_session(self):
         from playwright.async_api import async_playwright
         from playwright_stealth import stealth_async
 
         playwright = await async_playwright().start()
-
-        # Use persistent context so Google sees real cookies/history
         context = await playwright.chromium.launch_persistent_context(
             user_data_dir=CHROME_USER_DATA,
             executable_path=CHROME_PATH,
@@ -133,6 +250,10 @@ class ChromeBrowser(Browser):
                 '--disable-blink-features=AutomationControlled',
                 '--no-first-run',
                 '--no-default-browser-check',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--window-size=1280,1024',
             ],
             viewport={'width': 1280, 'height': 1024},
             user_agent=(
@@ -141,7 +262,6 @@ class ChromeBrowser(Browser):
             ),
         )
 
-        # Apply stealth to all existing and future pages
         async def apply_stealth(page):
             await stealth_async(page)
 
@@ -153,155 +273,143 @@ class ChromeBrowser(Browser):
 
         from browser_use.browser.views import BrowserState
         from browser_use.browser.service import BrowserSession
-        initial_state = BrowserState(
-            items=[], selector_map={},
-            url=page.url, title=await page.title(),
-            screenshot=None, tabs=[],
-        )
         self.session = BrowserSession(
             playwright=playwright,
-            browser=context,   # persistent context acts as the browser
+            browser=context,
             context=context,
             current_page=page,
-            cached_state=initial_state,
+            cached_state=BrowserState(
+                items=[], selector_map={},
+                url=page.url, title=await page.title(),
+                screenshot=None, tabs=[],
+            ),
         )
         return self.session
 
-# --- 2. Browser Use for browser Automation ---
+# ── TOOLS ────────────────────────────────────────────────────────────────────
+
 @register_tool('browser_automation')
 class BrowserAutomationTool(BaseTool):
-    description = 'Use this tool to perform complex browser tasks like clicking, typing, and navigating websites.'
-    parameters = [{
-        'name': 'task',
-        'type': 'string',
-        'description': 'The specific web automation task to perform (e.g., "Find the price of BTC on Coinbase")',
-        'required': True
-    }]
+    description = 'Perform complex browser tasks: navigate websites, fill forms, click buttons, extract info.'
+    parameters = [{'name': 'task', 'type': 'string', 'required': True,
+                   'description': "Clear description of what to do (e.g., 'Go to google.com and search for python tutorials')"}]
 
     def call(self, params: str, **kwargs) -> str:
         from browser_use.controller.service import Controller
-
-        params = _parse(params)
-        task = params['task'] if isinstance(params, dict) else params
-
+        p    = _parse(params)
+        task = p['task'] if isinstance(p, dict) else str(p)
+        logger.info(f"[browser_automation] Starting: {task[:100]}")
         try:
-            browser = ChromeBrowser()
+            browser    = ChromeBrowser()
             controller = Controller()
             controller.browser = browser
-            llm = ChatOpenAI(
-                base_url="http://127.0.0.1:11434/v1",
-                model="default",
-                temperature=0.3,
-            )
-            browser_sub_agent = BrowserAgent(
-                task=task,
-                llm=llm,
-                controller=controller,
-                use_vision=False,
-            )
-            result = asyncio.run(browser_sub_agent.run())
+            llm   = ChatOpenAI(base_url="http://127.0.0.1:11434/v1", model="default", temperature=0.3)
+            agent = BrowserAgent(task=task, llm=llm, controller=controller, use_vision=False)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                result = pool.submit(asyncio.run, agent.run()).result(timeout=300)
             return str(result)
+        except concurrent.futures.TimeoutError:
+            return json.dumps({"error": "Task timed out after 300 seconds."})
         except Exception as e:
-            logger.error(f"[browser_automation] failed: {e}")
+            logger.error(f"[browser_automation] {e}")
             return json.dumps({"error": str(e)})
 
-# --- 4. WINDOWS APP CONTROL (Step-by-Step Workflow) ---
-ACTIVE_SESSIONS = {}
 
 @register_tool('search_win_app_by_name')
 class SearchWinAppByName(BaseTool):
-    description = "Step 1: Get the AppId for any app by its name (e.g. 'calc' or 'chrome'). Use this before starting a session."
-    parameters = [{
-        'name': 'name', 
-        'type': 'string', 
-        'required': True, 
-        'description': 'The name of the app to search for.'
-    }]
+    description = "Step 1: Find AppId for any Windows app by name. Always call before start_app_session."
+    parameters = [{'name': 'name', 'type': 'string', 'required': True,
+                   'description': "App name (e.g., 'calc', 'notepad', 'spotify')"}]
 
     def call(self, params: str, **kwargs) -> str:
-        # 1. Parse the single 'name' parameter
-        p = _parse(params)
-        name = p.get('name', '')
-        
-        # 2. Logic: Ensure the database exists (use absolute path)
+        p    = _parse(params)
+        name = p.get('name', '') if isinstance(p, dict) else str(p)
+        logger.info(f"[search_win_app_by_name] Searching: {name}")
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(script_dir, "context", "installed_apps.json")
+        db_path    = os.path.join(script_dir, "context", "installed_apps.json")
         if not os.path.exists(db_path):
             win.get_all_windows_apps_installed_AppIds()
-
-        # 3. Logic: Search for the app
         results = win.find_appId_by_name(name)
-
-        # 4. Self-Healing: If not found, refresh the system list and search again
         if isinstance(results, str) and "No Apps found" in results:
-            win.get_all_windows_apps_installed_AppIds() # Re-scan system
+            win.get_all_windows_apps_installed_AppIds()
             results = win.find_appId_by_name(name)
-
-        # 5. Return clean results for the 0.6B model
         if isinstance(results, list):
-            # Return only the top 3 results to save context space
             return json.dumps(results[:3], ensure_ascii=False)
-        
         return str(results)
+
 
 @register_tool('start_app_session')
 class StartAppSession(BaseTool):
-    description = "Launch app using AppId from search_app_id. Returns session status. Store driver in ACTIVE_SESSIONS."
-    parameters = [{'name': 'app_id', 'type': 'string', 'required': True, 'description': 'Full AppId like "Microsoft.WindowsNotepad_8wekyb3d8bbwe!App"'}]
+    description = "Step 2: Launch a Windows app using its AppId from search_win_app_by_name."
+    parameters = [{'name': 'app_id', 'type': 'string', 'required': True,
+                   'description': 'Full AppId (e.g., "Microsoft.WindowsNotepad_8wekyb3d8bbwe!App")'}]
 
     def call(self, params: str, **kwargs) -> str:
         app_id = _get(params, 'app_id')
+        logger.info(f"[start_app_session] Starting: {app_id}")
         driver, message = win.open_win_app_and_start_session(app_id)
         if driver:
             ACTIVE_SESSIONS[app_id] = driver
             return json.dumps({"app_id": app_id, "status": "started", "message": message})
         return json.dumps({"app_id": app_id, "status": "failed", "message": message})
 
+
 @register_tool('inspect_ui_elements')
 class InspectUIElements(BaseTool):
-    description = "Capture app UI tree. Run AFTER start_app_session. Saves elements to context/ for next steps."
+    description = "Step 3: Capture the app's UI element tree. Run AFTER start_app_session."
     parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
 
     def call(self, params: str, **kwargs) -> str:
         app_id = _get(params, 'app_id')
         driver = ACTIVE_SESSIONS.get(app_id)
         if not driver:
-            return json.dumps({"error": f"No session for {app_id}. Call start_app_session first."})
-        result = win.get_all_elements_in_current_window(app_id, driver)
+            return json.dumps({"error": f"No active session for {app_id}. Call start_app_session first."})
+        win.get_all_elements_in_current_window(app_id, driver)
         return json.dumps({"app_id": app_id, "status": "inspected", "elements_saved": True})
+
 
 @register_tool('list_element_names')
 class ListElementNames(BaseTool):
-    description = "Get clickable element names from inspected UI. Returns list of strings. Use to find button names."
+    description = "Step 4: Get all clickable element names from the inspected UI."
     parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
 
     def call(self, params: str, **kwargs) -> str:
         app_id = _get(params, 'app_id')
         driver = ACTIVE_SESSIONS.get(app_id)
         if not driver:
-            return json.dumps({"error": f"No session for {app_id}"})
+            return json.dumps({"error": f"No active session for {app_id}"})
         names = win.quickly_lookup_all_element_names_in_current_window(app_id, driver)
-        return json.dumps({"app_id": app_id, "element_names": names})
+        return json.dumps({"app_id": app_id, "element_names": names,
+                           "count": len(names) if isinstance(names, list) else 0})
+
 
 @register_tool('get_element_details')
 class GetElementDetails(BaseTool):
-    description = "Get coords/ID for element by name. Returns: {name, id, x, y, width, height}. Use for clicking."
+    description = "Step 5: Get exact coordinates and ID for a specific element by name."
     parameters = [
-        {'name': 'app_id', 'type': 'string', 'required': True},
-        {'name': 'element_name', 'type': 'string', 'required': True, 'description': 'Exact name from list_element_names'}
+        {'name': 'app_id',       'type': 'string', 'required': True},
+        {'name': 'element_name', 'type': 'string', 'required': True,
+         'description': 'Exact element name from list_element_names'},
     ]
 
     def call(self, params: str, **kwargs) -> str:
         p = _parse(params)
-        driver = ACTIVE_SESSIONS.get(p['app_id'])
+        if not isinstance(p, dict):
+            return json.dumps({"error": "Invalid parameters"})
+        app_id       = p.get('app_id', '')
+        element_name = p.get('element_name', '')
+        driver       = ACTIVE_SESSIONS.get(app_id)
         if not driver:
-            return json.dumps({"error": f"No session for {p['app_id']}"})
-        details = win.get_element_by_name(p['app_id'], driver, p['element_name'])
-        return json.dumps(details if details else {"error": f"Element '{p['element_name']}' not found"})
+            return json.dumps({"error": f"No active session for {app_id}"})
+        details = win.get_element_by_name(app_id, driver, element_name)
+        if details:
+            return json.dumps(details)
+        return json.dumps({"error": f"Element '{element_name}' not found. Try list_element_names."})
+
 
 @register_tool('stop_app_session')
 class StopAppSession(BaseTool):
-    description = "Close app & cleanup session. Always call when done with an app."
+    description = "Step 6: Close the app and clean up the session. Always call when done."
     parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
 
     def call(self, params: str, **kwargs) -> str:
@@ -314,138 +422,128 @@ class StopAppSession(BaseTool):
             del ACTIVE_SESSIONS[app_id]
         return json.dumps({"app_id": app_id, "status": "closed" if success else "failed", "message": message})
 
-# 2. Define the Mem0 Tool for Qwen
+
 @register_tool('manage_memory')
 class ManageMemory(BaseTool):
-    description = 'Store or retrieve user preferences (long-term) or task data (working memory).'
-    parameters = [{
-        'name': 'action', 'type': 'string', 'description': 'save or search', 'required': True
-    }, {
-        'name': 'content', 'type': 'string', 'description': 'The info to save or the query to search'
-    }, {
-        'name': 'memory_type', 'type': 'string', 'description': 'long_term or working'
-    }]
+    """Store or retrieve user facts for personalised assistance.
 
-    def call(self, params: str, **kwargs) -> str:
-        p = _parse(params)
-        action = p.get('action') if isinstance(p, dict) else None
-        content = p.get('content', '') if isinstance(p, dict) else str(p)
-        m_type = p.get('memory_type', 'working') if isinstance(p, dict) else 'working'
-
-        # Read from ContextVar — set in stream_gen's thread before airi.run()
-        user_id = _current_user_id.get()
-        session_id = _current_session_id.get()
-
-        if action == 'save':
-            try:
-                # long_term: tied to user only so it persists across all sessions
-                # working: tied to both user + session (current chat only)
-                if m_type == 'long_term':
-                    mem_client.add(content, user_id=user_id, metadata={"type": m_type})
-                else:
-                    mem_client.add(content, user_id=user_id, session_id=session_id, metadata={"type": m_type})
-                return f"Saved to {m_type} memory."
-            except Exception as e:
-                return json.dumps({"error": str(e)})
-
-        elif action == 'search':
-            try:
-                # Always search user-level so long_term memories from past sessions are found
-                raw = mem_client.search(content, user_id=user_id, limit=10)
-                # mem0 returns {"results": [...]} — extract the list safely
-                if isinstance(raw, dict):
-                    items = raw.get("results", [])
-                elif isinstance(raw, list):
-                    items = raw
-                else:
-                    items = []
-                # Filter by relevance score and extract text
-                memories = [
-                    r['memory'] for r in items
-                    if isinstance(r, dict) and r.get('memory') and r.get('score', 1.0) >= 0.3
-                ]
-                return json.dumps(memories) if memories else "No relevant memories found."
-            except Exception as e:
-                return json.dumps({"error": str(e)})
-
-        return json.dumps({"error": f"Unknown action: {action}. Use 'save' or 'search'."})
-
-
-SYSTEM_PROMPT = """You are Airi, a Windows desktop AI assistant. Control apps, browse web, run code, manage memory.
-
-RULES:
-- ONE tool call per turn. Wait for result before next.
-- Never guess app_id — always search_win_app_by_name first.
-- Never interact with UI without inspect_ui_elements first.
-- Start of conversation: search memory for user context.
-- Save user preferences/facts immediately when mentioned.
-
-TOOLS:
-search_win_app_by_name(name)
-start_app_session(app_id)
-inspect_ui_elements(app_id)
-list_element_names(app_id)
-get_element_details(app_id, element_name)
-stop_app_session(app_id)
-browser_automation(task)
-web_search(query)
-manage_memory(action, content, memory_type)  # action: save|search  memory_type: long_term|working
-scan_document(file, query)
-
-APP WORKFLOW ORDER:
-search_win_app_by_name → start_app_session → inspect_ui_elements → list_element_names → get_element_details → stop_app_session
-
-EXAMPLES:
-User: open calculator
-→ search_win_app_by_name("calculator")
-
-User: go to youtube
-→ browser_automation("go to youtube.com")
-
-User: my name is Alex
-→ manage_memory(action="save", content="User name is Alex", memory_type="long_term")
-
-User: what do you know about me?
-→ manage_memory(action="search", content="user info")
-
-User: summarize report.pdf
-→ scan_document(file="report.pdf", query="summarize")
-"""
-
-# --- 6. AGENT INITIALIZATION ---
-
-# DocScanner wrapped as a tool so Assistant can call it without Router overhead
-_doc_agent_instance = VirtualMemoryAgent(
-    llm=llm_cfg,
-    name='DocScanner',
-    description='Reads and summarizes large documents or files.',
-)
-
-@register_tool('scan_document')
-class ScanDocumentTool(BaseTool):
-    description = 'Read, summarize, or answer questions about a large document or file.'
+    mem0 1.0.7 API notes (verified):
+    - add()    : use run_id= for session scope (not session_id=)
+                 memory_type= only accepts "procedural_memory" or None — do NOT pass custom strings
+    - search() : native threshold= param; returns {"results": [...]}
+    - delete_all(): accepts user_id + run_id for session-scoped wipe
+    """
+    description = 'Save or search user facts/preferences. action: save | search | delete_session'
     parameters = [
-        {'name': 'file', 'type': 'string', 'required': True, 'description': 'Absolute or relative path to the file'},
-        {'name': 'query', 'type': 'string', 'required': True, 'description': 'What you want to know about the file'},
+        {'name': 'action',  'type': 'string', 'required': True,
+         'description': "save — store a fact; search — retrieve relevant facts; delete_session — clear session memories"},
+        {'name': 'content', 'type': 'string',
+         'description': 'Fact to save, or query to search for'},
     ]
 
     def call(self, params: str, **kwargs) -> str:
-        p = _parse(params)
-        file_path = p.get('file', '') if isinstance(p, dict) else ''
-        query = p.get('query', '') if isinstance(p, dict) else str(p)
-        try:
-            messages = [{'role': 'user', 'content': [{'text': query}, {'file': file_path}]}]
-            result = ''
-            for resp in _doc_agent_instance.run(messages):
-                if resp:
-                    last = [m for m in resp if m.get('role') == 'assistant']
-                    if last:
-                        result = last[-1].get('content', '')
-            return str(result) if result else 'No result from DocScanner.'
-        except Exception as e:
-            return json.dumps({'error': str(e)})
+        p       = _parse(params)
+        action  = p.get('action')  if isinstance(p, dict) else str(p)
+        content = p.get('content', '') if isinstance(p, dict) else ''
+        user_id    = _current_user_id.get()
+        session_id = _current_session_id.get()
+        logger.info(f"[manage_memory] action={action} user={user_id}")
 
-# Single Assistant — no Router, no routing confusion
+        if action == 'save':
+            if not content:
+                return json.dumps({"error": "content is required for save"})
+            try:
+                # run_id= scopes to session; infer=False stores raw text (no LLM extraction)
+                result = mem_client.add(
+                    [{"role": "user", "content": content}],
+                    user_id=user_id,
+                    run_id=session_id,
+                    infer=False,
+                )
+                ids = [r.get("id") for r in result.get("results", [])]
+                return json.dumps({"saved": True, "ids": ids})
+            except Exception as e:
+                logger.error(f"[manage_memory] save error: {e}")
+                return json.dumps({"error": str(e)})
+
+        elif action == 'search':
+            if not content:
+                return json.dumps({"error": "content is required for search"})
+            try:
+                # threshold= is native in mem0 1.0.7 — no manual score filtering needed
+                raw     = mem_client.search(content, user_id=user_id, limit=8, threshold=0.2)
+                items   = raw.get("results", []) if isinstance(raw, dict) else []
+                memories = [r["memory"] for r in items if r.get("memory")]
+                return json.dumps(memories) if memories else "No relevant memories found."
+            except Exception as e:
+                logger.error(f"[manage_memory] search error: {e}")
+                return json.dumps({"error": str(e)})
+
+        elif action == 'delete_session':
+            try:
+                mem_client.delete_all(user_id=user_id, run_id=session_id)
+                return json.dumps({"deleted": True, "session_id": session_id})
+            except Exception as e:
+                return json.dumps({"error": str(e)})
+
+        return json.dumps({"error": f"Unknown action '{action}'. Use: save, search, delete_session"})
+
+
+# ── SYSTEM PROMPT ─────────────────────────────────────────────────────────────
+SYSTEM_PROMPT = """# 🌸 You are Airi — A Friendly Windows Desktop Assistant
+
+You are Airi, a warm, helpful, and efficient AI companion for Windows users.
+Your goal is to make every task feel easy and enjoyable. ✨
+
+## 🎯 Your Personality
+- **Friendly & Warm**: Speak naturally, like a helpful friend. Use emojis sparingly (🌸✨✅) to add warmth.
+- **Clear & Simple**: Explain steps in plain language. Avoid technical jargon unless asked.
+- **Proactive & Thorough**: Anticipate follow-up needs. Confirm before destructive actions.
+- **Patient & Encouraging**: Never make users feel silly for asking. Celebrate small wins!
+
+## 🛠️ Your Capabilities
+- **Windows Apps**: Open, control, and automate any installed application
+- **Web Browsing**: Navigate websites, fill forms, extract information
+- **Documents & Images**: Analyze uploaded files automatically (PDF, Word, images, etc.)
+- **Memory**: Remember user preferences and important details across sessions
+- **Web Search**: Find current information when needed
+
+## 📋 Golden Rules
+1. **ONE tool at a time** — Call one tool, wait for result, then proceed.
+2. **Always search before launching** — Use `search_win_app_by_name` before `start_app_session`.
+3. **Always inspect before interacting** — Use `inspect_ui_elements` before clicking/typing in apps.
+4. **Save important info** — When user shares preferences/facts, use `manage_memory(action=save)`.
+5. **Check memory first** — At conversation start, search for relevant user context.
+6. **Files are automatic** — Uploaded documents/images are analyzed directly (no tool needed).
+7. **Clean up sessions** — Call `stop_app_session` when app tasks are complete.
+8. **Be honest about limits** — If something fails, explain clearly and suggest alternatives.
+
+## 🔧 Available Tools
+| Tool | When to Use |
+|------|-------------|
+| `search_win_app_by_name(name)` | First step to find any app |
+| `start_app_session(app_id)` | Launch app after getting AppId |
+| `inspect_ui_elements(app_id)` | See what's clickable in the app |
+| `list_element_names(app_id)` | Get list of element names |
+| `get_element_details(app_id, element_name)` | Find exact position of element |
+| `stop_app_session(app_id)` | Close app when done |
+| `browser_automation(task)` | Web tasks (search, forms, navigation) |
+| `web_search(query)` | Find current info online |
+| `manage_memory(action, content)` | Save/search user info — action: save \| search \| delete_session |
+
+## 🔄 Typical Workflow
+**For App Tasks:**
+1. `search_win_app_by_name` → 2. `start_app_session` → 3. `inspect_ui_elements` → 4. `list_element_names` → 5. `get_element_details` → 6. Interact → 7. `stop_app_session`
+
+**For Web Tasks:**
+`browser_automation(task)` handles the full flow internally.
+
+**For Memory:**
+- Save: `manage_memory(action=save, content=<fact>)`
+- Search: `manage_memory(action=search, content=<query>)`
+"""
+
+# ── Agent Initialization ─────────────────────────────────────────────────────
 airi = Assistant(
     llm=llm_cfg,
     system_message=SYSTEM_PROMPT,
@@ -455,70 +553,136 @@ airi = Assistant(
         'inspect_ui_elements', 'list_element_names', 'get_element_details',
         'stop_app_session', 'web_search',
         'manage_memory',
-        'scan_document',
     ]
 )
 
-# --- 7. FASTAPI ENDPOINT (Streaming + Error Handling) ---
+# ── FastAPI Endpoints ────────────────────────────────────────────────────────
+
 @app.post("/v1/chat/completions")
 async def chat_completions(request: Request):
-    data = await request.json()
-    messages = data.get("messages", [])
-    user_id = data.get("user_id", "default_user")
-    session_id = data.get("session_id", "default_session")
+    data        = await request.json()
+    raw_messages = data.get("messages", [])
+    user_id     = data.get("user_id",    "default_user")
+    session_id  = data.get("session_id", "default_session")
 
-    # Set context vars for this request — captured by closure below, not relied on for thread safety
     _current_user_id.set(user_id)
     _current_session_id.set(session_id)
 
+    messages = _build_messages(raw_messages)
+
     def stream_gen():
-        # Capture user_id/session_id as closure locals — safe across concurrent requests
-        # and across threadpool execution where ContextVar propagation is unreliable
-        _uid = user_id
-        _sid = session_id
-        # Temporarily set context vars inside this thread so ManageMemory.call() reads them
-        _current_user_id.set(_uid)
-        _current_session_id.set(_sid)
+        _current_user_id.set(user_id)
+        _current_session_id.set(session_id)
 
         prev_content = ""
-        for response in airi.run(messages):
-            if not response: continue
-            assistant_msgs = [m for m in response if m.get("role") == "assistant"]
-            if not assistant_msgs: continue
-            last = assistant_msgs[-1]
+        chunk_id     = f"chatcmpl-{int(time.time())}"
 
-            full_content = last.get("content") or ""
-            if not isinstance(full_content, str): continue
+        try:
+            for response in airi.run(messages):
+                if not response:
+                    continue
+                assistant_msgs = [m for m in response if m.get("role") == "assistant"]
+                if not assistant_msgs:
+                    continue
+                last = assistant_msgs[-1]
 
-            delta = full_content[len(prev_content):]
-            prev_content = full_content
+                raw = last.get("content") or ""
+                if isinstance(raw, list):
+                    full_content = " ".join(
+                        c.get("text", "") for c in raw
+                        if isinstance(c, dict) and c.get("text")
+                    )
+                else:
+                    full_content = str(raw)
 
-            if not delta: continue
+                # Strip <think>...</think> blocks from streamed output
+                if "<think>" in full_content:
+                    import re
+                    full_content = re.sub(r"<think>.*?</think>", "", full_content, flags=re.DOTALL).strip()
 
-            chunk = {
-                "id": f"chatcmpl-{int(time.time())}",
-                "object": "chat.completion.chunk",
-                "created": int(time.time()),
-                "model": modelName,
-                "choices": [{
-                    "index": 0,
-                    "delta": {"content": delta},
-                    "finish_reason": None
-                }]
-            }
+                delta = full_content[len(prev_content):]
+                prev_content = full_content
+                if not delta:
+                    continue
 
-            yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
+                chunk = {
+                    "id": chunk_id,
+                    "object": "chat.completion.chunk",
+                    "created": int(time.time()),
+                    "model": modelName,
+                    "choices": [{"index": 0, "delta": {"content": delta}, "finish_reason": None}],
+                }
+                yield f"data: {json.dumps(chunk, ensure_ascii=False)}\n\n"
 
-        yield "data: [DONE]\n\n"
+            # Final chunk
+            yield f"data: {json.dumps({'id': chunk_id, 'object': 'chat.completion.chunk', 'created': int(time.time()), 'model': modelName, 'choices': [{'index': 0, 'delta': {}, 'finish_reason': 'stop'}]})}\n\n"
+            yield "data: [DONE]\n\n"
+
+        except Exception as e:
+            logger.error(f"[chat_completions] stream error: {e}")
+            err = {"id": chunk_id, "object": "chat.completion.chunk", "created": int(time.time()),
+                   "model": modelName,
+                   "choices": [{"index": 0, "delta": {"content": f"\n\n⚠️ Error: {e}"}, "finish_reason": "error"}]}
+            yield f"data: {json.dumps(err)}\n\n"
+            yield "data: [DONE]\n\n"
 
     return StreamingResponse(stream_gen(), media_type="text/event-stream")
 
+
+USER_STUFF_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_stuff")
+os.makedirs(USER_STUFF_DIR, exist_ok=True)
+
+@app.post("/upload")
+async def upload_files(files: list[UploadFile] = File(...)):
+    saved = []
+    for f in files:
+        dest = os.path.join(USER_STUFF_DIR, f.filename)
+        base, ext = os.path.splitext(f.filename)
+        counter = 1
+        while os.path.exists(dest):
+            dest = os.path.join(USER_STUFF_DIR, f"{base}_{counter}{ext}")
+            counter += 1
+        with open(dest, "wb") as out:
+            shutil.copyfileobj(f.file, out)
+        saved.append(dest)
+        logger.info(f"[upload] Saved: {dest}")
+    return {"paths": saved, "count": len(saved)}
+
+
 @app.get("/health")
 async def health():
-    return {"status": "ok", "model": modelName, "agent": "Airi"}
+    return {
+        "status": "ok",
+        "model": modelName,
+        "agent": "Airi",
+        "version": "2.0.0",
+        "thinking_enabled": llm_cfg["generate_cfg"].get("extra_body", {}).get("enable_thinking", False),
+        "active_sessions": len(ACTIVE_SESSIONS),
+        "timestamp": time.time(),
+    }
+
+
+@app.on_event("shutdown")
+async def cleanup_sessions():
+    logger.info("[shutdown] Cleaning up active sessions...")
+    for app_id, driver in list(ACTIVE_SESSIONS.items()):
+        try:
+            win.close_app_session(driver)
+        except Exception as e:
+            logger.error(f"[shutdown] Error closing {app_id}: {e}")
+    ACTIVE_SESSIONS.clear()
+
 
 if __name__ == "__main__":
     import uvicorn
-    print("Airi Agent running on http://127.0.0.1:11435")
-    print("Tips: Use /health to check status, /v1/chat/completions for requests")
-    uvicorn.run(app, host="127.0.0.1", port=11435, log_level="info")
+    print("""
+╔═══════════════════════════════════════════════════════════╗
+║                    🌸 Airi Agent v2.0                     ║
+║          Friendly Windows Desktop AI Assistant            ║
+║                                                           ║
+║  Model  : Qwen3-VL-2B-Instruct-GGUF                       ║
+║  Thinking: Enabled                                        ║
+║  Endpoint: http://127.0.0.1:11435                         ║
+╚═══════════════════════════════════════════════════════════╝
+""")
+    uvicorn.run(app, host="127.0.0.1", port=11435, log_level="info", access_log=True)

@@ -17,14 +17,14 @@ function historyToMessages(chatHistory = []) {
 function messagesToHistory(messages) {
     return messages.map((m) => ({
         role: m.from === "user" ? "user" : "assistant",
-        content: m.versions[0].content,
-    }));
+        // agentContent stores the full prompt+file-paths string for history replay
+        content: m.versions[0].agentContent ?? m.versions[0].content,
+    })).filter((m) => m.content);
 }
 
 const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
     const [messages, setMessages] = useState([]);
     const [streamingMessageId, setStreamingMessageId] = useState(null);
-    const [message, setMessage] = useState({ text: "" });
 
     const chatIdRef = useRef(initialChatId || null);
     const accumulatorRef = useRef("");
@@ -75,19 +75,23 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
         }
     }, [userId, addOrUpdateChat]);
 
-    const streamResponse = useCallback(async (messageId, userPrompt) => {
+    const streamResponse = useCallback(async (messageId, userPrompt, filePaths = []) => {
         setStreamingMessageId(messageId);
         accumulatorRef.current = "";
 
-        // Build history: all messages except the empty assistant placeholder just added
+        // History = all completed messages (exclude the blank assistant placeholder we just added)
         const history = messagesRef.current
-            .filter((m) => !(m.versions[0].id === messageId))
-            .map((m) => ({ role: m.from === "user" ? "user" : "assistant", content: m.versions[0].content }))
-            .filter((m) => m.content); // drop empty
+            .filter((m) => !(m.from === "assistant" && m.versions[0].id === messageId))
+            .map((m) => ({
+                role: m.from === "user" ? "user" : "assistant",
+                content: m.versions[0].agentContent ?? m.versions[0].content,
+            }))
+            .filter((m) => m.content);
 
         try {
             await callAgentAPI({
                 prompt: userPrompt,
+                filePaths,
                 history,
                 userId,
                 chatId: chatIdRef.current,
@@ -116,9 +120,10 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
         }
     }, [userId, saveChat]);
 
-    const handleOnSubmit = useCallback((inputData) => {
+    const handleOnSubmit = useCallback(async (inputData) => {
         const content = inputData.text?.trim();
-        if (!content && (!inputData.files || inputData.files.length === 0)) return;
+        const rawFiles = inputData.files || [];
+        if (!content && rawFiles.length === 0) return;
 
         // Generate chatId on first message from / and update URL without remounting
         if (!chatIdRef.current) {
@@ -129,10 +134,45 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
 
         const cid = chatIdRef.current;
 
+        // Upload files to agent-server/user_stuff and get back absolute paths
+        let filePaths = [];
+        if (rawFiles.length > 0) {
+            try {
+                const form = new FormData();
+                rawFiles.forEach(({ file }) => form.append("files", file));
+                const res = await fetch("http://127.0.0.1:11435/upload", { method: "POST", body: form });
+                const data = await res.json();
+                filePaths = data.paths || [];
+            } catch (e) {
+                console.error("File upload failed:", e);
+            }
+        }
+
+        // Build display content — show text + attached file names
+        const fileNames = rawFiles.map(({ file }) => file.name).join(", ");
+        const displayContent = content
+            ? (filePaths.length > 0 ? `${content}\n[Attached: ${fileNames}]` : content)
+            : `[Attached: ${fileNames}]`;
+
+        // Full prompt sent to agent — file paths baked in so history replay works
+        const agentContent = filePaths.length > 0
+            ? `${content || ""}\nAttached files: ${filePaths.join(", ")}`.trim()
+            : (content || "");
+
+        // Image previews for inline display in the message bubble
+        const imagePreviews = rawFiles
+            .filter(({ isImage }) => isImage)
+            .map(({ file, url }) => ({ name: file.name, url }));
+
         const userMessage = {
             from: "user",
             key: `user-${Date.now()}`,
-            versions: [{ content: content || "Sent attachments", id: `user-idx-${Date.now()}` }],
+            versions: [{
+                content: displayContent,   // shown in UI
+                agentContent,              // sent to agent + stored in history
+                imagePreviews,             // inline image previews
+                id: `user-idx-${Date.now()}`,
+            }],
         };
         const assistantMessageId = `assistant-${Date.now()}`;
         const assistantMessage = {
@@ -145,23 +185,24 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
         // Set title once on first submit only
         if (!titleSetRef.current) {
             titleSetRef.current = true;
-            const title = content.length < 3 ? "New Chat" : content.length > 60 ? content.slice(0, 57) + "..." : content;
+            const title = content && content.length >= 3
+                ? (content.length > 60 ? content.slice(0, 57) + "..." : content)
+                : "New Chat";
             chatTitleRef.current = title;
             const initialChatData = {
                 chatId: cid,
                 userId,
                 chatTitle: title,
-                chatHistory: [{ role: "user", content }],
+                chatHistory: [{ role: "user", content: displayContent }],
                 updatedAt: Date.now(),
             };
             addOrUpdateChat(initialChatData);
-            // Persist immediately so the new ChatProvider (after pushState navigation) loads it from electron-store
             if (typeof window !== "undefined" && window.electronAPI) {
                 window.electronAPI.saveChat(initialChatData);
             }
         }
 
-        streamResponse(assistantMessageId, content);
+        streamResponse(assistantMessageId, agentContent, []);
     }, [streamResponse, addOrUpdateChat, userId]);
 
     const handleOpenOverlay = () => {
@@ -191,7 +232,14 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
                             <div key={msg.key}>
                                 {msg.from === "user" && (
                                     <div className="flex flex-col items-end group">
-                                        <div className="bg-bg-hover text-text-primary px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[85%] text-base">
+                                        {msg.versions[0].imagePreviews?.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mb-2 justify-end">
+                                                {msg.versions[0].imagePreviews.map((img, i) => (
+                                                    <img key={i} src={img.url} alt={img.name} className="max-h-48 max-w-xs rounded-xl object-cover border border-border-default" />
+                                                ))}
+                                            </div>
+                                        )}
+                                        <div className="bg-bg-hover text-text-primary px-4 py-2.5 rounded-2xl rounded-tr-sm max-w-[85%] text-base whitespace-pre-wrap">
                                             {msg.versions[0].content}
                                         </div>
                                         <span className="text-[10px] text-text-muted mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Just now</span>
@@ -229,8 +277,6 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
                     <ChatInput
                         user_name={user_name}
                         showgreet={messages.length === 0}
-                        message={message}
-                        setMessage={setMessage}
                         handleOnSubmit={handleOnSubmit}
                     />
                 </div>

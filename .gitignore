@@ -46,3 +46,9 @@ yarn-error.log*
 next-env.d.ts
 
 .venv/
+
+agent-server/.mem0_db/*
+agent-server/user_stuff/*
+agent-server/screenshots/*
+agent-server/context/*
+workspace/*
