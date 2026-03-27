@@ -54,33 +54,11 @@ modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF"
 _MEM0_DB   = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".mem0_db")
 _EMBED_DIMS = 768  # embeddinggemma-300m-Q4_0
 
-def _check_and_fix_mem0_db():
-    """Wipe the qdrant collection if it was created with wrong embedding dims."""
-    meta_path = os.path.join(_MEM0_DB, "meta.json")
-    if not os.path.exists(meta_path):
-        return
-    try:
-        with open(meta_path) as f:
-            meta = json.load(f)
-        # Check both possible collection name keys
-        collections = meta.get("collections", {})
-        coll = collections.get("airi_memory") or collections.get("mem0") or {}
-        size = coll.get("vectors", {}).get("size")
-        if size is not None and size != _EMBED_DIMS:
-            logger.warning(f"[mem0] DB dim={size} != expected {_EMBED_DIMS}. Recreating DB.")
-            shutil.rmtree(_MEM0_DB, ignore_errors=True)
-        else:
-            logger.info(f"[mem0] DB dims OK ({size})")
-    except Exception as e:
-        logger.warning(f"[mem0] Could not check DB dims: {e}")
-
-_check_and_fix_mem0_db()
-
-# ── Embedding server health check (before mem0 init) ─────────────────────────
-def _wait_for_embedding_server(max_retries=30, delay=0.5):
-    """Wait for the embedding server at 11445 to be ready."""
+# ── Embedding server health check ────────────────────────────────────────────
+def _wait_for_embedding_server(max_retries=40, delay=0.5):
+    """Block until the embedding server at 11445 is ready."""
     import time, requests
-    for _ in range(max_retries):
+    for i in range(max_retries):
         try:
             resp = requests.get("http://127.0.0.1:11445/health", timeout=1)
             if resp.status_code == 200:
@@ -88,12 +66,53 @@ def _wait_for_embedding_server(max_retries=30, delay=0.5):
                 return True
         except Exception:
             pass
+        if i == 0:
+            logger.info("[mem0] Waiting for embedding server...")
         time.sleep(delay)
-    logger.warning("[mem0] Embedding server not ready, proceeding anyway")
+    logger.warning("[mem0] Embedding server not ready after timeout")
     return False
 
-# Wait for embedding server before initializing mem0
+def _probe_embedding_dims():
+    """Ask the embedding server what dims it actually returns."""
+    import requests
+    try:
+        resp = requests.post(
+            "http://127.0.0.1:11445/v1/embeddings",
+            json={"model": "unsloth/embeddinggemma-300m-GGUF:Q4_0", "input": "test"},
+            timeout=5,
+        )
+        data = resp.json()
+        dims = len(data["data"][0]["embedding"])
+        logger.info(f"[mem0] Embedder returns {dims} dims")
+        return dims
+    except Exception as e:
+        logger.warning(f"[mem0] Could not probe embedding dims: {e}")
+        return _EMBED_DIMS
+
+def _check_and_fix_mem0_db(actual_dims):
+    """Wipe the qdrant DB if its dims don't match the live embedder."""
+    meta_path = os.path.join(_MEM0_DB, "meta.json")
+    if not os.path.exists(meta_path):
+        return
+    try:
+        with open(meta_path) as f:
+            meta = json.load(f)
+        collections = meta.get("collections", {})
+        coll = collections.get("airi_memory") or collections.get("mem0") or {}
+        size = coll.get("vectors", {}).get("size")
+        if size is not None and size != actual_dims:
+            logger.warning(f"[mem0] DB dim={size} != embedder dim={actual_dims}. Recreating DB.")
+            shutil.rmtree(_MEM0_DB, ignore_errors=True)
+        else:
+            logger.info(f"[mem0] DB dims OK ({size})")
+    except Exception as e:
+        logger.warning(f"[mem0] Could not check DB dims: {e}")
+        shutil.rmtree(_MEM0_DB, ignore_errors=True)
+
+# Wait for embedder, probe actual dims, then fix DB if needed
 _wait_for_embedding_server()
+_EMBED_DIMS = _probe_embedding_dims()   # override with live value
+_check_and_fix_mem0_db(_EMBED_DIMS)
 
 # ── Mem0 Configuration (Fully Local) ─────────────────────────────────────────
 mem0_config = {
@@ -117,7 +136,7 @@ mem0_config = {
     "embedder": {
         "provider": "openai",
         "config": {
-            "model": "embeddinggemma-300m-Q4_0",
+            "model": "default",
             "openai_base_url": "http://127.0.0.1:11445/v1",
             "api_key": "none",
             "embedding_dims": _EMBED_DIMS,

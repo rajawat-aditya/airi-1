@@ -167,10 +167,61 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
     const [message, setMessage] = useState({ text: "" });
     const [interimText, setInterimText] = useState("");
     const [files, setFiles] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
     const submitRef = useRef();
     const autoSubmitTimerRef = useRef(null);
+    const dragCounterRef = useRef(0); // track nested drag enter/leave
+
+    const addFiles = useCallback((rawFiles) => {
+        setFiles((prev) => [...prev, ...rawFiles.map((file) => ({
+            file,
+            url: URL.createObjectURL(file),
+            isImage: file.type.startsWith("image/"),
+        }))]);
+    }, []);
+
+    // ── Drag handlers ──────────────────────────────────────────────────────────
+    const onDragEnter = useCallback((e) => {
+        e.preventDefault();
+        dragCounterRef.current += 1;
+        setIsDragging(true);
+    }, []);
+
+    const onDragLeave = useCallback((e) => {
+        e.preventDefault();
+        dragCounterRef.current -= 1;
+        if (dragCounterRef.current === 0) setIsDragging(false);
+    }, []);
+
+    const onDragOver = useCallback((e) => {
+        e.preventDefault();
+    }, []);
+
+    const onDrop = useCallback((e) => {
+        e.preventDefault();
+        dragCounterRef.current = 0;
+        setIsDragging(false);
+
+        const dt = e.dataTransfer;
+
+        // 1. Files / images
+        const droppedFiles = Array.from(dt.files || []);
+        if (droppedFiles.length > 0) {
+            addFiles(droppedFiles);
+            return;
+        }
+
+        // 2. Plain text (e.g. selected text dragged from browser)
+        const text = dt.getData("text/plain");
+        if (text?.trim()) {
+            setMessage((prev) => ({
+                text: prev.text ? prev.text + " " + text.trim() : text.trim(),
+            }));
+            textareaRef.current?.focus();
+        }
+    }, [addFiles]);
 
     const submit = useCallback(() => {
         const fullText = ((message?.text || "") + interimText).trim();
@@ -231,13 +282,8 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
     }, [files]);
 
     const handleFileChange = useCallback((e) => {
-        const selected = Array.from(e.target.files || []);
-        setFiles((prev) => [...prev, ...selected.map((file) => ({
-            file,
-            url: URL.createObjectURL(file),
-            isImage: file.type.startsWith("image/"),
-        }))]);
-    }, []);
+        addFiles(Array.from(e.target.files || []));
+    }, [addFiles]);
 
     const removeFile = useCallback((index) => {
         setFiles((prev) => {
@@ -265,9 +311,25 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
                 </div>
             )}
 
-            <div className={`bg-bg-card rounded-[28px] border shadow-lg transition-colors ${
-                isListening ? "border-blue-500/50 shadow-blue-500/10" : "border-border-default focus-within:border-border-active"
-            }`}>
+            <div
+                className={`relative bg-bg-card rounded-[28px] border shadow-lg transition-colors ${
+                    isDragging
+                        ? "border-blue-500/70 shadow-blue-500/20"
+                        : isListening
+                        ? "border-blue-500/50 shadow-blue-500/10"
+                        : "border-border-default focus-within:border-border-active"
+                }`}
+                onDragEnter={onDragEnter}
+                onDragLeave={onDragLeave}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
+            >
+                {/* Drag overlay */}
+                {isDragging && (
+                    <div className="absolute inset-0 z-10 rounded-[28px] bg-blue-500/10 border-2 border-dashed border-blue-500/60 flex items-center justify-center pointer-events-none">
+                        <span className="text-blue-400 text-sm font-medium">Drop files or text here</span>
+                    </div>
+                )}
                 {files.length > 0 && (
                     <div className="flex flex-wrap gap-2 p-4 pb-0">
                         {files.map((file, i) => (
