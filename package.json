@@ -27,6 +27,7 @@
     "eslint-config-next": "^16.2.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.563.0",
+    "mcp-searxng": "^0.10.1",
     "media-chrome": "^4.17.2",
     "mongodb": "^7.1.0",
     "mongoose": "^9.3.1",

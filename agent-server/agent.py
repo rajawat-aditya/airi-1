@@ -100,10 +100,16 @@ def _ensure_qdrant_collection(dims: int):
     os.makedirs(_MEM0_DB, exist_ok=True)
     client = QdrantClient(path=_MEM0_DB)
 
-    existing = {c.name: c for c in client.get_collections().collections}
+    existing = {c.name for c in client.get_collections().collections}
 
     if _COLLECTION in existing:
-        current_dims = existing[_COLLECTION].config.params.vectors.size
+        info = client.get_collection(_COLLECTION)
+        vectors_config = info.config.params.vectors
+        # vectors_config can be a dict (named vectors) or a VectorParams object
+        if isinstance(vectors_config, dict):
+            current_dims = next(iter(vectors_config.values())).size
+        else:
+            current_dims = vectors_config.size
         if current_dims != dims:
             logger.warning(f"[mem0] Collection has {current_dims} dims, need {dims}. Recreating.")
             client.delete_collection(_COLLECTION)
