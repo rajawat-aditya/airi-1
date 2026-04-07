@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FlaUI.TestUtilities</name>
+    </assembly>
+    <members>
+        <member name="T:FlaUI.TestUtilities.ApplicationStartMode">
+            <summary>
+            Defines how the application under test should be started by the test fixture.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.ApplicationStartMode.None">
+            <summary>
+            Do not start or stop the application as this is done outside.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.ApplicationStartMode.OncePerTest">
+            <summary>
+            Start the application before each test and close it after each test.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.ApplicationStartMode.OncePerFixture">
+            <summary>
+            Start the application once for the whole test fixture and close it when all tests are finished.
+            </summary>
+        </member>
+        <member name="T:FlaUI.TestUtilities.FlaUITestBase">
+            <summary>
+            Base class for ui tests with some helper methods.
+            This class allows recording videos, taking screen shots on failed tests and
+            starts and stops the application under test for each test or fixture.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.FlaUITestBase._recorder">
+            <summary>
+            Member which holds the current video recorder.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.FlaUITestBase._testMethodName">
+            <summary>
+            The name of the current test method. Used for the video recorder.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.Automation">
+            <summary>
+            Instance of the current used automation object.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.Application">
+            <summary>
+            Instance of the current running application.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.ApplicationStartMode">
+            <summary>
+            Specifies the starting mode of the application to test.
+            Defaults to OncePerTest.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.KeepVideoForSuccessfulTests">
+            <summary>
+            Flag to indicate if videos should be kept even if the test did not fail.
+            Defaults to false.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.TakeScreenshots">
+            <summary>
+            Flag to indicate if screenshots should be taken in failing tests.
+            Defaults to true.
+            </summary>
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.VideoRecordingMode">
+            <summary>
+            Specifies the mode of the video recorder.
+            Defaults to OnePerTest.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.FlaUITestBase._testDateTime">
+            <summary>
+            static member which holds the current execution date and time
+            </summary> 
+        </member>
+        <member name="P:FlaUI.TestUtilities.FlaUITestBase.TestsMediaPath">
+            <summary>
+            Path of the directory for the screenshots and videos for the tests.
+            Defaults to c:\temp\testsmedia.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.GetAutomation">
+            <summary>
+            Gets the automation instance that should be used.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.StartApplication">
+            <summary>
+            Starts the application which should be tested.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.UITestBaseOneTimeSetUp">
+            <summary>
+            Setup method for the test fixture.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.UITestBaseOneTimeTearDown">
+            <summary>
+            Teardown method of the test fixture.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.UITestBaseSetUp">
+            <summary>
+            Setup method for each test.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.UITestBaseTearDown">
+            <summary>
+            Teardown method for each test.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.RestartApplication">
+            <summary>
+            Closes and starts the application.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.CloseApplication">
+            <summary>
+            Closes the application.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.CaptureImage">
+            <summary>
+            Method which captures the image for the video and screen shots.
+            By default captures the main screen.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.AdjustRecorderSettings(FlaUI.Core.Capturing.VideoRecorderSettings)">
+            <summary>
+            Method which allows customizing the settings for the video recorder.
+            By default downloads ffmpeg and sets the path to ffmpeg.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.StartVideoRecorder(System.String)">
+            <summary>
+            Starts the video recorder.
+            </summary>
+            <param name="videoName">The unique name of the video file.</param>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.StopVideoRecorder">
+            <summary>
+            Stops the video recorder.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.TakeScreenShot(System.String)">
+            <summary>
+            Takes a screen shot.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.SanitizeFileName(System.String)">
+            <summary>
+            Replaces all invalid characters with underlines.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.FlaUITestBase.CreateScreenShotPath(System.String)">
+            <summary>
+            Generates full path for screenshot.
+            </summary>
+        </member>
+        <member name="T:FlaUI.TestUtilities.NUnitProgressLogger">
+            <summary>
+            Implementation of a FlaUI logger which logs to the NUnit progress stream.
+            </summary>
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedTrace(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedDebug(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedInfo(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedWarn(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedError(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FlaUI.TestUtilities.NUnitProgressLogger.GatedFatal(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FlaUI.TestUtilities.VideoRecordingMode">
+            <summary>
+            Defines how videos should be recorded for the tests.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.VideoRecordingMode.NoVideo">
+            <summary>
+            Do not record any video.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.VideoRecordingMode.OnePerTest">
+            <summary>
+            Record one separate video per test.
+            </summary>
+        </member>
+        <member name="F:FlaUI.TestUtilities.VideoRecordingMode.OnePerFixture">
+            <summary>
+            Report one video for the whole test fixture.
+            </summary>
+        </member>
+    </members>
+</doc>
