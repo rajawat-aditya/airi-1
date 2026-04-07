@@ -6,7 +6,9 @@ import asyncio
 import logging
 import concurrent.futures
 from contextvars import ContextVar
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Callable
+from functools import wraps
+from threading import Lock
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -23,7 +25,6 @@ if sys.stderr.encoding != 'utf-8':
 
 # ── Set env vars before mem0 import ──────────────────────────────────────────
 os.environ.setdefault("OPENAI_API_KEY", "none")
-# Disable mem0 telemetry — prevents a second qdrant instance fighting over ~/.mem0 lock
 os.environ.setdefault("MEM0_TELEMETRY", "false")
 
 # ── Qwen Agent Framework Imports ─────────────────────────────────────────────
@@ -34,18 +35,14 @@ from qwen_agent.llm.schema import Message, ContentItem
 # ── FastAPI Imports ──────────────────────────────────────────────────────────
 from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 import shutil
-
-# ── Browser & LLM Imports ────────────────────────────────────────────────────
-from browser_use import Agent as BrowserAgent
-from browser_use.browser.service import Browser
-from langchain_openai import ChatOpenAI
 
 # ── Memory Import ────────────────────────────────────────────────────────────
 from mem0 import Memory
 
-# ── Local Windows Module ─────────────────────────────────────────────────────
-import win
+# ── FlaUI Engine ──────────────────────────────────────────────────────────────
+from flaui import engine
 
 # ── Model Configuration ──────────────────────────────────────────────────────
 modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF"
@@ -89,11 +86,6 @@ def _probe_embedding_dims():
         return _EMBED_DIMS
 
 def _ensure_qdrant_collection(dims: int):
-    """
-    Pre-create the qdrant collection with the correct dims BEFORE mem0 touches it.
-    If the collection exists with wrong dims, delete and recreate it.
-    This prevents mem0 from ever creating a 1536-dim collection.
-    """
     from qdrant_client import QdrantClient
     from qdrant_client.models import Distance, VectorParams
 
@@ -105,7 +97,6 @@ def _ensure_qdrant_collection(dims: int):
     if _COLLECTION in existing:
         info = client.get_collection(_COLLECTION)
         vectors_config = info.config.params.vectors
-        # vectors_config can be a dict (named vectors) or a VectorParams object
         if isinstance(vectors_config, dict):
             current_dims = next(iter(vectors_config.values())).size
         else:
@@ -176,9 +167,6 @@ _current_session_id: ContextVar[str] = ContextVar('session_id', default='default
 _RAG_EXTS = {'.pdf', '.docx', '.pptx', '.txt', '.csv', '.tsv', '.xlsx', '.xls', '.html'}
 _IMG_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp'}
 
-# ── Active Sessions Tracker ──────────────────────────────────────────────────
-ACTIVE_SESSIONS: Dict[str, Any] = {}
-
 # ── Helper Functions ─────────────────────────────────────────────────────────
 def _parse(params):
     """Safely parse params: dict, JSON string, Python repr, or raw primitive."""
@@ -203,19 +191,12 @@ def _get(params, key, default=None):
     return default
 
 def _build_messages(raw_messages: list) -> list[Message]:
-    """Convert plain OpenAI-style dicts into proper Qwen-Agent Message objects.
-
-    - image extensions  → ContentItem(image=path)
-    - doc extensions    → ContentItem(file=path)  — triggers built-in RAG
-    - plain text        → ContentItem(text=text)
-    - parses "Attached files: ..." suffix appended by agent-api.js
-    """
+    """Convert plain OpenAI-style dicts into proper Qwen-Agent Message objects."""
     result = []
     for m in raw_messages:
         role        = m.get("role", "user")
         raw_content = m.get("content", "")
 
-        # ── List content (already multimodal) ────────────────────────────────
         if isinstance(raw_content, list):
             items = []
             for c in raw_content:
@@ -236,7 +217,6 @@ def _build_messages(raw_messages: list) -> list[Message]:
             result.append(Message(role=role, content=items if items else ""))
             continue
 
-        # ── String content ────────────────────────────────────────────────────
         text_part  = str(raw_content) if raw_content else ""
         file_items: list[ContentItem] = []
 
@@ -263,7 +243,7 @@ def _build_messages(raw_messages: list) -> list[Message]:
 app = FastAPI(
     title="Airi Agent API",
     description="Friendly Windows Desktop AI Assistant powered by Qwen3-VL-2B",
-    version="2.0.0"
+    version="2.1.0"
 )
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -275,214 +255,377 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+# ── Settings persistence ──────────────────────────────────────────────────────
+_SETTINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json")
+
+def _load_settings() -> dict:
+    defaults = {"model_server": "http://127.0.0.1:11434/v1", "model": "default", "api_key": "none", "thinking_enabled": True}
+    if os.path.exists(_SETTINGS_PATH):
+        try:
+            with open(_SETTINGS_PATH) as f:
+                saved = json.load(f)
+            defaults.update(saved)
+            logger.info(f"[settings] Loaded from {_SETTINGS_PATH}")
+        except Exception as e:
+            logger.warning(f"[settings] Could not load settings.json: {e}")
+    return defaults
+
+def _save_settings(s: dict):
+    try:
+        with open(_SETTINGS_PATH, "w") as f:
+            json.dump(s, f, indent=2)
+    except Exception as e:
+        logger.warning(f"[settings] Could not save settings.json: {e}")
+
+_settings = _load_settings()
+
 # ── LLM Configuration ────────────────────────────────────────────────────────
 llm_cfg = {
-    "model": "default",
-    "model_server": "http://127.0.0.1:11434/v1",
+    "model":        _settings["model"],
+    "model_server": _settings["model_server"],
+    "api_key":      _settings.get("api_key", "none"),
     "generate_cfg": {
         "temperature": 0.5,
         "top_p": 0.9,
-        "top_k": 20,            # auto-moved to extra_body by qwen-agent
+        "top_k": 20,
         "presence_penalty": 0.5,
         "max_tokens": 2048,
-        "repetition_penalty": 1.1,  # auto-moved to extra_body by qwen-agent
-        # enable_thinking must go in extra_body — the OpenAI client rejects it as a top-level kwarg
-        "extra_body": {"enable_thinking": True},
+        "repetition_penalty": 1.1,
+        "extra_body": {"enable_thinking": _settings.get("thinking_enabled", True)},
     }
 }
 
-# ── Chrome Browser Configuration ─────────────────────────────────────────────
-CHROME_PATH      = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-CHROME_USER_DATA = r"C:\Users\anshv\AppData\Local\Google\Chrome\User Data Airi"
+# ── Retry Decorator for Robust Tool Calls ─────────────────────────────────────
+def retry_on_failure(max_retries=3, delay=1.0, backoff=2.0, exceptions=(Exception,)):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            last_error = None
+            current_delay = delay
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    last_error = e
+                    if attempt < max_retries - 1:
+                        logger.warning(f"[retry] {func.__name__} failed (attempt {attempt+1}/{max_retries}): {e}")
+                        time.sleep(current_delay)
+                        current_delay *= backoff
+            logger.error(f"[retry] {func.__name__} failed after {max_retries} attempts: {last_error}")
+            raise last_error
+        return wrapper
+    return decorator
 
-class ChromeBrowser(Browser):
-    """Launches system Chrome with real user profile + stealth mode."""
+# ── TOOL CALL VALIDATION ──────────────────────────────────────────────────────
+def _validate_tool_call(tool_name: str, params: dict) -> tuple[bool, str]:
+    """Validate tool parameters before execution."""
+    if tool_name == 'windows_launch':
+        if not params.get('app'):
+            return False, "app is required for windows_launch"
+    elif tool_name == 'windows_inspect':
+        if not params.get('app'):
+            return False, "app is required for windows_inspect"
+    elif tool_name == 'windows_do':
+        if not params.get('app'):
+            return False, "app is required for windows_do"
+        actions = params.get('actions', [])
+        if not isinstance(actions, list) or len(actions) == 0:
+            return False, "actions must be a non-empty list"
+    elif tool_name == 'file_op':
+        if not params.get('op'):
+            return False, "op is required for file_op"
+        if not params.get('path'):
+            return False, "path is required for file_op"
+    elif tool_name == 'add_memory':
+        if not params.get('content'):
+            return False, "content is required for add_memory"
+    elif tool_name == 'search_memories':
+        if not params.get('query'):
+            return False, "query is required for search_memories"
+    elif tool_name == 'get_memory':
+        if not params.get('memory_id'):
+            return False, "memory_id is required for get_memory"
+    elif tool_name == 'update_memory':
+        if not params.get('memory_id'):
+            return False, "memory_id is required for update_memory"
+        if not params.get('content'):
+            return False, "content is required for update_memory"
+    elif tool_name == 'delete_memory':
+        if not params.get('memory_id'):
+            return False, "memory_id is required for delete_memory"
+    return True, ""
 
-    async def _initialize_session(self):
-        from playwright.async_api import async_playwright
-        from playwright_stealth import stealth_async
+# ── CONTEXT WINDOW MANAGEMENT ─────────────────────────────────────────────────
+class ContextManager:
+    """Manages long conversation context with summarization."""
+    
+    def __init__(self, max_tokens=16000, summary_threshold=0.8):
+        self.max_tokens = max_tokens
+        self.summary_threshold = summary_threshold
+        self._lock = Lock()
+        self._message_history: List[Dict] = []
+        self._summary: Optional[str] = None
+    
+    def add_message(self, message: Dict):
+        with self._lock:
+            self._message_history.append(message)
+    
+    def get_context(self) -> List[Dict]:
+        with self._lock:
+            if self._summary:
+                return [{"role": "system", "content": f"Previous conversation summary: {self._summary}"}] + [
+                    m for m in self._message_history[-50:]  # Keep last 50 messages
+                ]
+            return self._message_history[-100:]  # Keep last 100 messages without summary
+    
+    def should_summarize(self) -> bool:
+        with self._lock:
+            # Simple token estimation: ~4 chars per token
+            total_chars = sum(len(str(m.get("content", ""))) for m in self._message_history)
+            return total_chars > self.max_tokens * 4 * self.summary_threshold
+    
+    def summarize(self):
+        """Create a summary of old messages to reduce context size."""
+        with self._lock:
+            if len(self._message_history) < 10:
+                return
+            
+            # Keep recent messages, summarize older ones
+            recent = self._message_history[-10:]
+            old = self._message_history[:-10]
+            
+            # Build summary prompt
+            summary_prompt = "Summarize this conversation history in 3-5 sentences:\n"
+            for m in old:
+                role = m.get("role", "unknown")
+                content = m.get("content", "")
+                summary_prompt += f"\n{role}: {content[:500]}..."
+            
+            self._summary = summary_prompt
+            self._message_history = recent
+            logger.info(f"[context] Summarized {len(old)} messages into summary")
 
-        playwright = await async_playwright().start()
-        context = await playwright.chromium.launch_persistent_context(
-            user_data_dir=CHROME_USER_DATA,
-            executable_path=CHROME_PATH,
-            headless=False,
-            ignore_default_args=['--enable-automation'],
-            args=[
-                '--disable-blink-features=AutomationControlled',
-                '--no-first-run',
-                '--no-default-browser-check',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--disable-gpu',
-                '--window-size=1280,1024',
-            ],
-            viewport={'width': 1280, 'height': 1024},
-            user_agent=(
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            ),
-        )
+_context_manager = ContextManager()
 
-        async def apply_stealth(page):
-            await stealth_async(page)
-
-        for page in context.pages:
-            await apply_stealth(page)
-        context.on("page", lambda page: asyncio.ensure_future(apply_stealth(page)))
-
-        page = context.pages[0] if context.pages else await context.new_page()
-
-        from browser_use.browser.views import BrowserState
-        from browser_use.browser.service import BrowserSession
-        self.session = BrowserSession(
-            playwright=playwright,
-            browser=context,
-            context=context,
-            current_page=page,
-            cached_state=BrowserState(
-                items=[], selector_map={},
-                url=page.url, title=await page.title(),
-                screenshot=None, tabs=[],
-            ),
-        )
-        return self.session
-
-# ── TOOLS ────────────────────────────────────────────────────────────────────
-
-@register_tool('browser_automation')
-class BrowserAutomationTool(BaseTool):
-    description = 'Perform complex browser tasks: navigate websites, fill forms, click buttons, extract info.'
-    parameters = [{'name': 'task', 'type': 'string', 'required': True,
-                   'description': "Clear description of what to do (e.g., 'Go to google.com and search for python tutorials')"}]
-
+# ── TOOL REGISTRATION ─────────────────────────────────────────────────────────
+@register_tool('windows_launch')
+class WindowsLaunch(BaseTool):
+    description = 'Launch a Windows app by name. Returns already_running if already open.'
+    parameters = [
+        {'name': 'app',  'type': 'string', 'required': True,  'description': 'App name e.g. "chrome", "excel", "cmd"'},
+        {'name': 'args', 'type': 'string', 'required': False, 'description': 'Optional command-line arguments'},
+    ]
+    
+    @retry_on_failure(max_retries=3, delay=0.5)
     def call(self, params: str, **kwargs) -> str:
-        from browser_use.controller.service import Controller
         p    = _parse(params)
-        task = p['task'] if isinstance(p, dict) else str(p)
-        logger.info(f"[browser_automation] Starting: {task[:100]}")
+        app  = p.get('app',  '') if isinstance(p, dict) else str(p)
+        args = p.get('args', '') if isinstance(p, dict) else ''
+        logger.info(f"[windows_launch] {app}")
+        if not app:
+            return json.dumps({"status": "error", "detail": "app is required"})
         try:
-            browser    = ChromeBrowser()
-            controller = Controller()
-            controller.browser = browser
-            llm   = ChatOpenAI(base_url="http://127.0.0.1:11434/v1", model="default", temperature=0.3)
-            agent = BrowserAgent(task=task, llm=llm, controller=controller, use_vision=False)
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-                result = pool.submit(asyncio.run, agent.run()).result(timeout=300)
-            return str(result)
-        except concurrent.futures.TimeoutError:
-            return json.dumps({"error": "Task timed out after 300 seconds."})
+            result = engine.launch_app(app, args or '')
+            return json.dumps(result)
         except Exception as e:
-            logger.error(f"[browser_automation] {e}")
+            logger.error(f"[windows_launch] {e}")
+            return json.dumps({"status": "error", "detail": str(e)})
+
+
+@register_tool('windows_inspect')
+class WindowsInspect(BaseTool):
+    description = 'Return compact UI element tree for a running app. Use to discover element names/IDs before windows_do.'
+    parameters = [
+        {'name': 'app',          'type': 'string',  'required': True,  'description': 'App name e.g. "chrome", "excel"'},
+        {'name': 'depth',        'type': 'integer', 'required': False, 'description': 'Tree depth (default 4)'},
+        {'name': 'filter_types', 'type': 'string',  'required': False, 'description': 'Comma-separated control types e.g. "Button,Edit"'},
+    ]
+    
+    @retry_on_failure(max_retries=3, delay=0.5)
+    def call(self, params: str, **kwargs) -> str:
+        p            = _parse(params)
+        app          = p.get('app',          '') if isinstance(p, dict) else str(p)
+        depth        = int(p.get('depth') or 4)  if isinstance(p, dict) else 4
+        filter_types = p.get('filter_types', '') if isinstance(p, dict) else ''
+        logger.info(f"[windows_inspect] {app}")
+        try:
+            result = engine.inspect_window(app, depth=depth, filter_types=filter_types)
+            return json.dumps(result)
+        except Exception as e:
+            logger.error(f"[windows_inspect] {e}")
             return json.dumps({"error": str(e)})
 
 
-@register_tool('search_win_app_by_name')
-class SearchWinAppByName(BaseTool):
-    description = "Step 1: Find AppId for any Windows app by name. Always call before start_app_session."
-    parameters = [{'name': 'name', 'type': 'string', 'required': True,
-                   'description': "App name (e.g., 'calc', 'notepad', 'spotify')"}]
-
-    def call(self, params: str, **kwargs) -> str:
-        p    = _parse(params)
-        name = p.get('name', '') if isinstance(p, dict) else str(p)
-        logger.info(f"[search_win_app_by_name] Searching: {name}")
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        db_path    = os.path.join(script_dir, "context", "installed_apps.json")
-        if not os.path.exists(db_path):
-            win.get_all_windows_apps_installed_AppIds()
-        results = win.find_appId_by_name(name)
-        if isinstance(results, str) and "No Apps found" in results:
-            win.get_all_windows_apps_installed_AppIds()
-            results = win.find_appId_by_name(name)
-        if isinstance(results, list):
-            return json.dumps(results[:3], ensure_ascii=False)
-        return str(results)
-
-
-@register_tool('start_app_session')
-class StartAppSession(BaseTool):
-    description = "Step 2: Launch a Windows app using its AppId from search_win_app_by_name."
-    parameters = [{'name': 'app_id', 'type': 'string', 'required': True,
-                   'description': 'Full AppId (e.g., "Microsoft.WindowsNotepad_8wekyb3d8bbwe!App")'}]
-
-    def call(self, params: str, **kwargs) -> str:
-        app_id = _get(params, 'app_id')
-        logger.info(f"[start_app_session] Starting: {app_id}")
-        driver, message = win.open_win_app_and_start_session(app_id)
-        if driver:
-            ACTIVE_SESSIONS[app_id] = driver
-            return json.dumps({"app_id": app_id, "status": "started", "message": message})
-        return json.dumps({"app_id": app_id, "status": "failed", "message": message})
-
-
-@register_tool('inspect_ui_elements')
-class InspectUIElements(BaseTool):
-    description = "Step 3: Capture the app's UI element tree. Run AFTER start_app_session."
-    parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
-
-    def call(self, params: str, **kwargs) -> str:
-        app_id = _get(params, 'app_id')
-        driver = ACTIVE_SESSIONS.get(app_id)
-        if not driver:
-            return json.dumps({"error": f"No active session for {app_id}. Call start_app_session first."})
-        win.get_all_elements_in_current_window(app_id, driver)
-        return json.dumps({"app_id": app_id, "status": "inspected", "elements_saved": True})
-
-
-@register_tool('list_element_names')
-class ListElementNames(BaseTool):
-    description = "Step 4: Get all clickable element names from the inspected UI."
-    parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
-
-    def call(self, params: str, **kwargs) -> str:
-        app_id = _get(params, 'app_id')
-        driver = ACTIVE_SESSIONS.get(app_id)
-        if not driver:
-            return json.dumps({"error": f"No active session for {app_id}"})
-        names = win.quickly_lookup_all_element_names_in_current_window(app_id, driver)
-        return json.dumps({"app_id": app_id, "element_names": names,
-                           "count": len(names) if isinstance(names, list) else 0})
-
-
-@register_tool('get_element_details')
-class GetElementDetails(BaseTool):
-    description = "Step 5: Get exact coordinates and ID for a specific element by name."
+@register_tool('windows_do')
+class WindowsDo(BaseTool):
+    description = 'Execute a batch of UI actions on a Windows app. Primary interaction tool.'
     parameters = [
-        {'name': 'app_id',       'type': 'string', 'required': True},
-        {'name': 'element_name', 'type': 'string', 'required': True,
-         'description': 'Exact element name from list_element_names'},
+        {'name': 'app',     'type': 'string', 'required': True, 'description': 'Target app name'},
+        {'name': 'actions', 'type': 'array',  'required': True, 'description': 'List of action dicts. Each has "action" key plus action-specific fields.'},
+    ]
+    
+    @retry_on_failure(max_retries=3, delay=0.5)
+    def call(self, params: str, **kwargs) -> str:
+        p       = _parse(params)
+        app     = p.get('app',     '') if isinstance(p, dict) else ''
+        actions = p.get('actions', []) if isinstance(p, dict) else []
+        if isinstance(actions, str):
+            try:
+                actions = json.loads(actions)
+            except Exception:
+                try:
+                    import ast
+                    actions = ast.literal_eval(actions)
+                except Exception:
+                    return json.dumps({"error": "actions must be a JSON array"})
+        logger.info(f"[windows_do] {app} — {len(actions)} actions")
+        if not app:
+            return json.dumps({"error": "app is required"})
+        try:
+            result = engine.execute_batch(app, actions)
+            return json.dumps(result)
+        except Exception as e:
+            logger.error(f"[windows_do] {e}")
+            return json.dumps({"error": str(e)})
+
+
+# ── Path alias resolver ───────────────────────────────────────────────────────
+def _resolve_path(path: str) -> str:
+    """Resolve special aliases to real Windows paths."""
+    aliases = {
+        "desktop":   os.path.join(os.path.expanduser("~"), "Desktop"),
+        "downloads": os.path.join(os.path.expanduser("~"), "Downloads"),
+        "documents": os.path.join(os.path.expanduser("~"), "Documents"),
+        "pictures":  os.path.join(os.path.expanduser("~"), "Pictures"),
+    }
+    return aliases.get(path.lower().strip(), path)
+
+
+@register_tool('file_op')
+class FileOp(BaseTool):
+    description = 'File system operations: list, open, copy, move, delete, create_folder, search. Supports desktop/downloads/documents/pictures aliases.'
+    parameters = [
+        {'name': 'op',      'type': 'string', 'required': True,  'description': 'Operation: list|open|copy|move|delete|create_folder|search'},
+        {'name': 'path',    'type': 'string', 'required': True,  'description': 'File or folder path, or alias: desktop/downloads/documents/pictures'},
+        {'name': 'dest',    'type': 'string', 'required': False, 'description': 'Destination path for copy/move'},
+        {'name': 'pattern', 'type': 'string', 'required': False, 'description': 'Glob pattern or name fragment for search'},
     ]
 
+    @retry_on_failure(max_retries=2, delay=0.3)
     def call(self, params: str, **kwargs) -> str:
-        p = _parse(params)
-        if not isinstance(p, dict):
-            return json.dumps({"error": "Invalid parameters"})
-        app_id       = p.get('app_id', '')
-        element_name = p.get('element_name', '')
-        driver       = ACTIVE_SESSIONS.get(app_id)
-        if not driver:
-            return json.dumps({"error": f"No active session for {app_id}"})
-        details = win.get_element_by_name(app_id, driver, element_name)
-        if details:
-            return json.dumps(details)
-        return json.dumps({"error": f"Element '{element_name}' not found. Try list_element_names."})
+        import glob as _glob, shutil as _shutil
+        p       = _parse(params)
+        op      = p.get('op',      '') if isinstance(p, dict) else str(p)
+        path    = _resolve_path(p.get('path', '') if isinstance(p, dict) else '')
+        dest    = _resolve_path(p.get('dest', '') if isinstance(p, dict) else '')
+        pattern = p.get('pattern', '') if isinstance(p, dict) else ''
+        logger.info(f"[file_op] {op} {path}")
+        try:
+            if op == 'list':
+                if not os.path.exists(path):
+                    return json.dumps({"error": f"Path not found: {path}"})
+                items = []
+                for name in sorted(os.listdir(path)):
+                    full = os.path.join(path, name)
+                    stat = os.stat(full)
+                    items.append({
+                        "name":     name,
+                        "type":     "folder" if os.path.isdir(full) else "file",
+                        "size":     stat.st_size if os.path.isfile(full) else None,
+                        "modified": stat.st_mtime,
+                        "ext":      os.path.splitext(name)[1].lstrip('.') if os.path.isfile(full) else None,
+                    })
+                return json.dumps(items)
 
+            elif op == 'open':
+                if not os.path.exists(path):
+                    return json.dumps({"error": f"Path not found: {path}"})
+                os.startfile(path)
+                return json.dumps({"status": "opened", "path": path})
 
-@register_tool('stop_app_session')
-class StopAppSession(BaseTool):
-    description = "Step 6: Close the app and clean up the session. Always call when done."
-    parameters = [{'name': 'app_id', 'type': 'string', 'required': True}]
+            elif op == 'copy':
+                if not dest:
+                    return json.dumps({"error": "dest is required for copy"})
+                if os.path.isdir(path):
+                    _shutil.copytree(path, dest)
+                else:
+                    _shutil.copy2(path, dest)
+                return json.dumps({"status": "copied", "from": path, "to": dest})
 
+            elif op == 'move':
+                if not dest:
+                    return json.dumps({"error": "dest is required for move"})
+                _shutil.move(path, dest)
+                return json.dumps({"status": "moved", "from": path, "to": dest})
+
+            elif op == 'delete':
+                if not os.path.exists(path):
+                    return json.dumps({"error": f"Path not found: {path}"})
+                if os.path.isdir(path):
+                    _shutil.rmtree(path)
+                else:
+                    os.remove(path)
+                return json.dumps({"status": "deleted", "path": path})
+
+            elif op == 'create_folder':
+                os.makedirs(path, exist_ok=True)
+                return json.dumps({"status": "created", "path": path})
+
+            elif op == 'search':
+                base    = path if path else os.path.expanduser("~")
+                pat     = pattern or '*'
+                if '*' in pat or '?' in pat:
+                    matches = _glob.glob(os.path.join(base, '**', pat), recursive=True)
+                else:
+                    matches = [
+                        os.path.join(root, f)
+                        for root, dirs, files in os.walk(base)
+                        for f in files + dirs
+                        if pat.lower() in f.lower()
+                    ]
+                return json.dumps(matches[:100])
+
+            else:
+                return json.dumps({"error": f"Unknown op: {op}. Use list|open|copy|move|delete|create_folder|search"})
+
+        except Exception as e:
+            logger.error(f"[file_op] {e}")
+            return json.dumps({"error": str(e)})
+@register_tool('list_installed_apps')
+class ListInstalledApps(BaseTool):
+    description = 'List installed Windows apps. Use to find app names before windows_launch.'
+    parameters = []
+
+    @retry_on_failure(max_retries=2, delay=0.5)
     def call(self, params: str, **kwargs) -> str:
-        app_id = _get(params, 'app_id')
-        driver = ACTIVE_SESSIONS.get(app_id)
-        if not driver:
-            return json.dumps({"status": "no_session", "app_id": app_id})
-        success, message = win.close_app_session(driver)
-        if success:
-            del ACTIVE_SESSIONS[app_id]
-        return json.dumps({"app_id": app_id, "status": "closed" if success else "failed", "message": message})
+        import subprocess
+        logger.info("[list_installed_apps] Enumerating apps")
+        try:
+            result = subprocess.run(
+                ['powershell', '-NoProfile', '-Command',
+                 'Get-StartApps | Select-Object Name, AppID | ConvertTo-Json'],
+                capture_output=True, text=True, timeout=15
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                raw = json.loads(result.stdout)
+                if isinstance(raw, dict):
+                    raw = [raw]
+                apps = [{"name": a.get("Name", ""), "app_id": a.get("AppID", "")} for a in raw if a.get("Name")]
+                logger.info(f"[list_installed_apps] Found {len(apps)} apps via PowerShell")
+                return json.dumps(apps)
+        except Exception as e:
+            logger.warning(f"[list_installed_apps] PowerShell failed: {e}")
+
+        try:
+            import glob as _glob
+            start_menu = os.path.join(os.environ.get("APPDATA", ""), r"Microsoft\Windows\Start Menu")
+            lnk_files  = _glob.glob(os.path.join(start_menu, "**", "*.lnk"), recursive=True)
+            apps = [{"name": os.path.splitext(os.path.basename(f))[0], "app_id": f} for f in lnk_files]
+            logger.info(f"[list_installed_apps] Found {len(apps)} apps via Start Menu scan")
+            return json.dumps(apps)
+        except Exception as e:
+            logger.error(f"[list_installed_apps] fallback failed: {e}")
+            return json.dumps({"error": str(e)})
 
 
 @register_tool('add_memory')
@@ -510,8 +653,6 @@ class AddMemory(BaseTool):
         except Exception as e:
             logger.error(f"[add_memory] error: {e}")
             return json.dumps({"error": str(e)})
-
-
 @register_tool('search_memories')
 class SearchMemories(BaseTool):
     description = "Search user's long-term memories for relevant facts. Use at conversation start or when user asks about past preferences."
@@ -639,8 +780,6 @@ class DeleteAllMemories(BaseTool):
         except Exception as e:
             logger.error(f"[delete_all_memories] error: {e}")
             return json.dumps({"error": str(e)})
-
-
 # ── SYSTEM PROMPT ─────────────────────────────────────────────────────────────
 SYSTEM_PROMPT = """# 🌸 You are Airi — A Friendly Windows Desktop Assistant
 
@@ -654,32 +793,31 @@ Your goal is to make every task feel easy and enjoyable. ✨
 - **Patient & Encouraging**: Never make users feel silly for asking. Celebrate small wins!
 
 ## 🛠️ Your Capabilities
-- **Windows Apps**: Open, control, and automate any installed application
-- **Web Browsing**: Navigate websites, fill forms, extract information
+- **Windows Apps**: Open, control, and automate any installed application via UI automation
+- **File Management**: List, open, copy, move, delete files and folders
 - **Documents & Images**: Analyze uploaded files automatically (PDF, Word, images, etc.)
 - **Memory**: Remember user preferences and important details across sessions
 - **Web Search**: Find current information when needed
 
 ## 📋 Golden Rules
 1. **ONE tool at a time** — Call one tool, wait for result, then proceed.
-2. **Always search before launching** — Use `search_win_app_by_name` before `start_app_session`.
-3. **Always inspect before interacting** — Use `inspect_ui_elements` before clicking/typing in apps.
-4. **Save important info** — When user shares preferences/facts, use `add_memory`.
-5. **Check memory first** — At conversation start, use `search_memories` to retrieve relevant context.
-6. **Files are automatic** — Uploaded documents/images are analyzed directly (no tool needed).
-7. **Clean up sessions** — Call `stop_app_session` when app tasks are complete.
-8. **Be honest about limits** — If something fails, explain clearly and suggest alternatives.
+2. **Launch before interacting** — Use `windows_launch` if the app isn't open yet.
+3. **Inspect when unsure** — Use `windows_inspect` to discover element names before `windows_do`.
+4. **Batch actions** — Use `windows_do` with multiple actions in one call to minimize round-trips.
+5. **Read screen, not screenshots** — Use `read_screen` action in `windows_do` to read window content; it's faster than screenshots.
+6. **Save important info** — When user shares preferences/facts, use `add_memory`.
+7. **Check memory first** — At conversation start, use `search_memories` to retrieve relevant context.
+8. **Files are automatic** — Uploaded documents/images are analyzed directly (no tool needed).
+9. **Be honest about limits** — If something fails, explain clearly and suggest alternatives.
 
 ## 🔧 Available Tools
 | Tool | When to Use |
 |------|-------------|
-| `search_win_app_by_name(name)` | First step to find any app |
-| `start_app_session(app_id)` | Launch app after getting AppId |
-| `inspect_ui_elements(app_id)` | See what's clickable in the app |
-| `list_element_names(app_id)` | Get list of element names |
-| `get_element_details(app_id, element_name)` | Find exact position of element |
-| `stop_app_session(app_id)` | Close app when done |
-| `browser_automation(task)` | Web tasks (search, forms, navigation) |
+| `windows_launch(app, args?)` | Open a Windows app by name |
+| `windows_inspect(app, depth?, filter_types?)` | Discover UI elements in a running app |
+| `windows_do(app, actions[])` | Execute UI actions (click, type, key, scroll, read, etc.) |
+| `file_op(op, path, dest?, pattern?)` | File operations: list/open/copy/move/delete/create_folder/search |
+| `list_installed_apps()` | List all installed apps to find the right name |
 | `web_search(query)` | Find current info online |
 | `add_memory(content)` | Save a fact about the user |
 | `search_memories(query)` | Find relevant past memories |
@@ -689,33 +827,98 @@ Your goal is to make every task feel easy and enjoyable. ✨
 | `delete_memory(memory_id)` | Delete a specific memory |
 | `delete_all_memories()` | Clear all user memories |
 
-## 🔄 Typical Workflow
-**For App Tasks:**
-1. `search_win_app_by_name` → 2. `start_app_session` → 3. `inspect_ui_elements` → 4. `list_element_names` → 5. `get_element_details` → 6. Interact → 7. `stop_app_session`
+## 🔄 Typical Workflows
 
-**For Web Tasks:**
-`browser_automation(task)` handles the full flow internally.
+**For App Tasks:**
+1. `windows_launch(app)` — open the app if not running
+2. `windows_inspect(app)` — discover element names (only if needed)
+3. `windows_do(app, actions[])` — perform all interactions in one batch
+
+**For File Tasks:**
+- List files: `file_op(op=list, path=desktop)`
+- Open a file: `file_op(op=open, path=<full path>)`
+- Search files: `file_op(op=search, path=documents, pattern=*.pdf)`
 
 **For Memory:**
 - Save new fact: `add_memory(content=<fact>)`
 - Find relevant context: `search_memories(query=<topic>)`
 - List all: `get_memories()`
-- Update: `update_memory(memory_id=<id>, content=<new text>)`
-- Delete one: `delete_memory(memory_id=<id>)`
+
+## 🎮 windows_do Action Types
+| action | key fields | notes |
+|--------|-----------|-------|
+| click | target | left-click element |
+| double_click | target | double-click |
+| right_click | target | open context menu |
+| type | target, text | clear then type (append:true to keep existing) |
+| key | keys | e.g. "ctrl+c", "alt+F4", "ctrl+shift+esc" |
+| scroll | target, direction, amount | up/down/left/right |
+| focus | target | set keyboard focus |
+| read | target | return element's text/value |
+| read_screen | — | return ALL visible text in window (preferred for reading content) |
+| wait | ms | sleep N milliseconds |
+| screenshot | — | capture screen to file (use sparingly) |
+| close_app | — | close the window (must be explicit) |
 """
 
+# ── Skill Files — loaded into memory, injected per-request based on keywords ──
+_AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def _load_skill(filename: str) -> str:
+    path = os.path.join(_AGENT_DIR, filename)
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read().strip()
+    except Exception:
+        return ""
+
+# Each skill: (content, set-of-trigger-keywords)
+_SKILLS: list[tuple[str, set]] = [
+    (
+        _load_skill("WindowsAutomator.md"),
+        {"windows", "app", "launch", "click", "type", "key", "inspect", "automat",
+         "excel", "word", "notepad", "cmd", "settings", "whatsapp", "vlc", "spotify",
+         "open", "close", "read_screen", "screenshot", "batch", "action"},
+    ),
+    (
+        _load_skill("ChromeNavigator.md"),
+        {"chrome", "browser", "google", "youtube", "url", "navigate", "tab",
+         "search", "website", "web page", "address bar", "bing", "link"},
+    ),
+    (
+        _load_skill("FileManager.md"),
+        {"file", "folder", "desktop", "downloads", "documents", "pictures",
+         "copy", "move", "delete", "list", "search", "pdf", "explorer",
+         "directory", "path", "create folder", "rename"},
+    ),
+]
+
+_loaded_skills = sum(1 for content, _ in _SKILLS if content)
+logger.info(f"[skills] Loaded {_loaded_skills}/3 skill files into memory")
+
+def _build_system_prompt(user_text: str) -> str:
+    """Return SYSTEM_PROMPT + any skill sections relevant to the user message."""
+    if not user_text:
+        return SYSTEM_PROMPT
+    lower = user_text.lower()
+    sections = []
+    for content, keywords in _SKILLS:
+        if content and any(kw in lower for kw in keywords):
+            sections.append(content)
+    if not sections:
+        return SYSTEM_PROMPT
+    skill_block = "\n\n---\n\n".join(sections)
+    return f"{SYSTEM_PROMPT}\n\n---\n\n## 📖 Skill Reference\n\n{skill_block}"
 # ── Agent Initialization ─────────────────────────────────────────────────────
 airi = Assistant(
     llm=llm_cfg,
     system_message=SYSTEM_PROMPT,
     function_list=[
-        'browser_automation',
-        'search_win_app_by_name', 'start_app_session',
-        'inspect_ui_elements', 'list_element_names', 'get_element_details',
-        'stop_app_session', 'web_search',
+        'windows_launch', 'windows_inspect', 'windows_do',
+        'file_op', 'list_installed_apps',
         'add_memory', 'search_memories', 'get_memories', 'get_memory',
         'update_memory', 'delete_memory', 'delete_all_memories',
-    ]
+    ],
 )
 
 # ── FastAPI Endpoints ────────────────────────────────────────────────────────
@@ -732,10 +935,26 @@ async def chat_completions(request: Request):
 
     messages = _build_messages(raw_messages)
 
+    # Extract last user text for skill keyword matching
+    _last_user_text = ""
+    for m in reversed(raw_messages):
+        if m.get("role") == "user":
+            c = m.get("content", "")
+            _last_user_text = c if isinstance(c, str) else " ".join(
+                p.get("text", "") for p in c if isinstance(p, dict)
+            )
+            break
+
     def stream_gen():
         import re as _re
         _current_user_id.set(user_id)
         _current_session_id.set(session_id)
+
+        # Build per-request system prompt with relevant skill sections injected
+        _sys = _build_system_prompt(_last_user_text)
+        _run_messages = [Message("system", _sys)] + [
+            m for m in messages if m.get("role") != "system"
+        ]
 
         prev_content  = ""
         chunk_id      = f"chatcmpl-{int(time.time())}"
@@ -747,7 +966,7 @@ async def chat_completions(request: Request):
             return f"event: tool_call\ndata: {payload}\n\n"
 
         try:
-            for response in airi.run(messages):
+            for response in airi.run(_run_messages):
                 if not response:
                     continue
 
@@ -824,8 +1043,6 @@ async def chat_completions(request: Request):
             yield "data: [DONE]\n\n"
 
     return StreamingResponse(stream_gen(), media_type="text/event-stream")
-
-
 USER_STUFF_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_stuff")
 os.makedirs(USER_STUFF_DIR, exist_ok=True)
 
@@ -853,11 +1070,9 @@ def _get_whisper():
     if _whisper_model is None:
         from faster_whisper import WhisperModel
         from huggingface_hub import try_to_load_from_cache
-        # Check if model is already in local cache
         cached = try_to_load_from_cache("Systran/faster-whisper-tiny", "model.bin")
         is_cached = cached is not None and not isinstance(cached, type(None))
         if is_cached:
-            # Fully offline — no network calls at all
             os.environ["HF_HUB_OFFLINE"] = "1"
             _whisper_model = WhisperModel("tiny", device="cpu", compute_type="int8", local_files_only=True)
             logger.info("[whisper] Loaded from local cache (offline)")
@@ -919,8 +1134,7 @@ async def ws_transcribe(websocket: WebSocket):
 
     SAMPLE_RATE   = 16000
     CHANNELS      = 1
-    SAMPLE_WIDTH  = 2          # int16
-    # Accumulate ~1.2s of audio before transcribing (balance latency vs accuracy)
+    SAMPLE_WIDTH  = 2
     CHUNK_SAMPLES = int(SAMPLE_RATE * 1.2)
 
     def transcribe_worker():
@@ -932,12 +1146,10 @@ async def ws_transcribe(websocket: WebSocket):
                 if chunk is None:
                     break
                 buf += chunk
-                # Transcribe when we have enough samples
                 if len(buf) >= CHUNK_SAMPLES * SAMPLE_WIDTH:
                     pcm = buf
                     buf = b""
                     try:
-                        # Wrap PCM in a WAV container so faster-whisper can read it
                         wav_io = io.BytesIO()
                         with wave.open(wav_io, "wb") as wf:
                             wf.setnchannels(CHANNELS)
@@ -955,7 +1167,6 @@ async def ws_transcribe(websocket: WebSocket):
                     except Exception as e:
                         logger.error(f"[ws_transcribe] transcribe error: {e}")
             except queue.Empty:
-                # Flush remaining buffer if it has meaningful audio
                 if len(buf) > SAMPLE_RATE * SAMPLE_WIDTH * 0.3:
                     pcm = buf
                     buf = b""
@@ -1009,138 +1220,3 @@ async def ws_transcribe(websocket: WebSocket):
         send_task.cancel()
         worker.join(timeout=2)
         logger.info("[ws_transcribe] Client disconnected")
-
-
-@app.get("/health")
-async def health():
-    return {
-        "status": "ok",
-        "model": modelName,
-        "agent": "Airi",
-        "version": "2.0.0",
-        "thinking_enabled": llm_cfg["generate_cfg"].get("extra_body", {}).get("enable_thinking", False),
-        "active_sessions": len(ACTIVE_SESSIONS),
-        "timestamp": time.time(),
-    }
-
-
-_IMG_EXTS_SET = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'}
-_DOC_EXTS_SET = {'.pdf', '.doc', '.docx', '.txt', '.csv', '.xlsx', '.xls', '.json', '.pptx', '.html', '.md'}
-
-@app.get("/library")
-async def list_library():
-    """List all files in user_stuff, split into documents and media."""
-    docs, media = [], []
-    if not os.path.exists(USER_STUFF_DIR):
-        return {"documents": [], "media": []}
-    for fname in sorted(os.listdir(USER_STUFF_DIR)):
-        fpath = os.path.join(USER_STUFF_DIR, fname)
-        if not os.path.isfile(fpath):
-            continue
-        ext  = os.path.splitext(fname)[1].lower()
-        stat = os.stat(fpath)
-        info = {
-            "name": fname,
-            "size": stat.st_size,
-            "modified": stat.st_mtime,
-            "ext": ext.lstrip("."),
-        }
-        if ext in _IMG_EXTS_SET:
-            media.append(info)
-        elif ext in _DOC_EXTS_SET:
-            docs.append(info)
-        else:
-            docs.append(info)
-    return {"documents": docs, "media": media}
-
-
-@app.delete("/library/{filename}")
-async def delete_library_file(filename: str):
-    """Delete a file from user_stuff by name."""
-    # Sanitize — no path traversal
-    safe_name = os.path.basename(filename)
-    fpath = os.path.join(USER_STUFF_DIR, safe_name)
-    if not os.path.exists(fpath):
-        return {"success": False, "error": "File not found"}
-    try:
-        os.remove(fpath)
-        logger.info(f"[library] Deleted: {safe_name}")
-        return {"success": True}
-    except Exception as e:
-        logger.error(f"[library] Delete error: {e}")
-        return {"success": False, "error": str(e)}
-
-
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
-
-@app.get("/library/file/{filename}")
-async def serve_library_file(filename: str):
-    """Serve a file from user_stuff for inline preview."""
-    safe_name = os.path.basename(filename)
-    fpath = os.path.join(USER_STUFF_DIR, safe_name)
-    if not os.path.exists(fpath):
-        return {"error": "File not found"}
-    return FileResponse(fpath)
-
-
-# ── Memory endpoints ──────────────────────────────────────────────────────────
-
-@app.get("/memories")
-async def get_memories(user_id: str = "default_user"):
-    try:
-        raw = mem_client.get_all(user_id=user_id, limit=200)
-        results = raw.get("results", []) if isinstance(raw, dict) else raw
-        return {"memories": results}
-    except Exception as e:
-        logger.error(f"[memories] get error: {e}")
-        return {"memories": [], "error": str(e)}
-
-
-@app.delete("/memories/{memory_id}")
-async def delete_memory(memory_id: str):
-    try:
-        mem_client.delete(memory_id)
-        return {"success": True}
-    except Exception as e:
-        logger.error(f"[memories] delete error: {e}")
-        return {"success": False, "error": str(e)}
-
-
-class MemoryUpdateBody(BaseModel):
-    data: str
-
-@app.put("/memories/{memory_id}")
-async def update_memory(memory_id: str, body: MemoryUpdateBody):
-    try:
-        mem_client.update(memory_id, body.data)
-        return {"success": True}
-    except Exception as e:
-        logger.error(f"[memories] update error: {e}")
-        return {"success": False, "error": str(e)}
-
-
-@app.on_event("shutdown")
-async def cleanup_sessions():
-    logger.info("[shutdown] Cleaning up active sessions...")
-    for app_id, driver in list(ACTIVE_SESSIONS.items()):
-        try:
-            win.close_app_session(driver)
-        except Exception as e:
-            logger.error(f"[shutdown] Error closing {app_id}: {e}")
-    ACTIVE_SESSIONS.clear()
-
-
-if __name__ == "__main__":
-    import uvicorn
-    print("""
-╔═══════════════════════════════════════════════════════════╗
-║                    🌸 Airi Agent v2.0                     ║
-║          Friendly Windows Desktop AI Assistant            ║
-║                                                           ║
-║  Model  : Qwen3-VL-2B-Instruct-GGUF                       ║
-║  Thinking: Enabled                                        ║
-║  Endpoint: http://127.0.0.1:11435                         ║
-╚═══════════════════════════════════════════════════════════╝
-""")
-    uvicorn.run(app, host="127.0.0.1", port=11435, log_level="info", access_log=True)

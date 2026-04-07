@@ -1,0 +1,3822 @@
+[
+  {
+    "name": "MinGW Installation Manager",
+    "exe": "C:\\MinGW\\libexec\\mingw-get\\guimain.exe",
+    "title_hint": "guimain"
+  },
+  {
+    "name": "Administrative Tools",
+    "exe": "C:\\WINDOWS\\system32\\control.exe",
+    "title_hint": "control"
+  },
+  {
+    "name": "LiveCaptions",
+    "exe": "C:\\WINDOWS\\system32\\LiveCaptions.exe",
+    "title_hint": "LiveCaptions"
+  },
+  {
+    "name": "Magnify",
+    "exe": "C:\\WINDOWS\\system32\\magnify.exe",
+    "title_hint": "magnify"
+  },
+  {
+    "name": "Narrator",
+    "exe": "C:\\WINDOWS\\system32\\narrator.exe",
+    "title_hint": "narrator"
+  },
+  {
+    "name": "On-Screen Keyboard",
+    "exe": "C:\\WINDOWS\\system32\\osk.exe",
+    "title_hint": "osk"
+  },
+  {
+    "name": "VoiceAccess",
+    "exe": "C:\\WINDOWS\\system32\\voiceaccess.exe",
+    "title_hint": "voiceaccess"
+  },
+  {
+    "name": "Kiro",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Kiro\\Kiro.exe",
+    "title_hint": "Kiro"
+  },
+  {
+    "name": "Postman",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Postman\\Postman.exe",
+    "title_hint": "Postman"
+  },
+  {
+    "name": "IDLE (Python 3.11 64-bit)",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\pythonw.exe",
+    "title_hint": "pythonw"
+  },
+  {
+    "name": "Python 3.11 (64-bit)",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "title_hint": "python"
+  },
+  {
+    "name": "Command Prompt",
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe",
+    "title_hint": "cmd"
+  },
+  {
+    "name": "Windows PowerShell (x86)",
+    "exe": "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "title_hint": "powershell"
+  },
+  {
+    "name": "Windows PowerShell",
+    "exe": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "title_hint": "powershell"
+  },
+  {
+    "name": "WinRAR",
+    "exe": "C:\\Program Files (x86)\\WinRAR\\WinRAR.exe",
+    "title_hint": "WinRAR"
+  },
+  {
+    "name": "Access",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\MSACCESS.EXE",
+    "title_hint": "MSACCESS"
+  },
+  {
+    "name": "Blend for Visual Studio",
+    "exe": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\IDE\\Blend.exe",
+    "title_hint": "Blend"
+  },
+  {
+    "name": "Excel",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+    "title_hint": "EXCEL"
+  },
+  {
+    "name": "Google Chrome",
+    "exe": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "title_hint": "chrome"
+  },
+  {
+    "name": "Microsoft Edge",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    "title_hint": "msedge"
+  },
+  {
+    "name": "OneNote",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\ONENOTE.EXE",
+    "title_hint": "ONENOTE"
+  },
+  {
+    "name": "Outlook (classic)",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE",
+    "title_hint": "OUTLOOK"
+  },
+  {
+    "name": "PC Health Check",
+    "exe": "C:\\Program Files\\PCHealthCheck\\PCHealthCheck.exe",
+    "title_hint": "PCHealthCheck"
+  },
+  {
+    "name": "PowerPoint",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\POWERPNT.EXE",
+    "title_hint": "POWERPNT"
+  },
+  {
+    "name": "Publisher",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\MSPUB.EXE",
+    "title_hint": "MSPUB"
+  },
+  {
+    "name": "Visual Studio Installer",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\setup.exe",
+    "title_hint": "setup"
+  },
+  {
+    "name": "Visual Studio",
+    "exe": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\IDE\\devenv.exe",
+    "title_hint": "devenv"
+  },
+  {
+    "name": "Word",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+    "title_hint": "WINWORD"
+  },
+  {
+    "name": "Remote Desktop Connection",
+    "exe": "C:\\WINDOWS\\system32\\mstsc.exe",
+    "title_hint": "mstsc"
+  },
+  {
+    "name": "Steps Recorder",
+    "exe": "C:\\WINDOWS\\system32\\psr.exe",
+    "title_hint": "psr"
+  },
+  {
+    "name": "Windows Fax and Scan",
+    "exe": "C:\\WINDOWS\\system32\\WFS.exe",
+    "title_hint": "WFS"
+  },
+  {
+    "name": "Windows Media Player Legacy",
+    "exe": "C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe",
+    "title_hint": "wmplayer"
+  },
+  {
+    "name": "Character Map",
+    "exe": "C:\\WINDOWS\\system32\\charmap.exe",
+    "title_hint": "charmap"
+  },
+  {
+    "name": "dfrgui",
+    "exe": "C:\\WINDOWS\\system32\\dfrgui.exe",
+    "title_hint": "dfrgui"
+  },
+  {
+    "name": "Disk Cleanup",
+    "exe": "C:\\WINDOWS\\system32\\cleanmgr.exe",
+    "title_hint": "cleanmgr"
+  },
+  {
+    "name": "iSCSI Initiator",
+    "exe": "C:\\WINDOWS\\system32\\iscsicpl.exe",
+    "title_hint": "iscsicpl"
+  },
+  {
+    "name": "Memory Diagnostics Tool",
+    "exe": "C:\\WINDOWS\\system32\\MdSched.exe",
+    "title_hint": "MdSched"
+  },
+  {
+    "name": "ODBC Data Sources (32-bit)",
+    "exe": "C:\\WINDOWS\\syswow64\\odbcad32.exe",
+    "title_hint": "odbcad32"
+  },
+  {
+    "name": "ODBC Data Sources (64-bit)",
+    "exe": "C:\\WINDOWS\\system32\\odbcad32.exe",
+    "title_hint": "odbcad32"
+  },
+  {
+    "name": "RecoveryDrive",
+    "exe": "C:\\WINDOWS\\system32\\RecoveryDrive.exe",
+    "title_hint": "RecoveryDrive"
+  },
+  {
+    "name": "Registry Editor",
+    "exe": "C:\\WINDOWS\\regedit.exe",
+    "title_hint": "regedit"
+  },
+  {
+    "name": "Resource Monitor",
+    "exe": "C:\\WINDOWS\\system32\\perfmon.exe",
+    "title_hint": "perfmon"
+  },
+  {
+    "name": "System Configuration",
+    "exe": "C:\\WINDOWS\\system32\\msconfig.exe",
+    "title_hint": "msconfig"
+  },
+  {
+    "name": "System Information",
+    "exe": "C:\\WINDOWS\\system32\\msinfo32.exe",
+    "title_hint": "msinfo32"
+  },
+  {
+    "name": "Git Bash",
+    "exe": "C:\\Program Files\\Git\\git-bash.exe",
+    "title_hint": "git-bash"
+  },
+  {
+    "name": "Git CMD",
+    "exe": "C:\\Program Files\\Git\\git-cmd.exe",
+    "title_hint": "git-cmd"
+  },
+  {
+    "name": "Git GUI",
+    "exe": "C:\\Program Files\\Git\\cmd\\git-gui.exe",
+    "title_hint": "git-gui"
+  },
+  {
+    "name": "Add IncrediBuild Components",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Install.exe",
+    "title_hint": "Install"
+  },
+  {
+    "name": "Build History",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildHistory.exe",
+    "title_hint": "BuildHistory"
+  },
+  {
+    "name": "Build Monitor",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildMonitor.exe",
+    "title_hint": "BuildMonitor"
+  },
+  {
+    "name": "IncrediBuild Agent Settings",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildSettings.exe",
+    "title_hint": "BuildSettings"
+  },
+  {
+    "name": "IncrediBuild Agent Tray-Icon",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildTrayIcon.exe",
+    "title_hint": "BuildTrayIcon"
+  },
+  {
+    "name": "Test Network Connectivity",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NetworkTest.exe",
+    "title_hint": "NetworkTest"
+  },
+  {
+    "name": "Uninstall KMSpico",
+    "exe": "C:\\Program Files\\KMSpico\\UninsHs.exe",
+    "title_hint": "UninsHs"
+  },
+  {
+    "name": "Office Language Preferences",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SETLANG.EXE",
+    "title_hint": "SETLANG"
+  },
+  {
+    "name": "Node.js",
+    "exe": "C:\\Program Files\\nodejs\\node.exe",
+    "title_hint": "node"
+  },
+  {
+    "name": "Uninstall Node.js",
+    "exe": "C:\\Windows\\SysWOW64\\msiexec.exe",
+    "title_hint": "msiexec"
+  },
+  {
+    "name": "Task Manager",
+    "exe": "C:\\WINDOWS\\system32\\taskmgr.exe",
+    "title_hint": "taskmgr"
+  },
+  {
+    "name": "VLC media player - reset preferences and cache files",
+    "exe": "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe",
+    "title_hint": "vlc"
+  },
+  {
+    "name": "Application Verifier (X64)",
+    "exe": "C:\\Windows\\System32\\appverif.exe",
+    "title_hint": "appverif"
+  },
+  {
+    "name": "Application Verifier (WOW)",
+    "exe": "C:\\Windows\\SysWOW64\\appverif.exe",
+    "title_hint": "appverif"
+  },
+  {
+    "name": "Windows App Cert Kit",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\appcertui.exe",
+    "title_hint": "appcertui"
+  },
+  {
+    "name": "GPUView",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\gpuview\\GPUView.exe",
+    "title_hint": "GPUView"
+  },
+  {
+    "name": "Windows Performance Analyzer",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpa.exe",
+    "title_hint": "wpa"
+  },
+  {
+    "name": "Windows Performance Recorder",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\WPRUI.exe",
+    "title_hint": "WPRUI"
+  },
+  {
+    "name": "Windows Software Development Kit",
+    "exe": "C:\\WINDOWS\\explorer.exe",
+    "title_hint": "explorer"
+  },
+  {
+    "name": "Windows PowerShell ISE (x86)",
+    "exe": "C:\\WINDOWS\\syswow64\\WindowsPowerShell\\v1.0\\PowerShell_ISE.exe",
+    "title_hint": "PowerShell_ISE"
+  },
+  {
+    "name": "Windows PowerShell ISE",
+    "exe": "C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\PowerShell_ISE.exe",
+    "title_hint": "PowerShell_ISE"
+  },
+  {
+    "name": "Uninstall XAMPP",
+    "exe": "C:\\xampp\\uninstall.exe",
+    "title_hint": "uninstall"
+  },
+  {
+    "name": "XAMPP Control Panel",
+    "exe": "C:\\xampp\\xampp-control.exe",
+    "title_hint": "xampp-control"
+  },
+  {
+    "name": "Microsoft 365 - en-gb",
+    "exe": "C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\OfficeClickToRun.exe",
+    "title_hint": "OfficeClickToRun"
+  },
+  {
+    "name": "Microsoft OneDrive",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\OneDriveSetup.exe",
+    "title_hint": "OneDriveSetup"
+  },
+  {
+    "name": "XAMPP",
+    "exe": "C:\\xampp\\service.exe",
+    "title_hint": "service"
+  },
+  {
+    "name": "MongoDB Shell",
+    "exe": "C:\\monghoose\\mongosh.exe",
+    "title_hint": "mongosh"
+  },
+  {
+    "name": "Microsoft Edge",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\146.0.3856.97\\msedge.exe",
+    "title_hint": "msedge"
+  },
+  {
+    "name": "Microsoft Edge WebView2 Runtime",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\146.0.3856.97\\msedgewebview2.exe",
+    "title_hint": "msedgewebview2"
+  },
+  {
+    "name": "Microsoft Visual C++ v14 Redistributable (x86) - 14.50.35719",
+    "exe": "C:\\ProgramData\\Package Cache\\{0e4ccf1b-d073-4cfe-8a24-e86185719b56}\\VC_redist.x86.exe",
+    "title_hint": "VC_redist.x86"
+  },
+  {
+    "name": "Microsoft .NET SDK 10.0.105 (x64)",
+    "exe": "C:\\ProgramData\\Package Cache\\{253F7094-7A58-4A4C-931A-C61DDE4B4972}\\dotnet-sdk-10.0.105-win-x64.exe",
+    "title_hint": "dotnet-sdk-10.0.105-win-x64"
+  },
+  {
+    "name": "Composer - PHP Dependency Manager",
+    "exe": "C:\\Program Files (x86)\\ComposerSetup\\unins000.exe",
+    "title_hint": "unins000"
+  },
+  {
+    "name": "Microsoft Visual C++ v14 Redistributable (x64) - 14.50.35719",
+    "exe": "C:\\ProgramData\\Package Cache\\{91ee571b-0e8a-4c65-9eaf-2e2f5fc60c00}\\VC_redist.x64.exe",
+    "title_hint": "VC_redist.x64"
+  },
+  {
+    "name": "Adobe Reader XI (11.0.10)",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AcroTextExtractor.exe",
+    "title_hint": "AcroTextExtractor"
+  },
+  {
+    "name": "Windows Software Development Kit - Windows 10.0.22621.5040",
+    "exe": "C:\\ProgramData\\Package Cache\\{b72d4013-dd88-405a-9f9d-e88c278dcefe}\\winsdksetup.exe",
+    "title_hint": "winsdksetup"
+  },
+  {
+    "name": "Windows Software Development Kit - Windows 10.0.26100.7705",
+    "exe": "C:\\ProgramData\\Package Cache\\{c0b93b80-d0a4-47fc-a4d1-21a4008a63ca}\\winsdksetup.exe",
+    "title_hint": "winsdksetup"
+  },
+  {
+    "name": "llama.cpp",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Microsoft\\WinGet\\Packages\\ggml.llamacpp_Microsoft.Winget.Source_8wekyb3d8bbwe\\llama-cli.exe",
+    "title_hint": "llama-cli"
+  },
+  {
+    "name": "Python 3.11.9 (64-bit)",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Package Cache\\{1da2e09b-199c-4def-9a99-93a8c1b8ddf2}\\python-3.11.9-amd64.exe",
+    "title_hint": "python-3.11.9-amd64"
+  },
+  {
+    "name": "appvcleaner",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\appvcleaner.exe",
+    "title_hint": "appvcleaner"
+  },
+  {
+    "name": "AppVShNotify",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\AppVShNotify.exe",
+    "title_hint": "AppVShNotify"
+  },
+  {
+    "name": "InspectorOfficeGadget",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\InspectorOfficeGadget.exe",
+    "title_hint": "InspectorOfficeGadget"
+  },
+  {
+    "name": "IntegratedOffice",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\IntegratedOffice.exe",
+    "title_hint": "IntegratedOffice"
+  },
+  {
+    "name": "logcollector",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\logcollector.exe",
+    "title_hint": "logcollector"
+  },
+  {
+    "name": "MavInject32",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\MavInject32.exe",
+    "title_hint": "MavInject32"
+  },
+  {
+    "name": "OfficeC2RClient",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\OfficeC2RClient.exe",
+    "title_hint": "OfficeC2RClient"
+  },
+  {
+    "name": "officesvcmgr",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ClickToRun\\officesvcmgr.exe",
+    "title_hint": "officesvcmgr"
+  },
+  {
+    "name": "TabTip",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe",
+    "title_hint": "TabTip"
+  },
+  {
+    "name": "msinfo32",
+    "exe": "C:\\Program Files\\Common Files\\microsoft shared\\MSInfo\\msinfo32.exe",
+    "title_hint": "msinfo32"
+  },
+  {
+    "name": "unins000",
+    "exe": "C:\\Program Files\\Git\\unins000.exe",
+    "title_hint": "unins000"
+  },
+  {
+    "name": "bash",
+    "exe": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "title_hint": "bash"
+  },
+  {
+    "name": "git",
+    "exe": "C:\\Program Files\\Git\\bin\\git.exe",
+    "title_hint": "git"
+  },
+  {
+    "name": "sh",
+    "exe": "C:\\Program Files\\Git\\bin\\sh.exe",
+    "title_hint": "sh"
+  },
+  {
+    "name": "git-lfs",
+    "exe": "C:\\Program Files\\Git\\cmd\\git-lfs.exe",
+    "title_hint": "git-lfs"
+  },
+  {
+    "name": "git-receive-pack",
+    "exe": "C:\\Program Files\\Git\\cmd\\git-receive-pack.exe",
+    "title_hint": "git-receive-pack"
+  },
+  {
+    "name": "git-upload-pack",
+    "exe": "C:\\Program Files\\Git\\cmd\\git-upload-pack.exe",
+    "title_hint": "git-upload-pack"
+  },
+  {
+    "name": "git",
+    "exe": "C:\\Program Files\\Git\\cmd\\git.exe",
+    "title_hint": "git"
+  },
+  {
+    "name": "gitk",
+    "exe": "C:\\Program Files\\Git\\cmd\\gitk.exe",
+    "title_hint": "gitk"
+  },
+  {
+    "name": "scalar",
+    "exe": "C:\\Program Files\\Git\\cmd\\scalar.exe",
+    "title_hint": "scalar"
+  },
+  {
+    "name": "tig",
+    "exe": "C:\\Program Files\\Git\\cmd\\tig.exe",
+    "title_hint": "tig"
+  },
+  {
+    "name": "adig",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\adig.exe",
+    "title_hint": "adig"
+  },
+  {
+    "name": "ahost",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\ahost.exe",
+    "title_hint": "ahost"
+  },
+  {
+    "name": "antiword",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\antiword.exe",
+    "title_hint": "antiword"
+  },
+  {
+    "name": "blocked-file-util",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\blocked-file-util.exe",
+    "title_hint": "blocked-file-util"
+  },
+  {
+    "name": "brotli",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\brotli.exe",
+    "title_hint": "brotli"
+  },
+  {
+    "name": "bunzip2",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\bunzip2.exe",
+    "title_hint": "bunzip2"
+  },
+  {
+    "name": "bzcat",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\bzcat.exe",
+    "title_hint": "bzcat"
+  },
+  {
+    "name": "bzip2",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\bzip2.exe",
+    "title_hint": "bzip2"
+  },
+  {
+    "name": "bzip2recover",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\bzip2recover.exe",
+    "title_hint": "bzip2recover"
+  },
+  {
+    "name": "connect",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\connect.exe",
+    "title_hint": "connect"
+  },
+  {
+    "name": "create-shortcut",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\create-shortcut.exe",
+    "title_hint": "create-shortcut"
+  },
+  {
+    "name": "curl",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\curl.exe",
+    "title_hint": "curl"
+  },
+  {
+    "name": "edit_test",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\edit_test.exe",
+    "title_hint": "edit_test"
+  },
+  {
+    "name": "edit_test_dll",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\edit_test_dll.exe",
+    "title_hint": "edit_test_dll"
+  },
+  {
+    "name": "envsubst",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\envsubst.exe",
+    "title_hint": "envsubst"
+  },
+  {
+    "name": "gettext",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\gettext.exe",
+    "title_hint": "gettext"
+  },
+  {
+    "name": "git-askpass",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-askpass.exe",
+    "title_hint": "git-askpass"
+  },
+  {
+    "name": "git-askyesno",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-askyesno.exe",
+    "title_hint": "git-askyesno"
+  },
+  {
+    "name": "git-credential-manager",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-credential-manager.exe",
+    "title_hint": "git-credential-manager"
+  },
+  {
+    "name": "git-lfs",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-lfs.exe",
+    "title_hint": "git-lfs"
+  },
+  {
+    "name": "git-receive-pack",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-receive-pack.exe",
+    "title_hint": "git-receive-pack"
+  },
+  {
+    "name": "git-upload-archive",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-upload-archive.exe",
+    "title_hint": "git-upload-archive"
+  },
+  {
+    "name": "git-upload-pack",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git-upload-pack.exe",
+    "title_hint": "git-upload-pack"
+  },
+  {
+    "name": "git",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\git.exe",
+    "title_hint": "git"
+  },
+  {
+    "name": "lzmadec",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\lzmadec.exe",
+    "title_hint": "lzmadec"
+  },
+  {
+    "name": "lzmainfo",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\lzmainfo.exe",
+    "title_hint": "lzmainfo"
+  },
+  {
+    "name": "odt2txt",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\odt2txt.exe",
+    "title_hint": "odt2txt"
+  },
+  {
+    "name": "openssl",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\openssl.exe",
+    "title_hint": "openssl"
+  },
+  {
+    "name": "p11-kit",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\p11-kit.exe",
+    "title_hint": "p11-kit"
+  },
+  {
+    "name": "pdftotext",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\pdftotext.exe",
+    "title_hint": "pdftotext"
+  },
+  {
+    "name": "pkcs1-conv",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\pkcs1-conv.exe",
+    "title_hint": "pkcs1-conv"
+  },
+  {
+    "name": "proxy-lookup",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\proxy-lookup.exe",
+    "title_hint": "proxy-lookup"
+  },
+  {
+    "name": "psl",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\psl.exe",
+    "title_hint": "psl"
+  },
+  {
+    "name": "scalar",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\scalar.exe",
+    "title_hint": "scalar"
+  },
+  {
+    "name": "sexp-conv",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\sexp-conv.exe",
+    "title_hint": "sexp-conv"
+  },
+  {
+    "name": "tclsh",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\tclsh.exe",
+    "title_hint": "tclsh"
+  },
+  {
+    "name": "tclsh86",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\tclsh86.exe",
+    "title_hint": "tclsh86"
+  },
+  {
+    "name": "trust",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\trust.exe",
+    "title_hint": "trust"
+  },
+  {
+    "name": "unxz",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\unxz.exe",
+    "title_hint": "unxz"
+  },
+  {
+    "name": "WhoUses",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\WhoUses.exe",
+    "title_hint": "WhoUses"
+  },
+  {
+    "name": "wintoast",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\wintoast.exe",
+    "title_hint": "wintoast"
+  },
+  {
+    "name": "wish",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\wish.exe",
+    "title_hint": "wish"
+  },
+  {
+    "name": "wish86",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\wish86.exe",
+    "title_hint": "wish86"
+  },
+  {
+    "name": "x86_64-w64-mingw32-agrep",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\x86_64-w64-mingw32-agrep.exe",
+    "title_hint": "x86_64-w64-mingw32-agrep"
+  },
+  {
+    "name": "xmlwf",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\xmlwf.exe",
+    "title_hint": "xmlwf"
+  },
+  {
+    "name": "xz",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\xz.exe",
+    "title_hint": "xz"
+  },
+  {
+    "name": "xzcat",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\xzcat.exe",
+    "title_hint": "xzcat"
+  },
+  {
+    "name": "xzdec",
+    "exe": "C:\\Program Files\\Git\\mingw64\\bin\\xzdec.exe",
+    "title_hint": "xzdec"
+  },
+  {
+    "name": "arch",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\arch.exe",
+    "title_hint": "arch"
+  },
+  {
+    "name": "awk",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\awk.exe",
+    "title_hint": "awk"
+  },
+  {
+    "name": "b2sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\b2sum.exe",
+    "title_hint": "b2sum"
+  },
+  {
+    "name": "base32",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\base32.exe",
+    "title_hint": "base32"
+  },
+  {
+    "name": "base64",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\base64.exe",
+    "title_hint": "base64"
+  },
+  {
+    "name": "basename",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\basename.exe",
+    "title_hint": "basename"
+  },
+  {
+    "name": "basenc",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\basenc.exe",
+    "title_hint": "basenc"
+  },
+  {
+    "name": "bash",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "title_hint": "bash"
+  },
+  {
+    "name": "bunzip2",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\bunzip2.exe",
+    "title_hint": "bunzip2"
+  },
+  {
+    "name": "bzcat",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\bzcat.exe",
+    "title_hint": "bzcat"
+  },
+  {
+    "name": "bzip2",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\bzip2.exe",
+    "title_hint": "bzip2"
+  },
+  {
+    "name": "bzip2recover",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\bzip2recover.exe",
+    "title_hint": "bzip2recover"
+  },
+  {
+    "name": "captoinfo",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\captoinfo.exe",
+    "title_hint": "captoinfo"
+  },
+  {
+    "name": "cat",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cat.exe",
+    "title_hint": "cat"
+  },
+  {
+    "name": "chattr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chattr.exe",
+    "title_hint": "chattr"
+  },
+  {
+    "name": "chcon",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chcon.exe",
+    "title_hint": "chcon"
+  },
+  {
+    "name": "chgrp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chgrp.exe",
+    "title_hint": "chgrp"
+  },
+  {
+    "name": "chmod",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chmod.exe",
+    "title_hint": "chmod"
+  },
+  {
+    "name": "chown",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chown.exe",
+    "title_hint": "chown"
+  },
+  {
+    "name": "chroot",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\chroot.exe",
+    "title_hint": "chroot"
+  },
+  {
+    "name": "cksum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cksum.exe",
+    "title_hint": "cksum"
+  },
+  {
+    "name": "clear",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\clear.exe",
+    "title_hint": "clear"
+  },
+  {
+    "name": "cmp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cmp.exe",
+    "title_hint": "cmp"
+  },
+  {
+    "name": "column",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\column.exe",
+    "title_hint": "column"
+  },
+  {
+    "name": "comm",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\comm.exe",
+    "title_hint": "comm"
+  },
+  {
+    "name": "cp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cp.exe",
+    "title_hint": "cp"
+  },
+  {
+    "name": "csplit",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\csplit.exe",
+    "title_hint": "csplit"
+  },
+  {
+    "name": "cut",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cut.exe",
+    "title_hint": "cut"
+  },
+  {
+    "name": "cygcheck",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cygcheck.exe",
+    "title_hint": "cygcheck"
+  },
+  {
+    "name": "cygpath",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\cygpath.exe",
+    "title_hint": "cygpath"
+  },
+  {
+    "name": "d2u",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\d2u.exe",
+    "title_hint": "d2u"
+  },
+  {
+    "name": "dash",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dash.exe",
+    "title_hint": "dash"
+  },
+  {
+    "name": "date",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\date.exe",
+    "title_hint": "date"
+  },
+  {
+    "name": "dd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dd.exe",
+    "title_hint": "dd"
+  },
+  {
+    "name": "df",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\df.exe",
+    "title_hint": "df"
+  },
+  {
+    "name": "diff",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\diff.exe",
+    "title_hint": "diff"
+  },
+  {
+    "name": "diff3",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\diff3.exe",
+    "title_hint": "diff3"
+  },
+  {
+    "name": "dir",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dir.exe",
+    "title_hint": "dir"
+  },
+  {
+    "name": "dircolors",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dircolors.exe",
+    "title_hint": "dircolors"
+  },
+  {
+    "name": "dirmngr-client",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dirmngr-client.exe",
+    "title_hint": "dirmngr-client"
+  },
+  {
+    "name": "dirmngr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dirmngr.exe",
+    "title_hint": "dirmngr"
+  },
+  {
+    "name": "dirname",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dirname.exe",
+    "title_hint": "dirname"
+  },
+  {
+    "name": "dos2unix",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dos2unix.exe",
+    "title_hint": "dos2unix"
+  },
+  {
+    "name": "du",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\du.exe",
+    "title_hint": "du"
+  },
+  {
+    "name": "dumpsexp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\dumpsexp.exe",
+    "title_hint": "dumpsexp"
+  },
+  {
+    "name": "echo",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\echo.exe",
+    "title_hint": "echo"
+  },
+  {
+    "name": "env",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\env.exe",
+    "title_hint": "env"
+  },
+  {
+    "name": "ex",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ex.exe",
+    "title_hint": "ex"
+  },
+  {
+    "name": "expand",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\expand.exe",
+    "title_hint": "expand"
+  },
+  {
+    "name": "expr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\expr.exe",
+    "title_hint": "expr"
+  },
+  {
+    "name": "factor",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\factor.exe",
+    "title_hint": "factor"
+  },
+  {
+    "name": "false",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\false.exe",
+    "title_hint": "false"
+  },
+  {
+    "name": "file",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\file.exe",
+    "title_hint": "file"
+  },
+  {
+    "name": "find",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\find.exe",
+    "title_hint": "find"
+  },
+  {
+    "name": "fmt",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\fmt.exe",
+    "title_hint": "fmt"
+  },
+  {
+    "name": "fold",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\fold.exe",
+    "title_hint": "fold"
+  },
+  {
+    "name": "funzip",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\funzip.exe",
+    "title_hint": "funzip"
+  },
+  {
+    "name": "gawk-5.0.0",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gawk-5.0.0.exe",
+    "title_hint": "gawk-5.0.0"
+  },
+  {
+    "name": "gawk",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gawk.exe",
+    "title_hint": "gawk"
+  },
+  {
+    "name": "gencat",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gencat.exe",
+    "title_hint": "gencat"
+  },
+  {
+    "name": "getconf",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\getconf.exe",
+    "title_hint": "getconf"
+  },
+  {
+    "name": "getfacl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\getfacl.exe",
+    "title_hint": "getfacl"
+  },
+  {
+    "name": "getopt",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\getopt.exe",
+    "title_hint": "getopt"
+  },
+  {
+    "name": "gkill",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gkill.exe",
+    "title_hint": "gkill"
+  },
+  {
+    "name": "gmondump",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gmondump.exe",
+    "title_hint": "gmondump"
+  },
+  {
+    "name": "gpg-agent",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-agent.exe",
+    "title_hint": "gpg-agent"
+  },
+  {
+    "name": "gpg-card",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-card.exe",
+    "title_hint": "gpg-card"
+  },
+  {
+    "name": "gpg-connect-agent",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-connect-agent.exe",
+    "title_hint": "gpg-connect-agent"
+  },
+  {
+    "name": "gpg-error",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-error.exe",
+    "title_hint": "gpg-error"
+  },
+  {
+    "name": "gpg-mail-tube",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-mail-tube.exe",
+    "title_hint": "gpg-mail-tube"
+  },
+  {
+    "name": "gpg-wks-client",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-wks-client.exe",
+    "title_hint": "gpg-wks-client"
+  },
+  {
+    "name": "gpg-wks-server",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg-wks-server.exe",
+    "title_hint": "gpg-wks-server"
+  },
+  {
+    "name": "gpg",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpg.exe",
+    "title_hint": "gpg"
+  },
+  {
+    "name": "gpgconf",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgconf.exe",
+    "title_hint": "gpgconf"
+  },
+  {
+    "name": "gpgparsemail",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgparsemail.exe",
+    "title_hint": "gpgparsemail"
+  },
+  {
+    "name": "gpgscm",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgscm.exe",
+    "title_hint": "gpgscm"
+  },
+  {
+    "name": "gpgsm",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgsm.exe",
+    "title_hint": "gpgsm"
+  },
+  {
+    "name": "gpgsplit",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgsplit.exe",
+    "title_hint": "gpgsplit"
+  },
+  {
+    "name": "gpgtar",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgtar.exe",
+    "title_hint": "gpgtar"
+  },
+  {
+    "name": "gpgv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gpgv.exe",
+    "title_hint": "gpgv"
+  },
+  {
+    "name": "grep",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\grep.exe",
+    "title_hint": "grep"
+  },
+  {
+    "name": "groups",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\groups.exe",
+    "title_hint": "groups"
+  },
+  {
+    "name": "gzip",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\gzip.exe",
+    "title_hint": "gzip"
+  },
+  {
+    "name": "head",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\head.exe",
+    "title_hint": "head"
+  },
+  {
+    "name": "hmac256",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\hmac256.exe",
+    "title_hint": "hmac256"
+  },
+  {
+    "name": "hostid",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\hostid.exe",
+    "title_hint": "hostid"
+  },
+  {
+    "name": "hostname",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\hostname.exe",
+    "title_hint": "hostname"
+  },
+  {
+    "name": "iconv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\iconv.exe",
+    "title_hint": "iconv"
+  },
+  {
+    "name": "id",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\id.exe",
+    "title_hint": "id"
+  },
+  {
+    "name": "infocmp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\infocmp.exe",
+    "title_hint": "infocmp"
+  },
+  {
+    "name": "infotocap",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\infotocap.exe",
+    "title_hint": "infotocap"
+  },
+  {
+    "name": "install",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\install.exe",
+    "title_hint": "install"
+  },
+  {
+    "name": "join",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\join.exe",
+    "title_hint": "join"
+  },
+  {
+    "name": "kbxutil",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\kbxutil.exe",
+    "title_hint": "kbxutil"
+  },
+  {
+    "name": "kill",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\kill.exe",
+    "title_hint": "kill"
+  },
+  {
+    "name": "ldd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ldd.exe",
+    "title_hint": "ldd"
+  },
+  {
+    "name": "ldh",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ldh.exe",
+    "title_hint": "ldh"
+  },
+  {
+    "name": "less",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\less.exe",
+    "title_hint": "less"
+  },
+  {
+    "name": "lessecho",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\lessecho.exe",
+    "title_hint": "lessecho"
+  },
+  {
+    "name": "lesskey",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\lesskey.exe",
+    "title_hint": "lesskey"
+  },
+  {
+    "name": "link",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\link.exe",
+    "title_hint": "link"
+  },
+  {
+    "name": "ln",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ln.exe",
+    "title_hint": "ln"
+  },
+  {
+    "name": "locale",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\locale.exe",
+    "title_hint": "locale"
+  },
+  {
+    "name": "locate",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\locate.exe",
+    "title_hint": "locate"
+  },
+  {
+    "name": "logname",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\logname.exe",
+    "title_hint": "logname"
+  },
+  {
+    "name": "ls",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ls.exe",
+    "title_hint": "ls"
+  },
+  {
+    "name": "lsattr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\lsattr.exe",
+    "title_hint": "lsattr"
+  },
+  {
+    "name": "mac2unix",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mac2unix.exe",
+    "title_hint": "mac2unix"
+  },
+  {
+    "name": "md5sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\md5sum.exe",
+    "title_hint": "md5sum"
+  },
+  {
+    "name": "minidumper",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\minidumper.exe",
+    "title_hint": "minidumper"
+  },
+  {
+    "name": "mintty",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mintty.exe",
+    "title_hint": "mintty"
+  },
+  {
+    "name": "mkdir",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mkdir.exe",
+    "title_hint": "mkdir"
+  },
+  {
+    "name": "mkfifo",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mkfifo.exe",
+    "title_hint": "mkfifo"
+  },
+  {
+    "name": "mkgroup",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mkgroup.exe",
+    "title_hint": "mkgroup"
+  },
+  {
+    "name": "mknod",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mknod.exe",
+    "title_hint": "mknod"
+  },
+  {
+    "name": "mkpasswd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mkpasswd.exe",
+    "title_hint": "mkpasswd"
+  },
+  {
+    "name": "mktemp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mktemp.exe",
+    "title_hint": "mktemp"
+  },
+  {
+    "name": "mount",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mount.exe",
+    "title_hint": "mount"
+  },
+  {
+    "name": "mpicalc",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mpicalc.exe",
+    "title_hint": "mpicalc"
+  },
+  {
+    "name": "mv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\mv.exe",
+    "title_hint": "mv"
+  },
+  {
+    "name": "nano",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nano.exe",
+    "title_hint": "nano"
+  },
+  {
+    "name": "nettle-hash",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nettle-hash.exe",
+    "title_hint": "nettle-hash"
+  },
+  {
+    "name": "nettle-lfib-stream",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nettle-lfib-stream.exe",
+    "title_hint": "nettle-lfib-stream"
+  },
+  {
+    "name": "nettle-pbkdf2",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nettle-pbkdf2.exe",
+    "title_hint": "nettle-pbkdf2"
+  },
+  {
+    "name": "newgrp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\newgrp.exe",
+    "title_hint": "newgrp"
+  },
+  {
+    "name": "nice",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nice.exe",
+    "title_hint": "nice"
+  },
+  {
+    "name": "nl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nl.exe",
+    "title_hint": "nl"
+  },
+  {
+    "name": "nohup",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nohup.exe",
+    "title_hint": "nohup"
+  },
+  {
+    "name": "nproc",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\nproc.exe",
+    "title_hint": "nproc"
+  },
+  {
+    "name": "numfmt",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\numfmt.exe",
+    "title_hint": "numfmt"
+  },
+  {
+    "name": "od",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\od.exe",
+    "title_hint": "od"
+  },
+  {
+    "name": "openssl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\openssl.exe",
+    "title_hint": "openssl"
+  },
+  {
+    "name": "p11-kit",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\p11-kit.exe",
+    "title_hint": "p11-kit"
+  },
+  {
+    "name": "passwd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\passwd.exe",
+    "title_hint": "passwd"
+  },
+  {
+    "name": "paste",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\paste.exe",
+    "title_hint": "paste"
+  },
+  {
+    "name": "patch",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\patch.exe",
+    "title_hint": "patch"
+  },
+  {
+    "name": "pathchk",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pathchk.exe",
+    "title_hint": "pathchk"
+  },
+  {
+    "name": "perl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\perl.exe",
+    "title_hint": "perl"
+  },
+  {
+    "name": "perl5.38.2",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\perl5.38.2.exe",
+    "title_hint": "perl5.38.2"
+  },
+  {
+    "name": "pinentry-w32",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pinentry-w32.exe",
+    "title_hint": "pinentry-w32"
+  },
+  {
+    "name": "pinentry",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pinentry.exe",
+    "title_hint": "pinentry"
+  },
+  {
+    "name": "pinky",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pinky.exe",
+    "title_hint": "pinky"
+  },
+  {
+    "name": "pkcs1-conv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pkcs1-conv.exe",
+    "title_hint": "pkcs1-conv"
+  },
+  {
+    "name": "pldd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pldd.exe",
+    "title_hint": "pldd"
+  },
+  {
+    "name": "pluginviewer",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pluginviewer.exe",
+    "title_hint": "pluginviewer"
+  },
+  {
+    "name": "pr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pr.exe",
+    "title_hint": "pr"
+  },
+  {
+    "name": "printenv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\printenv.exe",
+    "title_hint": "printenv"
+  },
+  {
+    "name": "printf",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\printf.exe",
+    "title_hint": "printf"
+  },
+  {
+    "name": "profiler",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\profiler.exe",
+    "title_hint": "profiler"
+  },
+  {
+    "name": "ps",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ps.exe",
+    "title_hint": "ps"
+  },
+  {
+    "name": "psl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\psl.exe",
+    "title_hint": "psl"
+  },
+  {
+    "name": "ptx",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ptx.exe",
+    "title_hint": "ptx"
+  },
+  {
+    "name": "pwd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\pwd.exe",
+    "title_hint": "pwd"
+  },
+  {
+    "name": "readlink",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\readlink.exe",
+    "title_hint": "readlink"
+  },
+  {
+    "name": "realpath",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\realpath.exe",
+    "title_hint": "realpath"
+  },
+  {
+    "name": "rebase",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rebase.exe",
+    "title_hint": "rebase"
+  },
+  {
+    "name": "regtool",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\regtool.exe",
+    "title_hint": "regtool"
+  },
+  {
+    "name": "reset",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\reset.exe",
+    "title_hint": "reset"
+  },
+  {
+    "name": "rm",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rm.exe",
+    "title_hint": "rm"
+  },
+  {
+    "name": "rmdir",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rmdir.exe",
+    "title_hint": "rmdir"
+  },
+  {
+    "name": "rnano",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rnano.exe",
+    "title_hint": "rnano"
+  },
+  {
+    "name": "runcon",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\runcon.exe",
+    "title_hint": "runcon"
+  },
+  {
+    "name": "rview",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rview.exe",
+    "title_hint": "rview"
+  },
+  {
+    "name": "rvim",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\rvim.exe",
+    "title_hint": "rvim"
+  },
+  {
+    "name": "scp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\scp.exe",
+    "title_hint": "scp"
+  },
+  {
+    "name": "sdiff",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sdiff.exe",
+    "title_hint": "sdiff"
+  },
+  {
+    "name": "sed",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sed.exe",
+    "title_hint": "sed"
+  },
+  {
+    "name": "seq",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\seq.exe",
+    "title_hint": "seq"
+  },
+  {
+    "name": "setfacl",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\setfacl.exe",
+    "title_hint": "setfacl"
+  },
+  {
+    "name": "setmetamode",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\setmetamode.exe",
+    "title_hint": "setmetamode"
+  },
+  {
+    "name": "sexp-conv",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sexp-conv.exe",
+    "title_hint": "sexp-conv"
+  },
+  {
+    "name": "sftp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sftp.exe",
+    "title_hint": "sftp"
+  },
+  {
+    "name": "sh",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sh.exe",
+    "title_hint": "sh"
+  },
+  {
+    "name": "sha1sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sha1sum.exe",
+    "title_hint": "sha1sum"
+  },
+  {
+    "name": "sha224sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sha224sum.exe",
+    "title_hint": "sha224sum"
+  },
+  {
+    "name": "sha256sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sha256sum.exe",
+    "title_hint": "sha256sum"
+  },
+  {
+    "name": "sha384sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sha384sum.exe",
+    "title_hint": "sha384sum"
+  },
+  {
+    "name": "sha512sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sha512sum.exe",
+    "title_hint": "sha512sum"
+  },
+  {
+    "name": "shred",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\shred.exe",
+    "title_hint": "shred"
+  },
+  {
+    "name": "shuf",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\shuf.exe",
+    "title_hint": "shuf"
+  },
+  {
+    "name": "sleep",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sleep.exe",
+    "title_hint": "sleep"
+  },
+  {
+    "name": "sort",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sort.exe",
+    "title_hint": "sort"
+  },
+  {
+    "name": "split",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\split.exe",
+    "title_hint": "split"
+  },
+  {
+    "name": "ssh-add",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh-add.exe",
+    "title_hint": "ssh-add"
+  },
+  {
+    "name": "ssh-agent",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh-agent.exe",
+    "title_hint": "ssh-agent"
+  },
+  {
+    "name": "ssh-keygen",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh-keygen.exe",
+    "title_hint": "ssh-keygen"
+  },
+  {
+    "name": "ssh-keyscan",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh-keyscan.exe",
+    "title_hint": "ssh-keyscan"
+  },
+  {
+    "name": "ssh-pageant",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh-pageant.exe",
+    "title_hint": "ssh-pageant"
+  },
+  {
+    "name": "ssh",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssh.exe",
+    "title_hint": "ssh"
+  },
+  {
+    "name": "ssp",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\ssp.exe",
+    "title_hint": "ssp"
+  },
+  {
+    "name": "stat",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\stat.exe",
+    "title_hint": "stat"
+  },
+  {
+    "name": "stdbuf",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\stdbuf.exe",
+    "title_hint": "stdbuf"
+  },
+  {
+    "name": "strace",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\strace.exe",
+    "title_hint": "strace"
+  },
+  {
+    "name": "stty",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\stty.exe",
+    "title_hint": "stty"
+  },
+  {
+    "name": "sum",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sum.exe",
+    "title_hint": "sum"
+  },
+  {
+    "name": "sync",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\sync.exe",
+    "title_hint": "sync"
+  },
+  {
+    "name": "tabs",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tabs.exe",
+    "title_hint": "tabs"
+  },
+  {
+    "name": "tac",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tac.exe",
+    "title_hint": "tac"
+  },
+  {
+    "name": "tail",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tail.exe",
+    "title_hint": "tail"
+  },
+  {
+    "name": "tar",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tar.exe",
+    "title_hint": "tar"
+  },
+  {
+    "name": "tee",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tee.exe",
+    "title_hint": "tee"
+  },
+  {
+    "name": "test",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\test.exe",
+    "title_hint": "test"
+  },
+  {
+    "name": "tic",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tic.exe",
+    "title_hint": "tic"
+  },
+  {
+    "name": "tig",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tig.exe",
+    "title_hint": "tig"
+  },
+  {
+    "name": "timeout",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\timeout.exe",
+    "title_hint": "timeout"
+  },
+  {
+    "name": "toe",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\toe.exe",
+    "title_hint": "toe"
+  },
+  {
+    "name": "touch",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\touch.exe",
+    "title_hint": "touch"
+  },
+  {
+    "name": "tput",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tput.exe",
+    "title_hint": "tput"
+  },
+  {
+    "name": "tr",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tr.exe",
+    "title_hint": "tr"
+  },
+  {
+    "name": "true",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\true.exe",
+    "title_hint": "true"
+  },
+  {
+    "name": "truncate",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\truncate.exe",
+    "title_hint": "truncate"
+  },
+  {
+    "name": "trust",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\trust.exe",
+    "title_hint": "trust"
+  },
+  {
+    "name": "tset",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tset.exe",
+    "title_hint": "tset"
+  },
+  {
+    "name": "tsort",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tsort.exe",
+    "title_hint": "tsort"
+  },
+  {
+    "name": "tty",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tty.exe",
+    "title_hint": "tty"
+  },
+  {
+    "name": "tzset",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\tzset.exe",
+    "title_hint": "tzset"
+  },
+  {
+    "name": "u2d",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\u2d.exe",
+    "title_hint": "u2d"
+  },
+  {
+    "name": "umount",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\umount.exe",
+    "title_hint": "umount"
+  },
+  {
+    "name": "uname",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\uname.exe",
+    "title_hint": "uname"
+  },
+  {
+    "name": "unexpand",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unexpand.exe",
+    "title_hint": "unexpand"
+  },
+  {
+    "name": "uniq",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\uniq.exe",
+    "title_hint": "uniq"
+  },
+  {
+    "name": "unix2dos",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unix2dos.exe",
+    "title_hint": "unix2dos"
+  },
+  {
+    "name": "unix2mac",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unix2mac.exe",
+    "title_hint": "unix2mac"
+  },
+  {
+    "name": "unlink",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unlink.exe",
+    "title_hint": "unlink"
+  },
+  {
+    "name": "unzip",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unzip.exe",
+    "title_hint": "unzip"
+  },
+  {
+    "name": "unzipsfx",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\unzipsfx.exe",
+    "title_hint": "unzipsfx"
+  },
+  {
+    "name": "users",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\users.exe",
+    "title_hint": "users"
+  },
+  {
+    "name": "vdir",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\vdir.exe",
+    "title_hint": "vdir"
+  },
+  {
+    "name": "view",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\view.exe",
+    "title_hint": "view"
+  },
+  {
+    "name": "vim",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\vim.exe",
+    "title_hint": "vim"
+  },
+  {
+    "name": "vimdiff",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\vimdiff.exe",
+    "title_hint": "vimdiff"
+  },
+  {
+    "name": "watchgnupg",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\watchgnupg.exe",
+    "title_hint": "watchgnupg"
+  },
+  {
+    "name": "wc",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\wc.exe",
+    "title_hint": "wc"
+  },
+  {
+    "name": "which",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\which.exe",
+    "title_hint": "which"
+  },
+  {
+    "name": "who",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\who.exe",
+    "title_hint": "who"
+  },
+  {
+    "name": "whoami",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\whoami.exe",
+    "title_hint": "whoami"
+  },
+  {
+    "name": "winpty-agent",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\winpty-agent.exe",
+    "title_hint": "winpty-agent"
+  },
+  {
+    "name": "winpty-debugserver",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\winpty-debugserver.exe",
+    "title_hint": "winpty-debugserver"
+  },
+  {
+    "name": "winpty",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\winpty.exe",
+    "title_hint": "winpty"
+  },
+  {
+    "name": "xargs",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\xargs.exe",
+    "title_hint": "xargs"
+  },
+  {
+    "name": "xxd",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\xxd.exe",
+    "title_hint": "xxd"
+  },
+  {
+    "name": "yat2m",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\yat2m.exe",
+    "title_hint": "yat2m"
+  },
+  {
+    "name": "yes",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\yes.exe",
+    "title_hint": "yes"
+  },
+  {
+    "name": "zipinfo",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\zipinfo.exe",
+    "title_hint": "zipinfo"
+  },
+  {
+    "name": "[",
+    "exe": "C:\\Program Files\\Git\\usr\\bin\\[.exe",
+    "title_hint": "["
+  },
+  {
+    "name": "frcode",
+    "exe": "C:\\Program Files\\Git\\usr\\libexec\\frcode.exe",
+    "title_hint": "frcode"
+  },
+  {
+    "name": "getprocaddr32",
+    "exe": "C:\\Program Files\\Git\\usr\\libexec\\getprocaddr32.exe",
+    "title_hint": "getprocaddr32"
+  },
+  {
+    "name": "getprocaddr64",
+    "exe": "C:\\Program Files\\Git\\usr\\libexec\\getprocaddr64.exe",
+    "title_hint": "getprocaddr64"
+  },
+  {
+    "name": "chrome_proxy",
+    "exe": "C:\\Program Files\\Google\\Chrome\\Application\\chrome_proxy.exe",
+    "title_hint": "chrome_proxy"
+  },
+  {
+    "name": "ExtExport",
+    "exe": "C:\\Program Files\\Internet Explorer\\ExtExport.exe",
+    "title_hint": "ExtExport"
+  },
+  {
+    "name": "iediagcmd",
+    "exe": "C:\\Program Files\\Internet Explorer\\iediagcmd.exe",
+    "title_hint": "iediagcmd"
+  },
+  {
+    "name": "ieinstal",
+    "exe": "C:\\Program Files\\Internet Explorer\\ieinstal.exe",
+    "title_hint": "ieinstal"
+  },
+  {
+    "name": "ielowutil",
+    "exe": "C:\\Program Files\\Internet Explorer\\ielowutil.exe",
+    "title_hint": "ielowutil"
+  },
+  {
+    "name": "iexplore",
+    "exe": "C:\\Program Files\\Internet Explorer\\iexplore.exe",
+    "title_hint": "iexplore"
+  },
+  {
+    "name": "unins000",
+    "exe": "C:\\Program Files\\KMSpico\\unins000.exe",
+    "title_hint": "unins000"
+  },
+  {
+    "name": "tap-windows-9.21.0",
+    "exe": "C:\\Program Files\\KMSpico\\driver\\tap-windows-9.21.0.exe",
+    "title_hint": "tap-windows-9.21.0"
+  },
+  {
+    "name": "IntegratedOffice",
+    "exe": "C:\\Program Files\\Microsoft Office 15\\ClientX64\\IntegratedOffice.exe",
+    "title_hint": "IntegratedOffice"
+  },
+  {
+    "name": "OfficeClickToRun",
+    "exe": "C:\\Program Files\\Microsoft Office 15\\ClientX64\\OfficeClickToRun.exe",
+    "title_hint": "OfficeClickToRun"
+  },
+  {
+    "name": "OneDrive.App",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\OneDrive.App.exe",
+    "title_hint": "OneDrive.App"
+  },
+  {
+    "name": "FileCoAuth",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\FileCoAuth.exe",
+    "title_hint": "FileCoAuth"
+  },
+  {
+    "name": "FileSyncConfig",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\FileSyncConfig.exe",
+    "title_hint": "FileSyncConfig"
+  },
+  {
+    "name": "Microsoft.SharePoint.NativeMessagingClient",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\Microsoft.SharePoint.NativeMessagingClient.exe",
+    "title_hint": "Microsoft.SharePoint.NativeMessagingClient"
+  },
+  {
+    "name": "OneDrive.Sync.Service",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\OneDrive.Sync.Service.exe",
+    "title_hint": "OneDrive.Sync.Service"
+  },
+  {
+    "name": "OneDriveFileLauncher",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\OneDriveFileLauncher.exe",
+    "title_hint": "OneDriveFileLauncher"
+  },
+  {
+    "name": "OneDriveLauncher",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\OneDriveLauncher.exe",
+    "title_hint": "OneDriveLauncher"
+  },
+  {
+    "name": "OneDrivePatcher",
+    "exe": "C:\\Program Files\\Microsoft OneDrive\\26.012.0119.0002\\OneDrivePatcher.exe",
+    "title_hint": "OneDrivePatcher"
+  },
+  {
+    "name": "SqlDumper",
+    "exe": "C:\\Program Files\\Microsoft SQL Server\\170\\Shared\\SqlDumper.exe",
+    "title_hint": "SqlDumper"
+  },
+  {
+    "name": "sqlwriter",
+    "exe": "C:\\Program Files\\Microsoft SQL Server\\90\\Shared\\sqlwriter.exe",
+    "title_hint": "sqlwriter"
+  },
+  {
+    "name": "uhssvc",
+    "exe": "C:\\Program Files\\Microsoft Update Health Tools\\uhssvc.exe",
+    "title_hint": "uhssvc"
+  },
+  {
+    "name": "PCHealthCheckBroker",
+    "exe": "C:\\Program Files\\PCHealthCheck\\PCHealthCheckBroker.exe",
+    "title_hint": "PCHealthCheckBroker"
+  },
+  {
+    "name": "DTUDriver",
+    "exe": "C:\\Program Files\\RUXIM\\DTUDriver.exe",
+    "title_hint": "DTUDriver"
+  },
+  {
+    "name": "PLUGScheduler",
+    "exe": "C:\\Program Files\\RUXIM\\PLUGScheduler.exe",
+    "title_hint": "PLUGScheduler"
+  },
+  {
+    "name": "RUXIMICS",
+    "exe": "C:\\Program Files\\RUXIM\\RUXIMICS.exe",
+    "title_hint": "RUXIMICS"
+  },
+  {
+    "name": "RUXIMIH",
+    "exe": "C:\\Program Files\\RUXIM\\RUXIMIH.exe",
+    "title_hint": "RUXIMIH"
+  },
+  {
+    "name": "vlc-cache-gen",
+    "exe": "C:\\Program Files\\VideoLAN\\VLC\\vlc-cache-gen.exe",
+    "title_hint": "vlc-cache-gen"
+  },
+  {
+    "name": "ConfigSecurityPolicy",
+    "exe": "C:\\Program Files\\Windows Defender\\ConfigSecurityPolicy.exe",
+    "title_hint": "ConfigSecurityPolicy"
+  },
+  {
+    "name": "DlpUserAgent",
+    "exe": "C:\\Program Files\\Windows Defender\\DlpUserAgent.exe",
+    "title_hint": "DlpUserAgent"
+  },
+  {
+    "name": "MipDlp",
+    "exe": "C:\\Program Files\\Windows Defender\\MipDlp.exe",
+    "title_hint": "MipDlp"
+  },
+  {
+    "name": "MpCmdRun",
+    "exe": "C:\\Program Files\\Windows Defender\\MpCmdRun.exe",
+    "title_hint": "MpCmdRun"
+  },
+  {
+    "name": "MpCopyAccelerator",
+    "exe": "C:\\Program Files\\Windows Defender\\MpCopyAccelerator.exe",
+    "title_hint": "MpCopyAccelerator"
+  },
+  {
+    "name": "MpDefenderCoreService",
+    "exe": "C:\\Program Files\\Windows Defender\\MpDefenderCoreService.exe",
+    "title_hint": "MpDefenderCoreService"
+  },
+  {
+    "name": "MpDlpCmd",
+    "exe": "C:\\Program Files\\Windows Defender\\MpDlpCmd.exe",
+    "title_hint": "MpDlpCmd"
+  },
+  {
+    "name": "MpDlpService",
+    "exe": "C:\\Program Files\\Windows Defender\\MpDlpService.exe",
+    "title_hint": "MpDlpService"
+  },
+  {
+    "name": "mpextms",
+    "exe": "C:\\Program Files\\Windows Defender\\mpextms.exe",
+    "title_hint": "mpextms"
+  },
+  {
+    "name": "MsMpEng",
+    "exe": "C:\\Program Files\\Windows Defender\\MsMpEng.exe",
+    "title_hint": "MsMpEng"
+  },
+  {
+    "name": "NisSrv",
+    "exe": "C:\\Program Files\\Windows Defender\\NisSrv.exe",
+    "title_hint": "NisSrv"
+  },
+  {
+    "name": "OfflineScannerShell",
+    "exe": "C:\\Program Files\\Windows Defender\\Offline\\OfflineScannerShell.exe",
+    "title_hint": "OfflineScannerShell"
+  },
+  {
+    "name": "MsSense",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\MsSense.exe",
+    "title_hint": "MsSense"
+  },
+  {
+    "name": "SenseAP",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseAP.exe",
+    "title_hint": "SenseAP"
+  },
+  {
+    "name": "SenseAPToast",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseAPToast.exe",
+    "title_hint": "SenseAPToast"
+  },
+  {
+    "name": "SenseCM",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseCM.exe",
+    "title_hint": "SenseCM"
+  },
+  {
+    "name": "SenseDlpProcessor",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseDlpProcessor.exe",
+    "title_hint": "SenseDlpProcessor"
+  },
+  {
+    "name": "SenseDlpService",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseDlpService.exe",
+    "title_hint": "SenseDlpService"
+  },
+  {
+    "name": "SenseGPParser",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseGPParser.exe",
+    "title_hint": "SenseGPParser"
+  },
+  {
+    "name": "SenseIdentity",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseIdentity.exe",
+    "title_hint": "SenseIdentity"
+  },
+  {
+    "name": "SenseImdsCollector",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseImdsCollector.exe",
+    "title_hint": "SenseImdsCollector"
+  },
+  {
+    "name": "SenseIR",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseIR.exe",
+    "title_hint": "SenseIR"
+  },
+  {
+    "name": "SenseNAS",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseNAS.exe",
+    "title_hint": "SenseNAS"
+  },
+  {
+    "name": "SenseNdr",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseNdr.exe",
+    "title_hint": "SenseNdr"
+  },
+  {
+    "name": "SenseSampleUploader",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseSampleUploader.exe",
+    "title_hint": "SenseSampleUploader"
+  },
+  {
+    "name": "SenseTracer",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseTracer.exe",
+    "title_hint": "SenseTracer"
+  },
+  {
+    "name": "SenseTVM",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\SenseTVM.exe",
+    "title_hint": "SenseTVM"
+  },
+  {
+    "name": "SenseCE",
+    "exe": "C:\\Program Files\\Windows Defender Advanced Threat Protection\\Classification\\SenseCE.exe",
+    "title_hint": "SenseCE"
+  },
+  {
+    "name": "wab",
+    "exe": "C:\\Program Files\\Windows Mail\\wab.exe",
+    "title_hint": "wab"
+  },
+  {
+    "name": "wabmig",
+    "exe": "C:\\Program Files\\Windows Mail\\wabmig.exe",
+    "title_hint": "wabmig"
+  },
+  {
+    "name": "wmlaunch",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmlaunch.exe",
+    "title_hint": "wmlaunch"
+  },
+  {
+    "name": "wmpconfig",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmpconfig.exe",
+    "title_hint": "wmpconfig"
+  },
+  {
+    "name": "wmplayer",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmplayer.exe",
+    "title_hint": "wmplayer"
+  },
+  {
+    "name": "wmpnetwk",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmpnetwk.exe",
+    "title_hint": "wmpnetwk"
+  },
+  {
+    "name": "wmpnscfg",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmpnscfg.exe",
+    "title_hint": "wmpnscfg"
+  },
+  {
+    "name": "wmprph",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmprph.exe",
+    "title_hint": "wmprph"
+  },
+  {
+    "name": "wmpshare",
+    "exe": "C:\\Program Files\\Windows Media Player\\wmpshare.exe",
+    "title_hint": "wmpshare"
+  },
+  {
+    "name": "ImagingDevices",
+    "exe": "C:\\Program Files\\Windows Photo Viewer\\ImagingDevices.exe",
+    "title_hint": "ImagingDevices"
+  },
+  {
+    "name": "AcroBroker",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AcroBroker.exe",
+    "title_hint": "AcroBroker"
+  },
+  {
+    "name": "AcroRd32",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AcroRd32.exe",
+    "title_hint": "AcroRd32"
+  },
+  {
+    "name": "AcroRd32Info",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AcroRd32Info.exe",
+    "title_hint": "AcroRd32Info"
+  },
+  {
+    "name": "AdobeCollabSync",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AdobeCollabSync.exe",
+    "title_hint": "AdobeCollabSync"
+  },
+  {
+    "name": "arh",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\arh.exe",
+    "title_hint": "arh"
+  },
+  {
+    "name": "Eula",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\Eula.exe",
+    "title_hint": "Eula"
+  },
+  {
+    "name": "LogTransport2",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\LogTransport2.exe",
+    "title_hint": "LogTransport2"
+  },
+  {
+    "name": "reader_sl",
+    "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\reader_sl.exe",
+    "title_hint": "reader_sl"
+  },
+  {
+    "name": "adb",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\adb.exe",
+    "title_hint": "adb"
+  },
+  {
+    "name": "etc1tool",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\etc1tool.exe",
+    "title_hint": "etc1tool"
+  },
+  {
+    "name": "fastboot",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\fastboot.exe",
+    "title_hint": "fastboot"
+  },
+  {
+    "name": "hprof-conv",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\hprof-conv.exe",
+    "title_hint": "hprof-conv"
+  },
+  {
+    "name": "make_f2fs",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\make_f2fs.exe",
+    "title_hint": "make_f2fs"
+  },
+  {
+    "name": "make_f2fs_casefold",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\make_f2fs_casefold.exe",
+    "title_hint": "make_f2fs_casefold"
+  },
+  {
+    "name": "mke2fs",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\mke2fs.exe",
+    "title_hint": "mke2fs"
+  },
+  {
+    "name": "sqlite3",
+    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\sqlite3.exe",
+    "title_hint": "sqlite3"
+  },
+  {
+    "name": "pipanel",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\ink\\pipanel.exe",
+    "title_hint": "pipanel"
+  },
+  {
+    "name": "TabTip32",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\ink\\TabTip32.exe",
+    "title_hint": "TabTip32"
+  },
+  {
+    "name": "VSLauncher",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\MSEnv\\VSLauncher.exe",
+    "title_hint": "VSLauncher"
+  },
+  {
+    "name": "msinfo32",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\MSInfo\\msinfo32.exe",
+    "title_hint": "msinfo32"
+  },
+  {
+    "name": "drivers",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Steam\\drivers.exe",
+    "title_hint": "drivers"
+  },
+  {
+    "name": "secure_desktop_capture",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Steam\\secure_desktop_capture.exe",
+    "title_hint": "secure_desktop_capture"
+  },
+  {
+    "name": "steamservice",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Steam\\steamservice.exe",
+    "title_hint": "steamservice"
+  },
+  {
+    "name": "steamxboxutil64",
+    "exe": "C:\\Program Files (x86)\\Common Files\\Steam\\steamxboxutil64.exe",
+    "title_hint": "steamxboxutil64"
+  },
+  {
+    "name": "hhc",
+    "exe": "C:\\Program Files (x86)\\HTML Help Workshop\\hhc.exe",
+    "title_hint": "hhc"
+  },
+  {
+    "name": "build-cache-redis-server",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\build-cache-redis-server.exe",
+    "title_hint": "build-cache-redis-server"
+  },
+  {
+    "name": "BuildAbout",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildAbout.exe",
+    "title_hint": "BuildAbout"
+  },
+  {
+    "name": "BuildCacheService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildCacheService.exe",
+    "title_hint": "BuildCacheService"
+  },
+  {
+    "name": "BuildConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole.exe",
+    "title_hint": "BuildConsole"
+  },
+  {
+    "name": "BuildConsole32",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole32.exe",
+    "title_hint": "BuildConsole32"
+  },
+  {
+    "name": "BuildConsole64",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole64.exe",
+    "title_hint": "BuildConsole64"
+  },
+  {
+    "name": "BuildDataExtractor",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildDataExtractor.exe",
+    "title_hint": "BuildDataExtractor"
+  },
+  {
+    "name": "BuildFile",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildFile.exe",
+    "title_hint": "BuildFile"
+  },
+  {
+    "name": "BuildService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildService.exe",
+    "title_hint": "BuildService"
+  },
+  {
+    "name": "BuildSystem",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildSystem.exe",
+    "title_hint": "BuildSystem"
+  },
+  {
+    "name": "CLWrapGL",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CLWrapGL.exe",
+    "title_hint": "CLWrapGL"
+  },
+  {
+    "name": "CoordinatorService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CoordinatorService.exe",
+    "title_hint": "CoordinatorService"
+  },
+  {
+    "name": "CPUInfo",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CPUInfo.exe",
+    "title_hint": "CPUInfo"
+  },
+  {
+    "name": "CTRBuild",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CTRBuild.exe",
+    "title_hint": "CTRBuild"
+  },
+  {
+    "name": "CtrlBreak",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CtrlBreak.exe",
+    "title_hint": "CtrlBreak"
+  },
+  {
+    "name": "eps_binaries_x86",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\eps_binaries_x86.exe",
+    "title_hint": "eps_binaries_x86"
+  },
+  {
+    "name": "IbBuildProxy",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbBuildProxy.exe",
+    "title_hint": "IbBuildProxy"
+  },
+  {
+    "name": "IbConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole.exe",
+    "title_hint": "IbConsole"
+  },
+  {
+    "name": "IbConsole32",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole32.exe",
+    "title_hint": "IbConsole32"
+  },
+  {
+    "name": "IbConsole64",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole64.exe",
+    "title_hint": "IbConsole64"
+  },
+  {
+    "name": "IBCustomStep",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IBCustomStep.exe",
+    "title_hint": "IBCustomStep"
+  },
+  {
+    "name": "IbTaskRunner",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTaskRunner.exe",
+    "title_hint": "IbTaskRunner"
+  },
+  {
+    "name": "IbTestConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTestConsole.exe",
+    "title_hint": "IbTestConsole"
+  },
+  {
+    "name": "IbTestWait",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTestWait.exe",
+    "title_hint": "IbTestWait"
+  },
+  {
+    "name": "ib_cert_validator_64",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ib_cert_validator_64.exe",
+    "title_hint": "ib_cert_validator_64"
+  },
+  {
+    "name": "ICLWrap",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ICLWrap.exe",
+    "title_hint": "ICLWrap"
+  },
+  {
+    "name": "LicenseService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\LicenseService.exe",
+    "title_hint": "LicenseService"
+  },
+  {
+    "name": "LicenseServiceConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\LicenseServiceConsole.exe",
+    "title_hint": "LicenseServiceConsole"
+  },
+  {
+    "name": "machineid",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\machineid.exe",
+    "title_hint": "machineid"
+  },
+  {
+    "name": "MailSpawn",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\MailSpawn.exe",
+    "title_hint": "MailSpawn"
+  },
+  {
+    "name": "SolutionConverter",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\SolutionConverter.exe",
+    "title_hint": "SolutionConverter"
+  },
+  {
+    "name": "VersionRollback",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VersionRollback.exe",
+    "title_hint": "VersionRollback"
+  },
+  {
+    "name": "VS15AddIn",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VS15AddIn.exe",
+    "title_hint": "VS15AddIn"
+  },
+  {
+    "name": "VSICafeBuild",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VSICafeBuild.exe",
+    "title_hint": "VSICafeBuild"
+  },
+  {
+    "name": "xgConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole.exe",
+    "title_hint": "xgConsole"
+  },
+  {
+    "name": "xgConsole32",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole32.exe",
+    "title_hint": "xgConsole32"
+  },
+  {
+    "name": "xgConsole64",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole64.exe",
+    "title_hint": "xgConsole64"
+  },
+  {
+    "name": "xgCoordConsole",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgCoordConsole.exe",
+    "title_hint": "xgCoordConsole"
+  },
+  {
+    "name": "xgHandle",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgHandle.exe",
+    "title_hint": "xgHandle"
+  },
+  {
+    "name": "xgHandle64",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgHandle64.exe",
+    "title_hint": "xgHandle64"
+  },
+  {
+    "name": "xgLogTask",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgLogTask.exe",
+    "title_hint": "xgLogTask"
+  },
+  {
+    "name": "xgMemInfo",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgMemInfo.exe",
+    "title_hint": "xgMemInfo"
+  },
+  {
+    "name": "xgSubmit",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgSubmit.exe",
+    "title_hint": "xgSubmit"
+  },
+  {
+    "name": "xgTrayIcon",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgTrayIcon.exe",
+    "title_hint": "xgTrayIcon"
+  },
+  {
+    "name": "xgWait",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgWait.exe",
+    "title_hint": "xgWait"
+  },
+  {
+    "name": "endpointService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\eps\\endpointService.exe",
+    "title_hint": "endpointService"
+  },
+  {
+    "name": "Manager",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Manager\\Manager.exe",
+    "title_hint": "Manager"
+  },
+  {
+    "name": "ManagerService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Manager\\ManagerService.exe",
+    "title_hint": "ManagerService"
+  },
+  {
+    "name": "Manager",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ManagerInstallBackup\\Manager\\Manager.exe",
+    "title_hint": "Manager"
+  },
+  {
+    "name": "ManagerService",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ManagerInstallBackup\\Manager\\ManagerService.exe",
+    "title_hint": "ManagerService"
+  },
+  {
+    "name": "NUnit2TestExplore",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NUnit2Discovery\\NUnit2TestExplore.exe",
+    "title_hint": "NUnit2TestExplore"
+  },
+  {
+    "name": "NUnit2TestExplore86",
+    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NUnit2Discovery\\NUnit2TestExplore86.exe",
+    "title_hint": "NUnit2TestExplore86"
+  },
+  {
+    "name": "ExtExport",
+    "exe": "C:\\Program Files (x86)\\Internet Explorer\\ExtExport.exe",
+    "title_hint": "ExtExport"
+  },
+  {
+    "name": "ieinstal",
+    "exe": "C:\\Program Files (x86)\\Internet Explorer\\ieinstal.exe",
+    "title_hint": "ieinstal"
+  },
+  {
+    "name": "ielowutil",
+    "exe": "C:\\Program Files (x86)\\Internet Explorer\\ielowutil.exe",
+    "title_hint": "ielowutil"
+  },
+  {
+    "name": "iexplore",
+    "exe": "C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe",
+    "title_hint": "iexplore"
+  },
+  {
+    "name": "msedge_proxy",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge_proxy.exe",
+    "title_hint": "msedge_proxy"
+  },
+  {
+    "name": "cookie_exporter",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\cookie_exporter.exe",
+    "title_hint": "cookie_exporter"
+  },
+  {
+    "name": "elevated_tracing_service",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\elevated_tracing_service.exe",
+    "title_hint": "elevated_tracing_service"
+  },
+  {
+    "name": "elevation_service",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\elevation_service.exe",
+    "title_hint": "elevation_service"
+  },
+  {
+    "name": "mscopilot",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\mscopilot.exe",
+    "title_hint": "mscopilot"
+  },
+  {
+    "name": "msedge",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\msedge.exe",
+    "title_hint": "msedge"
+  },
+  {
+    "name": "msedgewebview2",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\msedgewebview2.exe",
+    "title_hint": "msedgewebview2"
+  },
+  {
+    "name": "msedge_proxy",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\msedge_proxy.exe",
+    "title_hint": "msedge_proxy"
+  },
+  {
+    "name": "msedge_pwa_launcher",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\146.0.3856.97\\msedge_pwa_launcher.exe",
+    "title_hint": "msedge_pwa_launcher"
+  },
+  {
+    "name": "cookie_exporter",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\cookie_exporter.exe",
+    "title_hint": "cookie_exporter"
+  },
+  {
+    "name": "elevated_tracing_service",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\elevated_tracing_service.exe",
+    "title_hint": "elevated_tracing_service"
+  },
+  {
+    "name": "elevation_service",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\elevation_service.exe",
+    "title_hint": "elevation_service"
+  },
+  {
+    "name": "mscopilot",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\mscopilot.exe",
+    "title_hint": "mscopilot"
+  },
+  {
+    "name": "msedge",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\msedge.exe",
+    "title_hint": "msedge"
+  },
+  {
+    "name": "msedgewebview2",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\msedgewebview2.exe",
+    "title_hint": "msedgewebview2"
+  },
+  {
+    "name": "msedge_proxy",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\msedge_proxy.exe",
+    "title_hint": "msedge_proxy"
+  },
+  {
+    "name": "msedge_pwa_launcher",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeCore\\Optimized\\msedge_pwa_launcher.exe",
+    "title_hint": "msedge_pwa_launcher"
+  },
+  {
+    "name": "MicrosoftEdgeComRegisterShellARM64",
+    "exe": "C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\1.3.225.7\\MicrosoftEdgeComRegisterShellARM64.exe",
+    "title_hint": "MicrosoftEdgeComRegisterShellARM64"
+  },
+  {
+    "name": "AppVDllSurrogate",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Client\\AppVDllSurrogate.exe",
+    "title_hint": "AppVDllSurrogate"
+  },
+  {
+    "name": "AppVDllSurrogate32",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Client\\AppVDllSurrogate32.exe",
+    "title_hint": "AppVDllSurrogate32"
+  },
+  {
+    "name": "AppVDllSurrogate64",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Client\\AppVDllSurrogate64.exe",
+    "title_hint": "AppVDllSurrogate64"
+  },
+  {
+    "name": "AppVLP",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Client\\AppVLP.exe",
+    "title_hint": "AppVLP"
+  },
+  {
+    "name": "Integrator",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Integration\\Integrator.exe",
+    "title_hint": "Integrator"
+  },
+  {
+    "name": "ACCICONS",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\ACCICONS.EXE",
+    "title_hint": "ACCICONS"
+  },
+  {
+    "name": "CLVIEW",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\CLVIEW.EXE",
+    "title_hint": "CLVIEW"
+  },
+  {
+    "name": "CNFNOT32",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\CNFNOT32.EXE",
+    "title_hint": "CNFNOT32"
+  },
+  {
+    "name": "excelcnv",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\excelcnv.exe",
+    "title_hint": "excelcnv"
+  },
+  {
+    "name": "GRAPH",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\GRAPH.EXE",
+    "title_hint": "GRAPH"
+  },
+  {
+    "name": "misc",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\misc.exe",
+    "title_hint": "misc"
+  },
+  {
+    "name": "msoadfsb",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\msoadfsb.exe",
+    "title_hint": "msoadfsb"
+  },
+  {
+    "name": "msoasb",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\msoasb.exe",
+    "title_hint": "msoasb"
+  },
+  {
+    "name": "MSOHTMED",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\MSOHTMED.EXE",
+    "title_hint": "MSOHTMED"
+  },
+  {
+    "name": "MSOSREC",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\MSOSREC.EXE",
+    "title_hint": "MSOSREC"
+  },
+  {
+    "name": "MSQRY32",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\MSQRY32.EXE",
+    "title_hint": "MSQRY32"
+  },
+  {
+    "name": "NAMECONTROLSERVER",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\NAMECONTROLSERVER.EXE",
+    "title_hint": "NAMECONTROLSERVER"
+  },
+  {
+    "name": "officeappguardwin32",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\officeappguardwin32.exe",
+    "title_hint": "officeappguardwin32"
+  },
+  {
+    "name": "OfficeScrBroker",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OfficeScrBroker.exe",
+    "title_hint": "OfficeScrBroker"
+  },
+  {
+    "name": "OfficeScrSanBroker",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OfficeScrSanBroker.exe",
+    "title_hint": "OfficeScrSanBroker"
+  },
+  {
+    "name": "OLCFG",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OLCFG.EXE",
+    "title_hint": "OLCFG"
+  },
+  {
+    "name": "ONENOTEM",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\ONENOTEM.EXE",
+    "title_hint": "ONENOTEM"
+  },
+  {
+    "name": "ORGCHART",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\ORGCHART.EXE",
+    "title_hint": "ORGCHART"
+  },
+  {
+    "name": "OSPPREARM",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OSPPREARM.EXE",
+    "title_hint": "OSPPREARM"
+  },
+  {
+    "name": "PDFREFLOW",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\PDFREFLOW.EXE",
+    "title_hint": "PDFREFLOW"
+  },
+  {
+    "name": "PerfBoost",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\PerfBoost.exe",
+    "title_hint": "PerfBoost"
+  },
+  {
+    "name": "PPTICO",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\PPTICO.EXE",
+    "title_hint": "PPTICO"
+  },
+  {
+    "name": "protocolhandler",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\protocolhandler.exe",
+    "title_hint": "protocolhandler"
+  },
+  {
+    "name": "SCANPST",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SCANPST.EXE",
+    "title_hint": "SCANPST"
+  },
+  {
+    "name": "SELFCERT",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SELFCERT.EXE",
+    "title_hint": "SELFCERT"
+  },
+  {
+    "name": "VPREVIEW",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\VPREVIEW.EXE",
+    "title_hint": "VPREVIEW"
+  },
+  {
+    "name": "Wordconv",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\Wordconv.exe",
+    "title_hint": "Wordconv"
+  },
+  {
+    "name": "WORDICON",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\WORDICON.EXE",
+    "title_hint": "WORDICON"
+  },
+  {
+    "name": "XLICONS",
+    "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\XLICONS.EXE",
+    "title_hint": "XLICONS"
+  },
+  {
+    "name": "signtool",
+    "exe": "C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce\\SignTool\\signtool.exe",
+    "title_hint": "signtool"
+  },
+  {
+    "name": "Launcher",
+    "exe": "C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce Bootstrapper\\Engine\\Launcher.exe",
+    "title_hint": "Launcher"
+  },
+  {
+    "name": "feedback",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\feedback.exe",
+    "title_hint": "feedback"
+  },
+  {
+    "name": "InstallCleanup",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\InstallCleanup.exe",
+    "title_hint": "InstallCleanup"
+  },
+  {
+    "name": "VSInstallerElevationService",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\VSInstallerElevationService.exe",
+    "title_hint": "VSInstallerElevationService"
+  },
+  {
+    "name": "vswhere",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe",
+    "title_hint": "vswhere"
+  },
+  {
+    "name": "vs_installer",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vs_installer.exe",
+    "title_hint": "vs_installer"
+  },
+  {
+    "name": "vs_installer.windows",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vs_installer.windows.exe",
+    "title_hint": "vs_installer.windows"
+  },
+  {
+    "name": "vs_installershell",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vs_installershell.exe",
+    "title_hint": "vs_installershell"
+  },
+  {
+    "name": "vs_layout",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vs_layout.exe",
+    "title_hint": "vs_layout"
+  },
+  {
+    "name": "dump64",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\Feedback\\dump64.exe",
+    "title_hint": "dump64"
+  },
+  {
+    "name": "dump64a",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\Feedback\\dump64a.exe",
+    "title_hint": "dump64a"
+  },
+  {
+    "name": "Microsoft.VisualStudio.GitHubProtocolHandler",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\GitHubProtocolHandler\\Microsoft.VisualStudio.GitHubProtocolHandler.exe",
+    "title_hint": "Microsoft.VisualStudio.GitHubProtocolHandler"
+  },
+  {
+    "name": "Microsoft.VisualStudio.VsWebProtocolSelector",
+    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\VsWebProtocolSelector\\Microsoft.VisualStudio.VsWebProtocolSelector.exe",
+    "title_hint": "Microsoft.VisualStudio.VsWebProtocolSelector"
+  },
+  {
+    "name": "VisualStudio.Remoted.Simulator",
+    "exe": "C:\\Program Files (x86)\\Visual Studio\\Shared\\RemotedSimulator\\VisualStudio.Remoted.Simulator.exe",
+    "title_hint": "VisualStudio.Remoted.Simulator"
+  },
+  {
+    "name": "MpCmdRun",
+    "exe": "C:\\Program Files (x86)\\Windows Defender\\MpCmdRun.exe",
+    "title_hint": "MpCmdRun"
+  },
+  {
+    "name": "aitstatic",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\aitstatic.exe",
+    "title_hint": "aitstatic"
+  },
+  {
+    "name": "appcert",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\appcert.exe",
+    "title_hint": "appcert"
+  },
+  {
+    "name": "makeappx",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\makeappx.exe",
+    "title_hint": "makeappx"
+  },
+  {
+    "name": "microsoft.windows.softwarelogo.appxlauncher",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\microsoft.windows.softwarelogo.appxlauncher.exe",
+    "title_hint": "microsoft.windows.softwarelogo.appxlauncher"
+  },
+  {
+    "name": "microsoft.windows.softwarelogo.taskengine",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\microsoft.windows.softwarelogo.taskengine.exe",
+    "title_hint": "microsoft.windows.softwarelogo.taskengine"
+  },
+  {
+    "name": "rmlogotest",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\rmlogotest.exe",
+    "title_hint": "rmlogotest"
+  },
+  {
+    "name": "signtool",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\signtool.exe",
+    "title_hint": "signtool"
+  },
+  {
+    "name": "createdump",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\createdump.exe",
+    "title_hint": "createdump"
+  },
+  {
+    "name": "symcachegen",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\symcachegen.exe",
+    "title_hint": "symcachegen"
+  },
+  {
+    "name": "wpaexporter",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpaexporter.exe",
+    "title_hint": "wpaexporter"
+  },
+  {
+    "name": "wpr",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpr.exe",
+    "title_hint": "wpr"
+  },
+  {
+    "name": "xbootmgr",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xbootmgr.exe",
+    "title_hint": "xbootmgr"
+  },
+  {
+    "name": "xbootmgrsleep",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xbootmgrsleep.exe",
+    "title_hint": "xbootmgrsleep"
+  },
+  {
+    "name": "xperf",
+    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xperf.exe",
+    "title_hint": "xperf"
+  },
+  {
+    "name": "wab",
+    "exe": "C:\\Program Files (x86)\\Windows Mail\\wab.exe",
+    "title_hint": "wab"
+  },
+  {
+    "name": "wabmig",
+    "exe": "C:\\Program Files (x86)\\Windows Mail\\wabmig.exe",
+    "title_hint": "wabmig"
+  },
+  {
+    "name": "wmlaunch",
+    "exe": "C:\\Program Files (x86)\\Windows Media Player\\wmlaunch.exe",
+    "title_hint": "wmlaunch"
+  },
+  {
+    "name": "wmpconfig",
+    "exe": "C:\\Program Files (x86)\\Windows Media Player\\wmpconfig.exe",
+    "title_hint": "wmpconfig"
+  },
+  {
+    "name": "wmprph",
+    "exe": "C:\\Program Files (x86)\\Windows Media Player\\wmprph.exe",
+    "title_hint": "wmprph"
+  },
+  {
+    "name": "wmpshare",
+    "exe": "C:\\Program Files (x86)\\Windows Media Player\\wmpshare.exe",
+    "title_hint": "wmpshare"
+  },
+  {
+    "name": "ImagingDevices",
+    "exe": "C:\\Program Files (x86)\\Windows Photo Viewer\\ImagingDevices.exe",
+    "title_hint": "ImagingDevices"
+  },
+  {
+    "name": "Rar",
+    "exe": "C:\\Program Files (x86)\\WinRAR\\Rar.exe",
+    "title_hint": "Rar"
+  },
+  {
+    "name": "RarExtLoader",
+    "exe": "C:\\Program Files (x86)\\WinRAR\\RarExtLoader.exe",
+    "title_hint": "RarExtLoader"
+  },
+  {
+    "name": "UnRAR",
+    "exe": "C:\\Program Files (x86)\\WinRAR\\UnRAR.exe",
+    "title_hint": "UnRAR"
+  },
+  {
+    "name": "unins000",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Kiro\\unins000.exe",
+    "title_hint": "unins000"
+  },
+  {
+    "name": "datasets-cli",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\datasets-cli.exe",
+    "title_hint": "datasets-cli"
+  },
+  {
+    "name": "dotenv",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\dotenv.exe",
+    "title_hint": "dotenv"
+  },
+  {
+    "name": "estimator_ckpt_converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\estimator_ckpt_converter.exe",
+    "title_hint": "estimator_ckpt_converter"
+  },
+  {
+    "name": "f2py",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\f2py.exe",
+    "title_hint": "f2py"
+  },
+  {
+    "name": "flower-simulation",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flower-simulation.exe",
+    "title_hint": "flower-simulation"
+  },
+  {
+    "name": "flower-superexec",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flower-superexec.exe",
+    "title_hint": "flower-superexec"
+  },
+  {
+    "name": "flower-superlink",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flower-superlink.exe",
+    "title_hint": "flower-superlink"
+  },
+  {
+    "name": "flower-supernode",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flower-supernode.exe",
+    "title_hint": "flower-supernode"
+  },
+  {
+    "name": "flwr-clientapp",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flwr-clientapp.exe",
+    "title_hint": "flwr-clientapp"
+  },
+  {
+    "name": "flwr-serverapp",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flwr-serverapp.exe",
+    "title_hint": "flwr-serverapp"
+  },
+  {
+    "name": "flwr-simulation",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flwr-simulation.exe",
+    "title_hint": "flwr-simulation"
+  },
+  {
+    "name": "flwr",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\flwr.exe",
+    "title_hint": "flwr"
+  },
+  {
+    "name": "fonttools",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\fonttools.exe",
+    "title_hint": "fonttools"
+  },
+  {
+    "name": "google-oauthlib-tool",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\google-oauthlib-tool.exe",
+    "title_hint": "google-oauthlib-tool"
+  },
+  {
+    "name": "hf",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\hf.exe",
+    "title_hint": "hf"
+  },
+  {
+    "name": "httpx",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\httpx.exe",
+    "title_hint": "httpx"
+  },
+  {
+    "name": "import_pb_to_tensorboard",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\import_pb_to_tensorboard.exe",
+    "title_hint": "import_pb_to_tensorboard"
+  },
+  {
+    "name": "jsonschema",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\jsonschema.exe",
+    "title_hint": "jsonschema"
+  },
+  {
+    "name": "markdown-it",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\markdown-it.exe",
+    "title_hint": "markdown-it"
+  },
+  {
+    "name": "markdown_py",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\markdown_py.exe",
+    "title_hint": "markdown_py"
+  },
+  {
+    "name": "normalizer",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\normalizer.exe",
+    "title_hint": "normalizer"
+  },
+  {
+    "name": "pip",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pip.exe",
+    "title_hint": "pip"
+  },
+  {
+    "name": "pip3.10",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pip3.10.exe",
+    "title_hint": "pip3.10"
+  },
+  {
+    "name": "pip3",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pip3.exe",
+    "title_hint": "pip3"
+  },
+  {
+    "name": "pyftmerge",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyftmerge.exe",
+    "title_hint": "pyftmerge"
+  },
+  {
+    "name": "pyftsubset",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyftsubset.exe",
+    "title_hint": "pyftsubset"
+  },
+  {
+    "name": "pygmentize",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pygmentize.exe",
+    "title_hint": "pygmentize"
+  },
+  {
+    "name": "pyrsa-decrypt",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-decrypt.exe",
+    "title_hint": "pyrsa-decrypt"
+  },
+  {
+    "name": "pyrsa-encrypt",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-encrypt.exe",
+    "title_hint": "pyrsa-encrypt"
+  },
+  {
+    "name": "pyrsa-keygen",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-keygen.exe",
+    "title_hint": "pyrsa-keygen"
+  },
+  {
+    "name": "pyrsa-priv2pub",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-priv2pub.exe",
+    "title_hint": "pyrsa-priv2pub"
+  },
+  {
+    "name": "pyrsa-sign",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-sign.exe",
+    "title_hint": "pyrsa-sign"
+  },
+  {
+    "name": "pyrsa-verify",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\pyrsa-verify.exe",
+    "title_hint": "pyrsa-verify"
+  },
+  {
+    "name": "ray",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\ray.exe",
+    "title_hint": "ray"
+  },
+  {
+    "name": "rllib",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\rllib.exe",
+    "title_hint": "rllib"
+  },
+  {
+    "name": "saved_model_cli",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\saved_model_cli.exe",
+    "title_hint": "saved_model_cli"
+  },
+  {
+    "name": "serve",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\serve.exe",
+    "title_hint": "serve"
+  },
+  {
+    "name": "tensorboard",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tensorboard.exe",
+    "title_hint": "tensorboard"
+  },
+  {
+    "name": "tflite_convert",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tflite_convert.exe",
+    "title_hint": "tflite_convert"
+  },
+  {
+    "name": "tf_upgrade_v2",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tf_upgrade_v2.exe",
+    "title_hint": "tf_upgrade_v2"
+  },
+  {
+    "name": "tiny-agents",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tiny-agents.exe",
+    "title_hint": "tiny-agents"
+  },
+  {
+    "name": "toco",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\toco.exe",
+    "title_hint": "toco"
+  },
+  {
+    "name": "toco_from_protos",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\toco_from_protos.exe",
+    "title_hint": "toco_from_protos"
+  },
+  {
+    "name": "tqdm",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tqdm.exe",
+    "title_hint": "tqdm"
+  },
+  {
+    "name": "ttx",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\ttx.exe",
+    "title_hint": "ttx"
+  },
+  {
+    "name": "tune",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\tune.exe",
+    "title_hint": "tune"
+  },
+  {
+    "name": "typer",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\typer.exe",
+    "title_hint": "typer"
+  },
+  {
+    "name": "wandb",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\wandb.exe",
+    "title_hint": "wandb"
+  },
+  {
+    "name": "wb",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\wb.exe",
+    "title_hint": "wb"
+  },
+  {
+    "name": "wheel",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python310\\Scripts\\wheel.exe",
+    "title_hint": "wheel"
+  },
+  {
+    "name": "bedrock-agentcore",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\bedrock-agentcore.exe",
+    "title_hint": "bedrock-agentcore"
+  },
+  {
+    "name": "ct2-fairseq-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-fairseq-converter.exe",
+    "title_hint": "ct2-fairseq-converter"
+  },
+  {
+    "name": "ct2-marian-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-marian-converter.exe",
+    "title_hint": "ct2-marian-converter"
+  },
+  {
+    "name": "ct2-openai-gpt2-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-openai-gpt2-converter.exe",
+    "title_hint": "ct2-openai-gpt2-converter"
+  },
+  {
+    "name": "ct2-opennmt-py-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-opennmt-py-converter.exe",
+    "title_hint": "ct2-opennmt-py-converter"
+  },
+  {
+    "name": "ct2-opennmt-tf-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-opennmt-tf-converter.exe",
+    "title_hint": "ct2-opennmt-tf-converter"
+  },
+  {
+    "name": "ct2-opus-mt-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-opus-mt-converter.exe",
+    "title_hint": "ct2-opus-mt-converter"
+  },
+  {
+    "name": "ct2-transformers-converter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ct2-transformers-converter.exe",
+    "title_hint": "ct2-transformers-converter"
+  },
+  {
+    "name": "dashscope",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\dashscope.exe",
+    "title_hint": "dashscope"
+  },
+  {
+    "name": "debugpy-adapter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\debugpy-adapter.exe",
+    "title_hint": "debugpy-adapter"
+  },
+  {
+    "name": "debugpy",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\debugpy.exe",
+    "title_hint": "debugpy"
+  },
+  {
+    "name": "distro",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\distro.exe",
+    "title_hint": "distro"
+  },
+  {
+    "name": "dotenv",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\dotenv.exe",
+    "title_hint": "dotenv"
+  },
+  {
+    "name": "f2py",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\f2py.exe",
+    "title_hint": "f2py"
+  },
+  {
+    "name": "fastapi",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\fastapi.exe",
+    "title_hint": "fastapi"
+  },
+  {
+    "name": "gradio",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\gradio.exe",
+    "title_hint": "gradio"
+  },
+  {
+    "name": "hf",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\hf.exe",
+    "title_hint": "hf"
+  },
+  {
+    "name": "httpx",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\httpx.exe",
+    "title_hint": "httpx"
+  },
+  {
+    "name": "ipython",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ipython.exe",
+    "title_hint": "ipython"
+  },
+  {
+    "name": "ipython3",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ipython3.exe",
+    "title_hint": "ipython3"
+  },
+  {
+    "name": "isympy",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\isympy.exe",
+    "title_hint": "isympy"
+  },
+  {
+    "name": "jlpm",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jlpm.exe",
+    "title_hint": "jlpm"
+  },
+  {
+    "name": "jsonschema",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jsonschema.exe",
+    "title_hint": "jsonschema"
+  },
+  {
+    "name": "jupyter-console",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-console.exe",
+    "title_hint": "jupyter-console"
+  },
+  {
+    "name": "jupyter-dejavu",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-dejavu.exe",
+    "title_hint": "jupyter-dejavu"
+  },
+  {
+    "name": "jupyter-events",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-events.exe",
+    "title_hint": "jupyter-events"
+  },
+  {
+    "name": "jupyter-execute",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-execute.exe",
+    "title_hint": "jupyter-execute"
+  },
+  {
+    "name": "jupyter-kernel",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-kernel.exe",
+    "title_hint": "jupyter-kernel"
+  },
+  {
+    "name": "jupyter-kernelspec",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-kernelspec.exe",
+    "title_hint": "jupyter-kernelspec"
+  },
+  {
+    "name": "jupyter-lab",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-lab.exe",
+    "title_hint": "jupyter-lab"
+  },
+  {
+    "name": "jupyter-labextension",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-labextension.exe",
+    "title_hint": "jupyter-labextension"
+  },
+  {
+    "name": "jupyter-labhub",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-labhub.exe",
+    "title_hint": "jupyter-labhub"
+  },
+  {
+    "name": "jupyter-migrate",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-migrate.exe",
+    "title_hint": "jupyter-migrate"
+  },
+  {
+    "name": "jupyter-nbconvert",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-nbconvert.exe",
+    "title_hint": "jupyter-nbconvert"
+  },
+  {
+    "name": "jupyter-notebook",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-notebook.exe",
+    "title_hint": "jupyter-notebook"
+  },
+  {
+    "name": "jupyter-run",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-run.exe",
+    "title_hint": "jupyter-run"
+  },
+  {
+    "name": "jupyter-server",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-server.exe",
+    "title_hint": "jupyter-server"
+  },
+  {
+    "name": "jupyter-troubleshoot",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-troubleshoot.exe",
+    "title_hint": "jupyter-troubleshoot"
+  },
+  {
+    "name": "jupyter-trust",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter-trust.exe",
+    "title_hint": "jupyter-trust"
+  },
+  {
+    "name": "jupyter",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\jupyter.exe",
+    "title_hint": "jupyter"
+  },
+  {
+    "name": "markdown-it",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\markdown-it.exe",
+    "title_hint": "markdown-it"
+  },
+  {
+    "name": "markdownify",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\markdownify.exe",
+    "title_hint": "markdownify"
+  },
+  {
+    "name": "mcp",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\mcp.exe",
+    "title_hint": "mcp"
+  },
+  {
+    "name": "normalizer",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\normalizer.exe",
+    "title_hint": "normalizer"
+  },
+  {
+    "name": "numpy-config",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\numpy-config.exe",
+    "title_hint": "numpy-config"
+  },
+  {
+    "name": "onnxruntime_test",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\onnxruntime_test.exe",
+    "title_hint": "onnxruntime_test"
+  },
+  {
+    "name": "openai",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\openai.exe",
+    "title_hint": "openai"
+  },
+  {
+    "name": "opentelemetry-bootstrap",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\opentelemetry-bootstrap.exe",
+    "title_hint": "opentelemetry-bootstrap"
+  },
+  {
+    "name": "opentelemetry-instrument",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\opentelemetry-instrument.exe",
+    "title_hint": "opentelemetry-instrument"
+  },
+  {
+    "name": "pdfplumber",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pdfplumber.exe",
+    "title_hint": "pdfplumber"
+  },
+  {
+    "name": "pip",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip.exe",
+    "title_hint": "pip"
+  },
+  {
+    "name": "pip3.11",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip3.11.exe",
+    "title_hint": "pip3.11"
+  },
+  {
+    "name": "pip3",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip3.exe",
+    "title_hint": "pip3"
+  },
+  {
+    "name": "playwright",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\playwright.exe",
+    "title_hint": "playwright"
+  },
+  {
+    "name": "pyav",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pyav.exe",
+    "title_hint": "pyav"
+  },
+  {
+    "name": "pybabel",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pybabel.exe",
+    "title_hint": "pybabel"
+  },
+  {
+    "name": "pygmentize",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pygmentize.exe",
+    "title_hint": "pygmentize"
+  },
+  {
+    "name": "pyjson5",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pyjson5.exe",
+    "title_hint": "pyjson5"
+  },
+  {
+    "name": "pypdfium2",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pypdfium2.exe",
+    "title_hint": "pypdfium2"
+  },
+  {
+    "name": "pywin32_postinstall",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pywin32_postinstall.exe",
+    "title_hint": "pywin32_postinstall"
+  },
+  {
+    "name": "pywin32_testall",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pywin32_testall.exe",
+    "title_hint": "pywin32_testall"
+  },
+  {
+    "name": "ruff",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\ruff.exe",
+    "title_hint": "ruff"
+  },
+  {
+    "name": "send2trash",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\send2trash.exe",
+    "title_hint": "send2trash"
+  },
+  {
+    "name": "sprc",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\sprc.exe",
+    "title_hint": "sprc"
+  },
+  {
+    "name": "tabulate",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\tabulate.exe",
+    "title_hint": "tabulate"
+  },
+  {
+    "name": "tiny-agents",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\tiny-agents.exe",
+    "title_hint": "tiny-agents"
+  },
+  {
+    "name": "tqdm",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\tqdm.exe",
+    "title_hint": "tqdm"
+  },
+  {
+    "name": "typer",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\typer.exe",
+    "title_hint": "typer"
+  },
+  {
+    "name": "upload_theme",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\upload_theme.exe",
+    "title_hint": "upload_theme"
+  },
+  {
+    "name": "uvicorn",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\uvicorn.exe",
+    "title_hint": "uvicorn"
+  },
+  {
+    "name": "watchmedo",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\watchmedo.exe",
+    "title_hint": "watchmedo"
+  },
+  {
+    "name": "websockets",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\websockets.exe",
+    "title_hint": "websockets"
+  },
+  {
+    "name": "wsdump",
+    "exe": "C:\\Users\\Rajesh\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\wsdump.exe",
+    "title_hint": "wsdump"
+  }
+]
