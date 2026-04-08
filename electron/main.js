@@ -176,24 +176,17 @@ function startEmbeddingServer() {
 function startLlama() {
     const settingsPath = path.join(__dirname, '../agent-server/settings.json');
     let modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF";
-    let modelServer = null;
 
     if (fs.existsSync(settingsPath)) {
         try {
             const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-            if (settings.model) modelName = settings.model;
-            if (settings.model_server) modelServer = settings.model_server;
+            if (settings.model && settings.model !== 'default') modelName = settings.model;
         } catch (e) {
             console.error('[LLAMA] Failed to read settings.json:', e.message);
         }
     }
 
-    // Skip local llama-server if an external API is configured
-    if (modelServer && !modelServer.includes('localhost') && !modelServer.includes('127.0.0.1')) {
-        console.log(`[LLAMA] External model_server configured (${modelServer}), skipping local llama-server`);
-        return;
-    }
-
+    // Always start local llama-server; agent settings control which endpoint is used
     const llamaExe = path.join(__dirname, '../deps/llama-cpp/llama-server.exe');
     const llamaEnv = { ...process.env, LLAMA_CACHE: path.join(__dirname, '../models') };
     llamaProcess = spawn(llamaExe, [

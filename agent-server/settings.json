@@ -1,6 +1,6 @@
 {
-  "model_server": "https://router.huggingface.co/v1",
-  "model": "Qwen/Qwen3-VL-235B-A22B-Instruct:novita",
-  "api_key": "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",
+  "model_server": "http://127.0.0.1:11434/v1",
+  "model": "default",
+  "api_key": "none",
   "thinking_enabled": true
 }

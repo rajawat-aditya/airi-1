@@ -53,3 +53,5 @@ agent-server/screenshots/*
 agent-server/context/*
 workspace/*
 synopsis.tex
+
+agent-server\settings.json
