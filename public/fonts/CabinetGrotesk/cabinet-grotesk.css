@@ -1,0 +1,22 @@
+/**
+* @license
+*
+* Font Family: Cabinet Grotesk
+* Designed by: ITF
+* URL: https://www.fontshare.com/fonts/cabinet-grotesk
+* © 2026 Indian Type Foundry
+*
+* Cabinet Grotesk Extrabold 
+
+*
+*/
+@font-face {
+  font-family: 'CabinetGrotesk-Extrabold';
+  src: url('../fonts/CabinetGrotesk-Extrabold.woff2') format('woff2'),
+       url('../fonts/CabinetGrotesk-Extrabold.woff') format('woff'),
+       url('../fonts/CabinetGrotesk-Extrabold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+}
+

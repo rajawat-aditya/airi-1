@@ -3,12 +3,12 @@ import ChatMain from "@/component/chatMain/chatMain";
 import { ChatProvider } from "@/context/ChatContext";
 import { auth0 } from "@/lib/auth0";
 import { redirect } from "next/navigation";
-import { encode } from 'node-base64-image';
+import { fetchAvatarBase64 } from "@/lib/fetchAvatar";
 
 const ChatPage = async ({ params }) => {
     const { chatId } = await params;
     const session = await auth0.getSession();
-    const profilePicBase64 = session?.user?.picture ? await encode(session.user.picture, { string: true }) : null;
+    const profilePicBase64 = await fetchAvatarBase64(session?.user?.picture);
 
     if (!session) redirect('/login');
 

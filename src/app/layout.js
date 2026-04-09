@@ -1,26 +1,36 @@
 import "./globals.css";
 import "../../ui-components/index.css";
-import { Google_Sans_Flex } from "next/font/google";
 import { ThemeProvider } from "../../ui-components/hooks/useTheme";
-
-const googleSansFlex = Google_Sans_Flex({
-  subsets: ['latin', 'latin-ext', 'cyrillic', 'greek'],
-})
+import FluentClientProvider from "@/component/FluentClientProvider";
 
 export const metadata = {
-  title: "Airi | Ai Desktop Assistant Agent",
-  description: "Airi | Ai Desktop Assistant Agent",
+  title: "Airi",
+  description: "Airi",
 };
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <link rel="icon" href="/logo.ico" />
+    <html lang="en" suppressHydrationWarning>
+      <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28' font-family='serif' fill='%230078D4'>A</text></svg>" />
       <body
-        className={`antialiased ${googleSansFlex.className}`}
+        className="antialiased"
+        style={{ fontFamily: 'var(--font-body)' }}
       >
+        {/* Blocking script: apply dark class before first paint to avoid flash */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            try {
+              var t = localStorage.getItem('theme');
+              if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Night' : 'Day';
+              if (t === 'Night') document.documentElement.classList.add('dark');
+              else document.documentElement.classList.remove('dark');
+            } catch(e){}
+          })();
+        `}} />
         <ThemeProvider>
-          {children}
+          <FluentClientProvider>
+            {children}
+          </FluentClientProvider>
         </ThemeProvider>
       </body>
     </html>

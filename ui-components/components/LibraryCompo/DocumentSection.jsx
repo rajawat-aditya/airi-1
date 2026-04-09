@@ -43,7 +43,7 @@ const DocumentItem = ({ doc, onDelete }) => {
 
     return (
         <div className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-bg-hover transition-colors group">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-bg-hover flex items-center justify-center text-text-muted">
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-bg-hover flex items-center justify-center" style={{ color: 'var(--accent-blue)' }}>
                 {getIcon(doc.ext)}
             </div>
             <div className="flex-1 min-w-0">

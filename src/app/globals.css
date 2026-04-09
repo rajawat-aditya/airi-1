@@ -1,5 +1,35 @@
 @import "tailwindcss";
-@tailwind utilities;
+
+/* ── Custom Fonts ── */
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('/fonts/CabinetGrotesk/CabinetGrotesk-Extrabold.woff2') format('woff2'),
+       url('/fonts/CabinetGrotesk/CabinetGrotesk-Extrabold.woff') format('woff'),
+       url('/fonts/CabinetGrotesk/CabinetGrotesk-Extrabold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Santoshi/Satoshi-Medium.woff2') format('woff2'),
+       url('/fonts/Santoshi/Satoshi-Medium.woff') format('woff'),
+       url('/fonts/Santoshi/Satoshi-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zina';
+  src: url('/fonts/Zina/Zina-Regular.woff2') format('woff2'),
+       url('/fonts/Zina/Zina-Regular.woff') format('woff'),
+       url('/fonts/Zina/Zina-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 .titlebar {
   height: 30px;
@@ -23,15 +53,26 @@
   background: transparent; 
 }
 ::-webkit-scrollbar-thumb {
-  background: #52525b; /* Zinc-600 */
+  background: var(--border-default);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #71717a; /* Zinc-500 */
+  background: var(--text-muted);
 }
 
 :root {
-  --card: oklch(1 0 0);
+  --font-heading: 'Cabinet Grotesk', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+  --font-logo: 'Zina', sans-serif;
+  /* Design token bridge — light (Day) */
+  --bg-app:         #f5f5f5;
+  --bg-modal:       #ffffff;
+  --bg-card:        #ebebeb;
+  --bg-hover:       #e0e0e0;
+  --text-primary:   #242424;
+  --text-muted:     #616161;
+  --border-default: #d1d1d1;
+  --accent-blue:    #0078d4;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
@@ -66,6 +107,15 @@
 }
 
 .dark {
+  /* Design token bridge — dark (Night) */
+  --bg-app:         #141414;
+  --bg-modal:       #1f1f1f;
+  --bg-card:        #292929;
+  --bg-hover:       #333333;
+  --text-primary:   #ffffff;
+  --text-muted:     #adadad;
+  --border-default: #404040;
+  --accent-blue:    #479ef5;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -101,6 +151,9 @@
 
 @theme inline {
   --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-logo: var(--font-logo);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -170,33 +223,170 @@
   inset: auto;
 }
 
-/* ── Streamdown / prose message styles ── */
-.prose.prose-invert p {
-  @apply whitespace-pre-wrap leading-7 text-[#e5ebfa];
+/* ── Prose / markdown message styles ── */
+.prose p {
+  white-space: pre-wrap;
+  line-height: 1.75;
+  color: var(--text-primary);
+  font-family: var(--font-body);
   font-variant-ligatures: none;
 }
 
-.prose.prose-invert pre {
-  @apply rounded-xl overflow-hidden border border-white/20 bg-transparent p-0 my-3;
+.prose pre {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  padding: 0;
+  margin: 0.75rem 0;
 }
 
-.prose.prose-invert pre code {
-  @apply block font-mono text-sm px-4 pb-3 pt-4 overflow-x-auto whitespace-pre bg-[#1a1d2e] text-[#e5ebfa];
+.prose pre code {
+  display: block;
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+  padding: 1rem 1rem 0.75rem;
+  overflow-x: auto;
+  white-space: pre;
+  background: var(--bg-card);
+  color: var(--text-primary);
   font-variant-ligatures: none;
 }
 
-.prose.prose-invert h1 { @apply text-2xl font-semibold text-[#e5ebfa] mt-6 mb-2; }
-.prose.prose-invert h2 { @apply text-xl font-semibold text-[#e5ebfa] mt-5 mb-2; }
-.prose.prose-invert h3 { @apply text-lg font-semibold text-[#e5ebfa] mt-4 mb-1; }
+.prose h1 { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary); font-family: var(--font-heading); }
+.prose h2 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--text-primary); font-family: var(--font-heading); }
+.prose h3 { font-size: 1.125rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.25rem; color: var(--text-primary); font-family: var(--font-heading); }
 
-.prose.prose-invert ul { @apply list-disc pl-5 space-y-1 text-[#e5ebfa]; }
-.prose.prose-invert ol { @apply list-decimal pl-5 space-y-1 text-[#e5ebfa]; }
-.prose.prose-invert li { @apply leading-7; }
+.prose ul { list-style-type: disc; padding-left: 1.25rem; color: var(--text-primary); font-family: var(--font-body); }
+.prose ol { list-style-type: decimal; padding-left: 1.25rem; color: var(--text-primary); font-family: var(--font-body); }
+.prose li { line-height: 1.75; }
 
-.prose.prose-invert strong { @apply font-semibold text-white; }
-.prose.prose-invert em { @apply italic; }
+.prose strong { font-weight: 600; color: var(--text-primary); }
+.prose em { font-style: italic; }
 
-.prose.prose-invert :not(pre) > code {
-  @apply bg-[#ffffff12] text-[#e5ebfa] rounded px-1.5 py-0.5 text-sm;
+.prose :not(pre) > code {
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.875rem;
+  background: var(--bg-hover);
+  color: var(--text-primary);
   font-variant-ligatures: none;
+}
+
+/* backward compat alias */
+.prose.prose-invert p { color: var(--text-primary); }
+
+/* ── Settings modal responsive layout ── */
+.settings-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  padding: 0 0 16px 0;
+  gap: 0;
+}
+
+@media (max-width: 540px) {
+  .settings-body {
+    flex-direction: column;
+  }
+  .settings-tabs {
+    min-width: unset !important;
+    padding: 8px 8px 0 8px !important;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .settings-content {
+    padding: 12px 16px !important;
+  }
+}
+
+@media (max-width: 540px) {
+  /* Settings dialog full-screen on mobile */
+  .fui-DialogSurface {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    max-height: 100dvh !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* ── XMarkdown (AI response renderer) ── */
+.xmarkdown-content,
+.xmarkdown-content * {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+}
+.xmarkdown-content p {
+  margin: 0.5rem 0;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+.xmarkdown-content h1, .xmarkdown-content h2, .xmarkdown-content h3,
+.xmarkdown-content h4, .xmarkdown-content h5, .xmarkdown-content h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  color: var(--text-primary);
+}
+.xmarkdown-content h1 { font-size: 1.5rem; }
+.xmarkdown-content h2 { font-size: 1.25rem; }
+.xmarkdown-content h3 { font-size: 1.1rem; }
+.xmarkdown-content ul, .xmarkdown-content ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+.xmarkdown-content li { margin: 0.25rem 0; line-height: 1.7; }
+.xmarkdown-content code {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.875em;
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+.xmarkdown-content pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+.xmarkdown-content pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+}
+.xmarkdown-content blockquote {
+  border-left: 3px solid var(--accent-blue);
+  padding-left: 1rem;
+  margin: 0.75rem 0;
+  color: var(--text-muted);
+}
+.xmarkdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.875rem;
+}
+.xmarkdown-content th, .xmarkdown-content td {
+  border: 1px solid var(--border-default);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.xmarkdown-content th {
+  background: var(--bg-hover);
+  font-weight: 600;
+}
+.xmarkdown-content a {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+.xmarkdown-content strong { font-weight: 600; }
+.xmarkdown-content em { font-style: italic; }
+.xmarkdown-content hr {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: 1rem 0;
 }

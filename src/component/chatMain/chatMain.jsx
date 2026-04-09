@@ -5,7 +5,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import { callAgentAPI } from "@/lib/agent-api";
 import { useChatContext } from "@/context/ChatContext";
-import { ArrowCircleUpRight24Regular } from "@fluentui/react-icons";
+import { Button } from "@fluentui/react-components";
+import { XMarkdown } from "@ant-design/x-markdown";
+import {
+    ArrowCircleUpRight24Regular,
+    Sparkle24Filled,
+    ThumbLike24Filled, ThumbDislike24Filled,
+    Info16Regular, PanelLeft24Regular, Copy24Regular,
+} from "@fluentui/react-icons";
 
 function historyToMessages(chatHistory = []) {
     return chatHistory.map((m, i) => ({
@@ -23,10 +30,27 @@ function messagesToHistory(messages) {
     })).filter((m) => m.content);
 }
 
+// Safe clipboard copy — works in Electron without clipboard permissions
+function safeCopy(text) {
+    try {
+        const el = document.createElement('textarea');
+        el.value = text;
+        el.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+        document.body.appendChild(el);
+        el.focus();
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    } catch (e) {
+        console.warn('[copy] execCommand failed:', e);
+    }
+}
+
 const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
     const [messages, setMessages] = useState([]);
     const [streamingMessageId, setStreamingMessageId] = useState(null);
     const [activeToolName, setActiveToolName] = useState(null); // current tool being called
+    const [feedbackState, setFeedbackState] = useState({}); // { [messageId]: 'up' | 'down' | 'none' }
 
     const chatIdRef = useRef(initialChatId || null);
     const accumulatorRef = useRef("");
@@ -220,7 +244,6 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
         }
     };
 
-    console.log(messages);
     return (
         <main className="flex-1 h-screen overflow-hidden relative py-1.5 px-1.5">
             <div className="bg-bg-modal h-[98vh] rounded-md border border-border-default flex flex-col relative">
@@ -229,7 +252,7 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
                         onClick={() => { const s = document.getElementById("sidebar"); s.setAttribute('data-state', s.getAttribute('data-state') === 'open' ? 'close' : 'open'); }}
                         className="md:hidden text-sm flex items-center justify-center hover:bg-bg-hover transition-all duration-100 cursor-pointer text-text-muted w-9 h-9 rounded-lg"
                     >
-                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="size-5"><path d="M3.75 8.5C3.75 8.08579 4.08579 7.75 4.5 7.75H5.75C6.16421 7.75 6.5 8.08579 6.5 8.5C6.5 8.91421 6.16421 9.25 5.75 9.25H4.5C4.08579 9.25 3.75 8.91421 3.75 8.5ZM3.75 12C3.75 11.5858 4.08579 11.25 4.5 11.25H5.75C6.16421 11.25 6.5 11.5858 6.5 12C6.5 12.4142 6.16421 12.75 5.75 12.75H4.5C4.08579 12.75 3.75 12.4142 3.75 12ZM3.75 15.5C3.75 15.0858 4.08579 14.75 4.5 14.75H5.75C6.16421 14.75 6.5 15.0858 6.5 15.5C6.5 15.9142 6.16421 16.25 5.75 16.25H4.5C4.08579 16.25 3.75 15.9142 3.75 15.5ZM4.25 3C2.45507 3 1 4.45507 1 6.25V17.75C1 19.5449 2.45508 21 4.25 21H19.75C21.5449 21 23 19.5449 23 17.75V6.25C23 4.45507 21.5449 3 19.75 3H4.25ZM19.75 19.5H9V4.5H19.75C20.7165 4.5 21.5 5.2835 21.5 6.25V17.75C21.5 18.7165 20.7165 19.5 19.75 19.5ZM4.25 4.5H7.5V19.5H4.25C3.2835 19.5 2.5 18.7165 2.5 17.75V6.25C2.5 5.2835 3.2835 4.5 4.25 4.5Z"></path></svg>
+                        <PanelLeft24Regular />
                     </div>
                     <div onClick={handleOpenOverlay} className="text-sm flex items-center justify-center hover:bg-bg-hover transition-all duration-100 cursor-pointer text-text-muted w-9 h-9 rounded-lg">
                         <ArrowCircleUpRight24Regular />
@@ -257,27 +280,64 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
                                 )}
                                 {msg.from === "assistant" && (
                                     <div className="flex flex-col items-start group">
+                                        {/* RAI Label — task 11.1 */}
+                                        <div
+                                            data-testid="rai-label"
+                                            className="flex items-center gap-1 mb-1"
+                                            style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--text-muted)' }}
+                                        >
+                                            <Sparkle24Filled style={{ fontSize: 13, color: '#0078D4' }} />
+                                            <span>
+                                                {streamingMessageId === msg.versions[0].id ? "AI is responding…" : "AI-generated"}
+                                            </span>
+                                        </div>
                                         <div className="flex items-start gap-3 max-w-[90%]">
                                             <div className="space-y-4 pt-1">
-                                                {/* Show AgentLoader while streaming with no text yet, or while a tool is active */}
                                                 {streamingMessageId === msg.versions[0].id && (!msg.versions[0].content || activeToolName) ? (
                                                     <AgentLoader toolName={activeToolName} />
                                                 ) : (
-                                                    <div className="text-text-primary leading-relaxed space-y-3">
-                                                        {msg.versions[0].content.split("\n").map((line, i) => (
-                                                            <p key={i}>{line}</p>
-                                                        ))}
+                                                    <div className="text-text-primary leading-relaxed xmarkdown-content">
+                                                        <XMarkdown
+                                                            content={msg.versions[0].content}
+                                                            hasNextChunk={streamingMessageId === msg.versions[0].id}
+                                                        />
                                                     </div>
                                                 )}
                                                 {streamingMessageId !== msg.versions[0].id && msg.versions[0].content && (
-                                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button className="p-1.5 cursor-pointer hover:bg-bg-hover rounded-lg text-text-muted transition-colors">
-                                                            <svg viewBox="0 0 20 20" fill="currentColor" className="size-5"><path fillRule="evenodd" clipRule="evenodd" d="M10.7002 2.01074C11.0952 2.06005 11.4528 2.2785 11.6768 2.61426C12.2133 3.41901 12.5 4.36484 12.5 5.33203V5.95312C12.5 6.64737 12.3947 7.33709 12.1904 8H15.6914C16.9663 8 18 9.03369 18 10.3086C18 10.471 17.9832 10.6331 17.9492 10.792L16.7432 16.4189C16.5456 17.3411 15.7302 18 14.7871 18H9.11816C8.40698 18 7.70431 17.8549 7.05273 17.5752L7.04688 17.5723C6.7765 17.8363 6.40775 18 6 18H3.5C2.67157 18 2 17.3284 2 16.5V10.5C2 9.67157 2.67157 9 3.5 9H6C6.34648 9 6.665 9.11814 6.91895 9.31543L7.72559 8.34863C8.54907 7.36035 8.9999 6.11453 9 4.82812V3.47754C9 2.66177 9.66177 2 10.4775 2H10.5293L10.7002 2.01074Z"></path></svg>
-                                                        </button>
-                                                        <button className="p-1.5 cursor-pointer hover:bg-bg-hover rounded-lg text-text-muted transition-colors">
-                                                            <svg viewBox="0 0 20 20" fill="currentColor" className="size-5"><path d="M8 2C6.89543 2 6 2.89543 6 4V14C6 15.1046 6.89543 16 8 16H14C15.1046 16 16 15.1046 16 14V4C16 2.89543 15.1046 2 14 2H8ZM7 4C7 3.44772 7.44772 3 8 3H14C14.5523 3 15 3.44772 15 4V14C15 14.5523 14.5523 15 14 15H8C7.44772 15 7 14.5523 7 14V4ZM4 6.00001C4 5.25973 4.4022 4.61339 5 4.26758V14.5C5 15.8807 6.11929 17 7.5 17H13.7324C13.3866 17.5978 12.7403 18 12 18H7.5C5.567 18 4 16.433 4 14.5V6.00001Z"></path></svg>
-                                                        </button>
-                                                    </div>
+                                                    <>
+                                                        {/* Feedback_Control — task 11.2 */}
+                                                        <div
+                                                            data-testid="feedback-control"
+                                                            className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <Button
+                                                                appearance="subtle"
+                                                                icon={<ThumbLike24Filled style={{ color: feedbackState[msg.versions[0].id] === 'up' ? '#0078D4' : 'var(--text-muted)' }} />}
+                                                                onClick={() => setFeedbackState(prev => ({ ...prev, [msg.versions[0].id]: prev[msg.versions[0].id] === 'up' ? 'none' : 'up' }))}
+                                                                style={{ minWidth: 0 }}
+                                                            />
+                                                            <Button
+                                                                appearance="subtle"
+                                                                icon={<ThumbDislike24Filled style={{ color: feedbackState[msg.versions[0].id] === 'down' ? '#bc2f32' : 'var(--text-muted)' }} />}
+                                                                onClick={() => setFeedbackState(prev => ({ ...prev, [msg.versions[0].id]: prev[msg.versions[0].id] === 'down' ? 'none' : 'down' }))}
+                                                                style={{ minWidth: 0 }}
+                                                            />
+                                                            <Button
+                                                                appearance="subtle"
+                                                                icon={<Copy24Regular style={{ color: 'var(--text-muted)' }} />}
+                                                                style={{ minWidth: 0 }}
+                                                                onClick={() => safeCopy(msg.versions[0].content)}
+                                                            />
+                                                        </div>
+                                                        {/* Verify_Nudge — task 11.3 */}
+                                                        <p
+                                                            data-testid="verify-nudge"
+                                                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                                            style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'var(--text-muted)' }}
+                                                        >
+                                                            Always verify AI responses before acting on them.
+                                                        </p>
+                                                    </>
                                                 )}
                                             </div>
                                         </div>
@@ -289,6 +349,15 @@ const ChatMain = ({ userId, chatId: initialChatId, user_name }) => {
                 </div>
 
                 <div className="w-full pb-6 pt-2">
+                    {messages.length === 0 && (
+                        <div
+                            className="flex items-center justify-center gap-1.5 pb-2"
+                            style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--text-muted)' }}
+                        >
+                            <Info16Regular style={{ color: '#0078D4', flexShrink: 0 }} />
+                            <span>Airi can make mistakes. Verify important information.</span>
+                        </div>
+                    )}
                     <ChatInput
                         user_name={user_name}
                         showgreet={messages.length === 0}

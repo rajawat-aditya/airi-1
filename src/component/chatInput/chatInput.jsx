@@ -1,6 +1,7 @@
 "use client";
 
-import { Add24Regular, ArrowUp24Regular, MicSparkle24Regular, MicOff24Regular } from "@fluentui/react-icons";
+import { Button } from "@fluentui/react-components";
+import { Attach24Regular, ArrowUp24Regular, MicSparkle24Regular, MicOff24Regular } from "@fluentui/react-icons";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 const isElectron = () => typeof window !== "undefined" && window.electronAPI?.isElectron === true;
@@ -303,7 +304,7 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
         <div className="w-full max-w-184 mx-auto px-4">
             {showgreet && (
                 <div className="max-sm:pb-4 flex text-text-primary font-semibold w-full flex-col items-start justify-start sm:justify-end sm:mb-8 sm:h-25 text-2xl sm:ps-2">
-                    <h2 className="text-[28px]">
+                    <h2 className="text-[28px]" style={{ fontFamily: 'var(--font-heading)' }}>
                         <span className="font-normal text-[24px]">Hi {user_name},</span>
                         <br />
                         <span className="text-[36px] max-sm:text-[28px] font-normal tracking-[-0.03125rem]">Where should we start?</span>
@@ -314,11 +315,15 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
             <div
                 className={`relative bg-bg-card rounded-[28px] border shadow-lg transition-colors ${
                     isDragging
-                        ? "border-blue-500/70 shadow-blue-500/20"
+                        ? "shadow-blue-500/20 border-border-default"
                         : isListening
-                        ? "border-blue-500/50 shadow-blue-500/10"
+                        ? "shadow-blue-500/10 border-border-default"
                         : "border-border-default focus-within:border-border-active"
                 }`}
+                style={{
+                    borderRadius: 28,
+                    ...(isDragging ? { borderColor: 'var(--accent-blue)' } : isListening ? { borderColor: 'var(--accent-blue)' } : {}),
+                }}
                 onDragEnter={onDragEnter}
                 onDragLeave={onDragLeave}
                 onDragOver={onDragOver}
@@ -326,8 +331,11 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
             >
                 {/* Drag overlay */}
                 {isDragging && (
-                    <div className="absolute inset-0 z-10 rounded-[28px] bg-blue-500/10 border-2 border-dashed border-blue-500/60 flex items-center justify-center pointer-events-none">
-                        <span className="text-blue-400 text-sm font-medium">Drop files or text here</span>
+                    <div
+                        className="absolute inset-0 z-10 rounded-[28px] border-2 border-dashed flex items-center justify-center pointer-events-none"
+                        style={{ borderColor: 'var(--accent-blue)', background: 'color-mix(in srgb, var(--accent-blue) 8%, transparent)' }}
+                    >
+                        <span className="text-sm font-medium" style={{ color: 'var(--accent-blue)' }}>Drop files or text here</span>
                     </div>
                 )}
                 {files.length > 0 && (
@@ -362,24 +370,27 @@ export default function ChatInput({ showgreet, handleOnSubmit, user_name }) {
                 <div className="flex items-center justify-between p-3">
                     <div className="flex items-center gap-1">
                         <input type="file" multiple accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.json" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-                        <button onClick={() => fileInputRef.current?.click()} className="p-2 text-text-muted hover:bg-bg-hover rounded-full transition-colors">
-                            <Add24Regular />
-                        </button>
-                        <button
+                        <Button
+                            appearance="subtle"
+                            icon={<Attach24Regular />}
+                            onClick={() => fileInputRef.current?.click()}
+                            style={{ borderRadius: '50%', minWidth: 0 }}
+                        />
+                        <Button
+                            appearance="subtle"
+                            icon={isListening ? <MicSparkle24Regular /> : <MicOff24Regular />}
                             onClick={toggleMic}
                             title={isListening ? "Stop Listening" : "Start Voice Input"}
-                            className={`p-2 rounded-full transition-colors ${isListening ? "text-blue-500 bg-blue-500/20 animate-pulse" : "text-text-muted hover:bg-bg-hover"}`}
-                        >
-                            {isListening ? <MicSparkle24Regular /> : <MicOff24Regular />}
-                        </button>
+                            style={isListening ? { borderRadius: '50%', minWidth: 0, background: 'var(--accent-blue)', color: 'white' } : { borderRadius: '50%', minWidth: 0 }}
+                        />
                     </div>
-                    <button
+                    <Button
+                        appearance={hasContent ? "primary" : "subtle"}
+                        icon={<ArrowUp24Regular />}
                         onClick={submit}
                         disabled={!hasContent}
-                        className={`size-10 rounded-full flex items-center justify-center transition ${hasContent ? "bg-text-primary text-bg-app" : "bg-bg-hover text-text-muted"}`}
-                    >
-                        <ArrowUp24Regular />
-                    </button>
+                        style={{ borderRadius: '50%', minWidth: 0, width: 40, height: 40 }}
+                    />
                 </div>
             </div>
         </div>

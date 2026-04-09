@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, screen } = require('electron/main')
 const path = require('node:path')
+const fs = require('fs');
 // Load .env.local so APP_MONGO_URI and other vars are available in the main process
 require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
 const isDev = process.env.NODE_ENV == "development";
@@ -15,8 +16,8 @@ app.commandLine.appendSwitch('enable-features', 'WebSpeechAPI');
 let mainWindow = null;
 let llamaProcess = null;
 let embeddingProcess = null;
+let searxngProcess = null;
 let agentProcess = null;
-let appiumProcess = null;
 let atlasCollection = null;
 let store = null;
 
@@ -151,49 +152,251 @@ function snapToOverlay() {
     mainWindow.focus();
 }
 
+function startSearxng() {
+    const searxngExe = path.join(__dirname, '../deps/searxng/searxng-server.exe');
+    searxngProcess = spawn(searxngExe, ["--port", "11455"]);
+    searxngProcess.stdout.on("data", (data) => console.log(`[SEARXNG] ${data}`));
+    searxngProcess.stderr.on("data", (data) => console.error(`[SEARXNG ERROR] ${data}`));
+}
+
 function startEmbeddingServer() {
-    embeddingProcess = spawn("llama-server", [
+    const embeddingExe = path.join(__dirname, '../deps/llama-cpp/llama-server.exe');
+    const embeddingEnv = { ...process.env, LLAMA_CACHE: path.join(__dirname, '../models') };
+    embeddingProcess = spawn(embeddingExe, [
         "-hf", "unsloth/embeddinggemma-300m-GGUF:Q4_0",
         "--port", "11445",
         "--embedding",
         "--threads", "4",
         "--n-gpu-layers", "0",
-    ]);
+    ], { env: embeddingEnv });
     embeddingProcess.stdout.on("data", (data) => console.log(`[EMBEDDING] ${data}`));
     embeddingProcess.stderr.on("data", (data) => console.error(`[EMBEDDING ERROR] ${data}`));
 }
 
 function startLlama() {
-    llamaProcess = spawn("llama-server", [
-        "-hf", "Qwen/Qwen3-VL-2B-Instruct-GGUF",
-        "--ctx-size", "32768",
-        "-np", "2",
-        "--threads", "6",
-        "--n-gpu-layers", "0",
-        "--port", "11434",
-        "--cache-type-k", "q8_0",
-        "--cache-type-v", "q8_0",
-        "--jinja"
-    ]);
+    const settingsPath = path.join(__dirname, '../agent-server/settings.json');
+    let useLocal = true;
+    let modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF";
+
+    if (fs.existsSync(settingsPath)) {
+        try {
+            const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+            if (settings.model && settings.model !== 'default') {
+                modelName = settings.model;
+            }
+            // If model_server points to a remote API, don't start local llama
+            if (settings.model_server &&
+                !settings.model_server.includes('127.0.0.1') &&
+                !settings.model_server.includes('localhost')) {
+                useLocal = false;
+            }
+        } catch (e) {
+            console.error('[LLAMA] Failed to read settings.json:', e.message);
+        }
+    }
+
+    if (!useLocal) {
+        console.log('[LLAMA] Remote API mode — skipping local llama-server');
+        return;
+    }
+
+    const llamaExe = path.join(__dirname, '../deps/llama-cpp/llama-server.exe');
+    const llamaEnv = { ...process.env, LLAMA_CACHE: path.join(__dirname, '../models') };
+
+    // Try to use locally cached model file to avoid HF network dependency
+    const snapshotDir = path.join(__dirname, '../models/models--Qwen--Qwen3-VL-2B-Instruct-GGUF/snapshots/52d6c8ffea26cc873ac5ad116f8631268d7eb503');
+    const localModel  = path.join(snapshotDir, 'Qwen3VL-2B-Instruct-Q4_K_M.gguf');
+    const localMmproj = path.join(snapshotDir, 'mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf');
+
+    let args;
+    if (fs.existsSync(localModel)) {
+        console.log('[LLAMA] Using cached local model:', localModel);
+        args = [
+            "-m", localModel,
+            "--mmproj", localMmproj,
+            "--ctx-size", "32768",
+            "-np", "2",
+            "--threads", "6",
+            "--n-gpu-layers", "0",
+            "--port", "11434",
+            "--cache-type-k", "q4_0",
+            "--cache-type-v", "q8_0",
+            "--jinja"
+        ];
+    } else {
+        console.log('[LLAMA] Local model not found, downloading from HF:', modelName);
+        args = [
+            "-hf", modelName,
+            "--ctx-size", "32768",
+            "-np", "2",
+            "--threads", "6",
+            "--n-gpu-layers", "0",
+            "--port", "11434",
+            "--cache-type-k", "q4_0",
+            "--cache-type-v", "q8_0",
+            "--jinja"
+        ];
+    }
+
+    llamaProcess = spawn(llamaExe, args, { env: llamaEnv });
     llamaProcess.stdout.on("data", (data) => console.log(`[LLAMA] ${data}`));
     llamaProcess.stderr.on("data", (data) => console.error(`[LLAMA ERROR] ${data}`));
 }
 
 function startAgentServer() {
     const scriptPath = path.join(__dirname, '../agent-server', 'agent.py');
-    agentProcess = spawn("python", [scriptPath], {
-        env: { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' }
+    const agentEnv   = { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' };
+
+    agentProcess = spawn("python", [scriptPath], { env: agentEnv });
+
+    agentProcess.on("error", (err) => {
+        console.error(`[Agent-Server] Failed to start:`, err.message);
     });
-    agentProcess.on("error", (err) => console.error(`[Agent-Server FAILED TO START]`, err));
-    agentProcess.stdout.on("data", (data) => console.log(`[Agent-Server] ${data}`));
-    agentProcess.stderr.on("data", (data) => console.error(`[Agent-Server ERROR] ${data}`));
+    agentProcess.on("close", (code) => {
+        if (code !== 0 && code !== null) {
+            console.error(`[Agent-Server] Exited with code ${code}`);
+        }
+    });
+    agentProcess.stdout.on("data", (data) => process.stdout.write(`[Agent-Server] ${data}`));
+    agentProcess.stderr.on("data", (data) => process.stderr.write(`[Agent-Server] ${data}`));
 }
 
-function startAppium() {
-    appiumProcess = spawn("appium", ["--use-plugins", "ocr"], { shell: true });
-    appiumProcess.on("error", (err) => console.error(`[Appium FAILED TO START]`, err));
-    appiumProcess.stdout.on("data", (data) => console.log(`[Appium] ${data}`));
-    appiumProcess.stderr.on("data", (data) => console.error(`[Appium ERROR] ${data}`));
+/**
+ * Scan installed apps via PowerShell and write agent-server/installed_apps.json.
+ * Runs once at startup; non-blocking (errors are logged, not thrown).
+ *
+ * Output format: [{ name, exe, title_hint }]
+ *
+ * Sources (merged, deduped by exe path):
+ *   1. Start Menu .lnk shortcuts (user + common)
+ *   2. HKLM + HKCU Uninstall registry keys (InstallLocation + DisplayIcon)
+ *   3. Get-StartApps (UWP + pinned classic apps)
+ *   4. Common install directory scan for known exe names
+ */
+function buildInstalledAppsJson() {
+    const outPath = path.join(__dirname, '../agent-server/installed_apps.json');
+    const psPath  = path.join(__dirname, '../agent-server/_scan_apps.ps1');
+
+    // Write the PowerShell script to a file — avoids all JS template literal escaping issues
+    const psScript = [
+        "$ErrorActionPreference = 'SilentlyContinue'",
+        "$results = [System.Collections.Generic.List[hashtable]]::new()",
+        "$seen    = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)",
+        "",
+        "function Add-App($name, $exe, $hint) {",
+        "    if (-not $exe) { return }",
+        "    $exe = $exe.Trim('\"').Trim()",
+        "    if (-not $exe.EndsWith('.exe', [System.StringComparison]::OrdinalIgnoreCase)) { return }",
+        "    if (-not (Test-Path $exe -PathType Leaf)) { return }",
+        "    if (-not $seen.Add($exe)) { return }",
+        "    if (-not $hint) { $hint = [System.IO.Path]::GetFileNameWithoutExtension($exe) }",
+        "    if (-not $name) { $name = $hint }",
+        "    $results.Add(@{ name = $name.Trim(); exe = $exe; title_hint = $hint.Trim() })",
+        "}",
+        "",
+        "# 1. Start Menu .lnk shortcuts",
+        "$shell = New-Object -ComObject WScript.Shell",
+        "@(",
+        "    [System.Environment]::GetFolderPath('StartMenu'),",
+        "    [System.Environment]::GetFolderPath('CommonStartMenu')",
+        ") | ForEach-Object {",
+        "    Get-ChildItem -Path $_ -Recurse -Filter '*.lnk' -ErrorAction SilentlyContinue | ForEach-Object {",
+        "        try {",
+        "            $lnk    = $shell.CreateShortcut($_.FullName)",
+        "            $target = $lnk.TargetPath",
+        "            $name   = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)",
+        "            Add-App $name $target ''",
+        "        } catch {}",
+        "    }",
+        "}",
+        "",
+        "# 2. Registry Uninstall keys (HKLM 64-bit, 32-bit, HKCU)",
+        "$regPaths = @(",
+        "    'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',",
+        "    'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',",
+        "    'HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'",
+        ")",
+        "foreach ($rp in $regPaths) {",
+        "    Get-ItemProperty $rp -ErrorAction SilentlyContinue | ForEach-Object {",
+        "        $name = $_.DisplayName",
+        "        if (-not $name) { return }",
+        "        $icon = ($_.DisplayIcon -split ',')[0].Trim().Trim('\"')",
+        "        if ($icon -and $icon.EndsWith('.exe', [System.StringComparison]::OrdinalIgnoreCase)) {",
+        "            Add-App $name $icon ''",
+        "            return",
+        "        }",
+        "        $loc = $_.InstallLocation",
+        "        if ($loc -and (Test-Path $loc -PathType Container)) {",
+        "            $stem = ($name -replace '[^a-zA-Z0-9]', '').ToLower()",
+        "            Get-ChildItem -Path $loc -Filter '*.exe' -ErrorAction SilentlyContinue |",
+        "                Where-Object { $_.Name -notmatch 'uninstall|setup|update|helper|crash|redist' } |",
+        "                Sort-Object { [Math]::Abs($_.BaseName.ToLower().Length - $stem.Length) } |",
+        "                Select-Object -First 1 | ForEach-Object { Add-App $name $_.FullName '' }",
+        "        }",
+        "    }",
+        "}",
+        "",
+        "# 3. Get-StartApps",
+        "Get-StartApps -ErrorAction SilentlyContinue | ForEach-Object {",
+        "    $appId = $_.AppID",
+        "    if ($appId -and $appId.EndsWith('.exe', [System.StringComparison]::OrdinalIgnoreCase)) {",
+        "        Add-App $_.Name $appId ''",
+        "    }",
+        "}",
+        "",
+        "# 4. Common install directory scan",
+        "$scanDirs = @(",
+        "    $env:ProgramFiles,",
+        "    ${env:ProgramFiles(x86)},",
+        "    \"$env:LOCALAPPDATA\\Programs\"",
+        ") | Where-Object { $_ -and (Test-Path $_) }",
+        "foreach ($dir in $scanDirs) {",
+        "    Get-ChildItem -Path $dir -Recurse -Filter '*.exe' -Depth 3 -ErrorAction SilentlyContinue |",
+        "        Where-Object { $_.Name -notmatch 'uninstall|setup|update|helper|crash|redist|vcredist|dotnet' } |",
+        "        ForEach-Object {",
+        "            $name = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)",
+        "            Add-App $name $_.FullName ''",
+        "        }",
+        "}",
+        "",
+        "$results | ConvertTo-Json -Depth 2 -Compress",
+    ].join('\n');
+
+    try {
+        fs.writeFileSync(psPath, psScript, 'utf8');
+    } catch (err) {
+        console.error('[Apps] Could not write _scan_apps.ps1:', err.message);
+        return;
+    }
+
+    const proc = spawn('powershell', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', psPath], { timeout: 60000 });
+    let stdout = '';
+    let stderr = '';
+    proc.stdout.on('data', d => stdout += d);
+    proc.stderr.on('data', d => stderr += d);
+
+    proc.on('close', () => {
+        try {
+            let apps = JSON.parse(stdout.trim());
+            if (!Array.isArray(apps)) apps = apps ? [apps] : [];
+            apps = apps
+                .filter(a => a && a.exe)
+                .map(a => ({
+                    name:       (a.name       || path.basename(a.exe, '.exe')).trim(),
+                    exe:        a.exe.trim(),
+                    title_hint: (a.title_hint || path.basename(a.exe, '.exe')).trim(),
+                }));
+            fs.writeFileSync(outPath, JSON.stringify(apps, null, 2), 'utf8');
+            console.log(`[Apps] Wrote ${apps.length} entries to installed_apps.json`);
+        } catch (err) {
+            console.error('[Apps] Failed to build installed_apps.json:', err.message);
+            if (stderr) console.error('[Apps] PowerShell stderr:', stderr.slice(0, 600));
+        }
+        // Clean up temp script
+        try { fs.unlinkSync(psPath); } catch (_) {}
+    });
+
+    proc.on('error', err => console.error('[Apps] PowerShell spawn error:', err.message));
 }
 
 function createWindow() {
@@ -234,15 +437,16 @@ app.whenReady().then(() => {
         snapToOverlay();
     });
     setupDb();
+    buildInstalledAppsJson();
     startAgentServer();
-    startAppium();
     startLlama();
     startEmbeddingServer();
+    startSearxng();
     createWindow();
 });
 
 app.on('before-quit', () => {
-    [llamaProcess, embeddingProcess, agentProcess, appiumProcess].forEach(proc => {
+    [llamaProcess, embeddingProcess, searxngProcess, agentProcess].forEach(proc => {
         if (proc && !proc.killed) proc.kill();
     });
 });
