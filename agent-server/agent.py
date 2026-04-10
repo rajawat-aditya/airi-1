@@ -61,11 +61,20 @@ except ImportError as e:
     logger.critical(f"[startup] FATAL: flaui module not found: {e}")
     sys.exit(1)
 
+# ── Base directory (works both frozen/PyInstaller and plain Python) ───────────
+def _base_dir() -> str:
+    """Return the directory containing the executable (frozen) or agent.py (dev)."""
+    if getattr(sys, "frozen", False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+_BASE = _base_dir()
+
 # ── Model Configuration ──────────────────────────────────────────────────────
 modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF"
 
 # ── Mem0 DB Configuration ─────────────────────────────────────────────────────
-_MEM0_DB        = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".mem0_db")
+_MEM0_DB        = os.path.join(_BASE, ".mem0_db")
 _EMBED_DIMS     = 768
 _COLLECTION     = "airi_memory"
 _EMBED_MODEL    = "unsloth/embeddinggemma-300m-GGUF:Q4_0"
@@ -310,7 +319,7 @@ app.add_middleware(
 )
 
 # ── Settings persistence ──────────────────────────────────────────────────────
-_SETTINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json")
+_SETTINGS_PATH = os.path.join(_BASE, "settings.json")
 
 def _load_settings() -> dict:
     defaults = {
@@ -588,7 +597,7 @@ class FileOp(BaseTool):
             return json.dumps({"error": str(e)})
 
 
-_INSTALLED_APPS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "installed_apps.json")
+_INSTALLED_APPS_PATH = os.path.join(_BASE, "installed_apps.json")
 
 
 @register_tool('list_installed_apps')
@@ -873,7 +882,7 @@ Your goal is to make every task feel easy and enjoyable.
 """
 
 # ── Skill Files ───────────────────────────────────────────────────────────────
-_AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
+_AGENT_DIR = _BASE
 
 def _load_skill(filename: str) -> str:
     path = os.path.join(_AGENT_DIR, filename)
@@ -1183,7 +1192,7 @@ async def update_settings(payload: SettingsPayload):
 
 # ── File Upload ───────────────────────────────────────────────────────────────
 
-USER_STUFF_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "user_stuff")
+USER_STUFF_DIR = os.path.join(_BASE, "user_stuff")
 os.makedirs(USER_STUFF_DIR, exist_ok=True)
 
 _IMG_EXTS_SET = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'}

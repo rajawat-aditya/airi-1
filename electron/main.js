@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen } = require('electron/main')
+const { app, BrowserWindow, ipcMain, screen, protocol } = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
 // Load .env.local so APP_MONGO_URI and other vars are available in the main process
@@ -7,6 +7,7 @@ const isDev = process.env.NODE_ENV == "development";
 const { nativeImage } = require('electron');
 const { spawn } = require('child_process');
 const { MongoClient } = require('mongodb');
+const { createHandler } = require('next-electron-rsc');
 
 // Required for Web Speech API (Google speech service) to work inside Electron
 app.commandLine.appendSwitch('enable-speech-dispatcher');
@@ -23,6 +24,42 @@ let store = null;
 
 let dbReady;
 const dbReadyPromise = new Promise((resolve) => { dbReady = resolve; });
+
+// ── Path helpers ──────────────────────────────────────────────────────────────
+// electron-builder puts extraResources at process.resourcesPath
+// In dev, everything is relative to the repo root (__dirname/../)
+const IS_PACKAGED = app.isPackaged;
+const RESOURCES   = IS_PACKAGED ? process.resourcesPath : path.join(__dirname, '..');
+
+const AGENT_BUNDLE_EXE  = path.join(RESOURCES, 'airi-agent', 'airi-agent.exe');
+const AGENT_BUNDLE_DIR  = path.join(RESOURCES, 'airi-agent');
+const AGENT_SCRIPT      = path.join(__dirname, '../agent-server/agent.py');
+const AGENT_SETTINGS    = IS_PACKAGED
+    ? path.join(AGENT_BUNDLE_DIR, 'settings.json')
+    : path.join(__dirname, '../agent-server/settings.json');
+const INSTALLED_APPS_OUT = IS_PACKAGED
+    ? path.join(AGENT_BUNDLE_DIR, 'installed_apps.json')
+    : path.join(__dirname, '../agent-server/installed_apps.json');
+
+const LLAMA_EXE    = path.join(RESOURCES, 'deps', 'llama-cpp', 'llama-server.exe');
+const SEARXNG_EXE  = path.join(RESOURCES, 'deps', 'searxng', 'searxng-server.exe');
+const MODELS_DIR   = IS_PACKAGED
+    ? path.join(RESOURCES, 'models')
+    : path.join(__dirname, '../models');
+
+const isPackaged = IS_PACKAGED && fs.existsSync(AGENT_BUNDLE_EXE);
+
+// Next.js standalone server (production only)
+// ── next-electron-rsc: intercepts localhost:3000 at protocol level (no open port in prod) ──
+const STANDALONE_DIR = IS_PACKAGED
+    ? path.join(RESOURCES, 'next-server')
+    : path.join(app.getAppPath(), '.next', 'standalone', 'airi');
+
+const { createInterceptor, localhostUrl } = createHandler({
+    dev: !IS_PACKAGED,
+    dir: STANDALONE_DIR,
+    protocol,
+});
 
 async function setupDb() {
     // electron-store must be dynamically imported (ESM-only in v9+)
@@ -153,16 +190,14 @@ function snapToOverlay() {
 }
 
 function startSearxng() {
-    const searxngExe = path.join(__dirname, '../deps/searxng/searxng-server.exe');
-    searxngProcess = spawn(searxngExe, ["--port", "11455"]);
+    searxngProcess = spawn(SEARXNG_EXE, ["--port", "11455"]);
     searxngProcess.stdout.on("data", (data) => console.log(`[SEARXNG] ${data}`));
     searxngProcess.stderr.on("data", (data) => console.error(`[SEARXNG ERROR] ${data}`));
 }
 
 function startEmbeddingServer() {
-    const embeddingExe = path.join(__dirname, '../deps/llama-cpp/llama-server.exe');
-    const embeddingEnv = { ...process.env, LLAMA_CACHE: path.join(__dirname, '../models') };
-    embeddingProcess = spawn(embeddingExe, [
+    const embeddingEnv = { ...process.env, LLAMA_CACHE: MODELS_DIR };
+    embeddingProcess = spawn(LLAMA_EXE, [
         "-hf", "unsloth/embeddinggemma-300m-GGUF:Q4_0",
         "--port", "11445",
         "--embedding",
@@ -174,7 +209,7 @@ function startEmbeddingServer() {
 }
 
 function startLlama() {
-    const settingsPath = path.join(__dirname, '../agent-server/settings.json');
+    const settingsPath = AGENT_SETTINGS;
     let useLocal = true;
     let modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF";
 
@@ -200,11 +235,11 @@ function startLlama() {
         return;
     }
 
-    const llamaExe = path.join(__dirname, '../deps/llama-cpp/llama-server.exe');
-    const llamaEnv = { ...process.env, LLAMA_CACHE: path.join(__dirname, '../models') };
+    const llamaExe = LLAMA_EXE;
+    const llamaEnv = { ...process.env, LLAMA_CACHE: MODELS_DIR };
 
     // Try to use locally cached model file to avoid HF network dependency
-    const snapshotDir = path.join(__dirname, '../models/models--Qwen--Qwen3-VL-2B-Instruct-GGUF/snapshots/52d6c8ffea26cc873ac5ad116f8631268d7eb503');
+    const snapshotDir = path.join(MODELS_DIR, 'models--Qwen--Qwen3-VL-2B-Instruct-GGUF/snapshots/52d6c8ffea26cc873ac5ad116f8631268d7eb503');
     const localModel  = path.join(snapshotDir, 'Qwen3VL-2B-Instruct-Q4_K_M.gguf');
     const localMmproj = path.join(snapshotDir, 'mmproj-Qwen3VL-2B-Instruct-Q8_0.gguf');
 
@@ -244,10 +279,15 @@ function startLlama() {
 }
 
 function startAgentServer() {
-    const scriptPath = path.join(__dirname, '../agent-server', 'agent.py');
-    const agentEnv   = { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' };
+    const agentEnv = { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' };
 
-    agentProcess = spawn("python", [scriptPath], { env: agentEnv });
+    if (isPackaged) {
+        console.log('[Agent-Server] Starting bundled exe:', AGENT_BUNDLE_EXE);
+        agentProcess = spawn(AGENT_BUNDLE_EXE, [], { cwd: AGENT_BUNDLE_DIR, env: agentEnv });
+    } else {
+        console.log('[Agent-Server] Starting dev script:', AGENT_SCRIPT);
+        agentProcess = spawn('python', [AGENT_SCRIPT], { env: agentEnv });
+    }
 
     agentProcess.on("error", (err) => {
         console.error(`[Agent-Server] Failed to start:`, err.message);
@@ -274,7 +314,7 @@ function startAgentServer() {
  *   4. Common install directory scan for known exe names
  */
 function buildInstalledAppsJson() {
-    const outPath = path.join(__dirname, '../agent-server/installed_apps.json');
+    const outPath = INSTALLED_APPS_OUT;
     const psPath  = path.join(__dirname, '../agent-server/_scan_apps.ps1');
 
     // Write the PowerShell script to a file — avoids all JS template literal escaping issues
@@ -399,7 +439,7 @@ function buildInstalledAppsJson() {
     proc.on('error', err => console.error('[Apps] PowerShell spawn error:', err.message));
 }
 
-function createWindow() {
+async function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -422,16 +462,16 @@ function createWindow() {
         return allowed.includes(permission);
     });
 
+    // Register next-electron-rsc interceptor on this window's session
+    const stopIntercept = await createInterceptor({ session: mainWindow.webContents.session });
+    mainWindow.on('closed', () => stopIntercept?.());
+
     mainWindow.setMenuBarVisibility(false);
-    mainWindow.setIcon(nativeImage.createFromPath(path.join(__dirname, '../public/logo.ico')), 'Airi');
-    if (isDev) {
-        mainWindow.loadURL("http://localhost:3000/");
-    } else {
-        mainWindow.loadFile(path.join(__dirname, "../out/index.html"));
-    }
+    mainWindow.setIcon(nativeImage.createFromPath(path.join(__dirname, '../public/logo.png')), 'Airi');
+    mainWindow.loadURL(localhostUrl + '/');
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     ipcMain.on('trigger-snap-overlay', () => {
         console.log('[IPC] trigger-snap-overlay received');
         snapToOverlay();
@@ -442,7 +482,7 @@ app.whenReady().then(() => {
     startLlama();
     startEmbeddingServer();
     startSearxng();
-    createWindow();
+    await createWindow();
 });
 
 app.on('before-quit', () => {
