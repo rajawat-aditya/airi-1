@@ -1,0 +1,44 @@
+END USER LICENSE AGREEMENT (EULA)
+Airi — AI Desktop Assistant
+Last updated: April 2026
+
+PLEASE READ THIS AGREEMENT CAREFULLY BEFORE INSTALLING OR USING THIS SOFTWARE.
+
+By installing, copying, or otherwise using Airi ("the Software"), you agree to be bound by the terms of this End User License Agreement ("Agreement"). If you do not agree to these terms, do not install or use the Software.
+
+1. GRANT OF LICENSE
+The developer ("Licensor") grants you a limited, non-exclusive, non-transferable, revocable license to install and use the Software on Windows devices that you own or control, solely for your personal, non-commercial use.
+
+2. RESTRICTIONS
+You may not:
+- Copy, modify, or distribute the Software or any portion of it
+- Reverse engineer, decompile, or disassemble the Software
+- Rent, lease, lend, sell, or sublicense the Software
+- Remove or alter any proprietary notices or labels on the Software
+- Use the Software for any unlawful purpose
+
+3. INTELLECTUAL PROPERTY
+The Software and all copies thereof are proprietary to the Licensor and title thereto remains in the Licensor. All rights in the Software not specifically granted in this Agreement are reserved to the Licensor.
+
+4. AI AND DATA PROCESSING
+The Software uses local AI models and may optionally connect to third-party AI services. You are solely responsible for the content you submit to the Software. The Licensor does not collect, store, or transmit your conversations or personal data unless explicitly stated in a separate Privacy Policy.
+
+5. THIRD-PARTY COMPONENTS
+The Software includes open-source components licensed under their respective licenses (including MIT, Apache 2.0, and others). These components remain subject to their original license terms.
+
+6. DISCLAIMER OF WARRANTIES
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THE LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE OR UNINTERRUPTED.
+
+7. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, LOSS OF DATA, LOSS OF PROFITS, OR BUSINESS INTERRUPTION) ARISING OUT OF OR IN CONNECTION WITH THE USE OR INABILITY TO USE THE SOFTWARE.
+
+8. TERMINATION
+This Agreement is effective until terminated. Your rights under this Agreement will terminate automatically without notice if you fail to comply with any of its terms. Upon termination, you must destroy all copies of the Software in your possession.
+
+9. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with applicable law, without regard to conflict of law principles.
+
+10. ENTIRE AGREEMENT
+This Agreement constitutes the entire agreement between you and the Licensor regarding the Software and supersedes all prior agreements and understandings.
+
+If you have questions about this Agreement, contact the developer through the Microsoft Store listing page.

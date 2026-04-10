@@ -1,13 +1,29 @@
 const { app, BrowserWindow, ipcMain, screen, protocol } = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
-// Load .env.local so APP_MONGO_URI and other vars are available in the main process
-require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
+// Load .env.local — in dev it's next to the repo root, in packaged builds it's an extraResource
+const IS_PACKAGED_EARLY = !process.defaultApp;
+const envPath = IS_PACKAGED_EARLY
+    ? path.join(process.resourcesPath, '.env.local')
+    : path.join(__dirname, '../.env.local');
+require('dotenv').config({ path: envPath });
 const isDev = process.env.NODE_ENV == "development";
 const { nativeImage } = require('electron');
 const { spawn } = require('child_process');
 const { MongoClient } = require('mongodb');
 const { createHandler } = require('next-electron-rsc');
+
+// Redirect console to a log file in packaged mode so we can debug
+if (IS_PACKAGED_EARLY) {
+    const logPath = path.join(require('os').homedir(), 'airi-debug.log');
+    const logStream = fs.createWriteStream(logPath, { flags: 'a' });
+    const origLog = console.log.bind(console);
+    const origErr = console.error.bind(console);
+    console.log = (...args) => { origLog(...args); logStream.write('[LOG] ' + args.join(' ') + '\n'); };
+    console.error = (...args) => { origErr(...args); logStream.write('[ERR] ' + args.join(' ') + '\n'); };
+    console.log(`\n\n=== Airi started at ${new Date().toISOString()} ===`);
+    console.log('STANDALONE_DIR will be:', path.join(app.getAppPath(), '.next', 'standalone'));
+}
 
 // Required for Web Speech API (Google speech service) to work inside Electron
 app.commandLine.appendSwitch('enable-speech-dispatcher');
@@ -51,10 +67,17 @@ const isPackaged = IS_PACKAGED && fs.existsSync(AGENT_BUNDLE_EXE);
 
 // next-electron-rsc: only used in production to serve the standalone Next.js build
 // In dev, we connect directly to the already-running next dev server on localhost:3000
-const STANDALONE_DIR = path.join(RESOURCES, 'next-server');
+// In prod, dir must be inside the app bundle so resolve.sync('next', {basedir: dir}) can find node_modules/next
+const STANDALONE_DIR = IS_PACKAGED
+    ? path.join(app.getAppPath(), '.next', 'standalone')
+    : path.join(__dirname, '..');
+
+if (IS_PACKAGED) {
+    console.log('[NEXT] STANDALONE_DIR:', STANDALONE_DIR, '| exists:', fs.existsSync(STANDALONE_DIR));
+}
 
 const { createInterceptor, localhostUrl } = IS_PACKAGED
-    ? createHandler({ dev: false, dir: STANDALONE_DIR, protocol })
+    ? createHandler({ dev: false, dir: STANDALONE_DIR, protocol, debug: true })
     : { createInterceptor: null, localhostUrl: 'http://localhost:3000' };
 
 async function setupDb() {
@@ -293,8 +316,8 @@ function startAgentServer() {
             console.error(`[Agent-Server] Exited with code ${code}`);
         }
     });
-    agentProcess.stdout.on("data", (data) => process.stdout.write(`[Agent-Server] ${data}`));
-    agentProcess.stderr.on("data", (data) => process.stderr.write(`[Agent-Server] ${data}`));
+    agentProcess.stdout.on("data", (data) => console.log(`[Agent-Server] ${data}`));
+    agentProcess.stderr.on("data", (data) => console.error(`[Agent-Server] ${data}`));
 }
 
 /**
@@ -311,7 +334,8 @@ function startAgentServer() {
  */
 function buildInstalledAppsJson() {
     const outPath = INSTALLED_APPS_OUT;
-    const psPath  = path.join(__dirname, '../agent-server/_scan_apps.ps1');
+    // Write temp PS1 to a writable location — app.asar is read-only in packaged builds
+    const psPath = path.join(require('os').tmpdir(), '_airi_scan_apps.ps1');
 
     // Write the PowerShell script to a file — avoids all JS template literal escaping issues
     const psScript = [

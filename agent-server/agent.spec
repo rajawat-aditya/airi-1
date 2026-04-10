@@ -34,6 +34,8 @@ for pkg in [
     "httpcore",
     "pydantic",
     "pydantic_core",
+    "rfc3987_syntax",
+    "lark",
 ]:
     d, b, h = collect_all(pkg)
     datas    += d

@@ -74,7 +74,9 @@ _BASE = _base_dir()
 modelName = "Qwen/Qwen3-VL-2B-Instruct-GGUF"
 
 # ── Mem0 DB Configuration ─────────────────────────────────────────────────────
-_MEM0_DB        = os.path.join(_BASE, ".mem0_db")
+# Use APPDATA/Airi for the DB so it's always writable (not inside the read-only bundle)
+_APPDATA       = os.environ.get("APPDATA") or os.path.expanduser("~")
+_MEM0_DB        = os.path.join(_APPDATA, "Airi", ".mem0_db")
 _EMBED_DIMS     = 768
 _COLLECTION     = "airi_memory"
 _EMBED_MODEL    = "unsloth/embeddinggemma-300m-GGUF:Q4_0"
@@ -882,7 +884,11 @@ Your goal is to make every task feel easy and enjoyable.
 """
 
 # ── Skill Files ───────────────────────────────────────────────────────────────
-_AGENT_DIR = _BASE
+# PyInstaller 6.x puts collected data files in _internal/ next to the exe
+if getattr(sys, "frozen", False):
+    _AGENT_DIR = os.path.join(_BASE, "_internal")
+else:
+    _AGENT_DIR = _BASE
 
 def _load_skill(filename: str) -> str:
     path = os.path.join(_AGENT_DIR, filename)

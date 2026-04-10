@@ -1,0 +1,45 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.airi.app
+productName: Airi
+copyright: © 2026 Slew Inc. All rights reserved.
+forceCodeSigning: false
+files:
+  - filter:
+      - electron/**/*
+      - public/**/*
+      - node_modules/**/*
+      - package.json
+extraResources:
+  - from: .next/standalone
+    to: next-server
+    filter:
+      - '**/*'
+  - from: dist/airi-agent
+    to: airi-agent
+    filter:
+      - '**/*'
+  - from: deps
+    to: deps
+    filter:
+      - '**/*'
+  - from: models
+    to: models
+    filter:
+      - '**/*'
+win:
+  target:
+    - target: dir
+      arch:
+        - x64
+  icon: public/logo.png
+  legalTrademarks: Airi is a trademark of Slew Inc.
+  signtoolOptions: null
+compression: store
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  license: LICENSE.txt
+  differentialPackage: false
+electronVersion: 40.8.5
