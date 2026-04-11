@@ -30,7 +30,16 @@ except Exception:
 _FLAUI_AVAILABLE = False
 _FLAUI_ERROR = None
 
-_deps_dir = str(pathlib.Path(__file__).parent.parent / "deps" / "flaui")
+# Resolve deps/flaui relative to the exe (frozen) or repo root (dev)
+if getattr(sys, "frozen", False):
+    # PyInstaller 6.x puts collected data in _internal/ next to the exe
+    _exe_dir = pathlib.Path(sys.executable).parent
+    _deps_dir = str(_exe_dir / "_internal" / "deps" / "flaui")
+    # fallback: older PyInstaller puts it directly next to the exe
+    if not pathlib.Path(_deps_dir).exists():
+        _deps_dir = str(_exe_dir / "deps" / "flaui")
+else:
+    _deps_dir = str(pathlib.Path(__file__).parent.parent / "deps" / "flaui")
 
 try:
     # Add the deps dir to sys.path so CLR can locate the assemblies
@@ -39,9 +48,11 @@ try:
 
     import clr  # pythonnet
 
-    clr.AddReference("FlaUI.Core")
-    clr.AddReference("Interop.UIAutomationClient")
-    clr.AddReference("FlaUI.UIA3")
+    # Load by full path so .NET finds them regardless of probing config
+    _dll_path = pathlib.Path(_deps_dir)
+    clr.AddReference(str(_dll_path / "FlaUI.Core.dll"))
+    clr.AddReference(str(_dll_path / "Interop.UIAutomationClient.dll"))
+    clr.AddReference(str(_dll_path / "FlaUI.UIA3.dll"))
 
     # FlaUI namespace imports
     from FlaUI.UIA3 import UIA3Automation                          # noqa: E402
@@ -484,18 +495,26 @@ class ActionExecutor:
 
     @staticmethod
     def _make_result(action: dict, target_name, status: str, detail: str, value=None) -> dict:
+        # Ensure all values are plain Python primitives (not FlaUI AutomationProperty objects)
+        def _safe_str(v):
+            if v is None:
+                return None
+            try:
+                return str(v)
+            except Exception:
+                return ""
         return {
-            "action": action.get("action", ""),
-            "target": target_name,
-            "status": status,
-            "detail": detail,
-            "value": value,
+            "action": str(action.get("action", "")),
+            "target": _safe_str(target_name),
+            "status": str(status),
+            "detail": str(detail),
+            "value": _safe_str(value) if value is not None else None,
         }
 
     def execute(self, action: dict, element, window, engine) -> dict:
         """Execute a single action. Returns an ActionResult dict."""
         action_type = action.get("action", "")
-        target_name = (element.Name if element is not None else None) if _FLAUI_AVAILABLE else None
+        target_name = str(element.Name) if (element is not None and _FLAUI_AVAILABLE) else None
 
         try:
             # ------------------------------------------------------------------
@@ -823,23 +842,23 @@ class WindowsAutomationEngine:
 
                 # Get element name
                 try:
-                    name = el.Name or ""
+                    name = str(el.Name or "")
                 except Exception:
                     name = ""
 
                 # Get automation id
                 try:
-                    automation_id = el.AutomationId or ""
+                    automation_id = str(el.AutomationId or "")
                 except Exception:
                     automation_id = ""
 
                 # Get value
                 val = ""
                 try:
-                    val = el.AsTextBox().Text or ""
+                    val = str(el.AsTextBox().Text or "")
                 except Exception:
                     try:
-                        val = el.Patterns.Value.Pattern.Value or ""
+                        val = str(el.Patterns.Value.Pattern.Value or "")
                     except Exception:
                         pass
 
@@ -1002,7 +1021,7 @@ class WindowsAutomationEngine:
             result = []
             for child in children:
                 try:
-                    title = child.Name or ""
+                    title = str(child.Name or "")
                     try:
                         pid = child.Properties.ProcessId.Value
                         proc_name = psutil.Process(pid).name()

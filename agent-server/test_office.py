@@ -37,6 +37,21 @@ def do(app, actions, label=""):
 def all_ok(r):
     return all(x.get("status") == "ok" for x in r)
 
+def dismiss_start_screen(app, blank_button_name, wait_ms=1500):
+    """Click the 'Blank X' button on the Office start/dashboard screen.
+    Tries a direct click by name first; falls back to Escape if that fails."""
+    r = engine.execute_batch(app, [
+        {"action": "click", "target": {"name": blank_button_name}},
+        {"action": "wait",  "ms": wait_ms},
+    ])
+    if r[0].get("status") != "ok":
+        # Button not found — try Escape to close backstage
+        engine.execute_batch(app, [
+            {"action": "key",  "keys": "Escape"},
+            {"action": "wait", "ms": 800},
+        ])
+    return r[0].get("status") == "ok"
+
 # ── 0. FlaUI availability ────────────────────────────────────────────────────
 print("\n[0] FlaUI availability")
 check("FlaUI DLLs loaded",      _FLAUI_AVAILABLE, str(_FLAUI_ERROR) if not _FLAUI_AVAILABLE else "ok")
@@ -54,6 +69,9 @@ check("Word launched or already running", r.get("status") in ("launched", "alrea
 check("Word window title non-empty",      bool(r.get("window_title")))
 check("Word title contains 'Word'",       "word" in r.get("window_title", "").lower())
 time.sleep(2)
+print("     Dismissing Word start screen...")
+dismiss_start_screen("word", "Blank document")
+time.sleep(1)
 
 # ── 2. Launch Excel ──────────────────────────────────────────────────────────
 print("\n[2] Launch Excel")
@@ -63,6 +81,21 @@ check("Excel launched or already running", r.get("status") in ("launched", "alre
 check("Excel window title non-empty",      bool(r.get("window_title")))
 check("Excel title contains 'Excel'",      "excel" in r.get("window_title", "").lower())
 time.sleep(2)
+print("     Dismissing Excel start screen...")
+dismiss_start_screen("excel", "Blank workbook")
+time.sleep(1)
+
+# ── 2b. Launch PowerPoint ────────────────────────────────────────────────────
+print("\n[2b] Launch PowerPoint")
+r = engine.launch_app("powerpoint")
+print(f"     raw: {r}")
+check("PowerPoint launched or already running", r.get("status") in ("launched", "already_running"))
+check("PowerPoint window title non-empty",      bool(r.get("window_title")))
+check("PowerPoint title contains 'PowerPoint'", "powerpoint" in r.get("window_title", "").lower())
+time.sleep(2)
+print("     Dismissing PowerPoint start screen...")
+dismiss_start_screen("powerpoint", "Blank Presentation")
+time.sleep(1)
 
 # ── 3. Inspect Word elements ─────────────────────────────────────────────────
 print("\n[3] Inspect Word — find document area")
@@ -81,20 +114,6 @@ check("at least 1 element",      len(elements) >= 1, f"{len(elements)} elements"
 
 # ── 5. Type in Word ──────────────────────────────────────────────────────────
 print("\n[5] Type text in Word")
-# Dismiss Backstage / start screen — click "Blank document" if visible
-screen = engine.execute_batch("word", [{"action": "read_screen"}])
-screen_text_pre = screen[0].get("value") or ""
-if "blank document" in screen_text_pre.lower():
-    engine.execute_batch("word", [
-        {"action": "click", "target": {"name": "Blank document"}},
-        {"action": "wait",  "ms": 1500},
-    ])
-elif "backstage" in screen_text_pre.lower():
-    engine.execute_batch("word", [
-        {"action": "key",  "keys": "Escape"},
-        {"action": "wait", "ms": 800},
-    ])
-
 r = do("word", [
     {"action": "key",  "keys": "ctrl+Home"},
     {"action": "key",  "keys": "ctrl+a"},
@@ -111,20 +130,6 @@ check("Word contains typed text", "Hello from FlaUI" in read_val, repr(read_val[
 
 # ── 6. Switch to Excel ───────────────────────────────────────────────────────
 print("\n[6] Switch to Excel (windows_do on excel app)")
-# Dismiss Excel start screen — click "Blank workbook" if visible
-exc_screen = engine.execute_batch("excel", [{"action": "read_screen"}])
-exc_text_pre = exc_screen[0].get("value") or ""
-if "blank workbook" in exc_text_pre.lower():
-    engine.execute_batch("excel", [
-        {"action": "click", "target": {"name": "Blank workbook"}},
-        {"action": "wait",  "ms": 1500},
-    ])
-elif "backstage" in exc_text_pre.lower():
-    engine.execute_batch("excel", [
-        {"action": "key",  "keys": "Escape"},
-        {"action": "wait", "ms": 800},
-    ])
-
 r = do("excel", [
     {"action": "read_screen"},
 ], "switch to excel")
@@ -242,6 +247,25 @@ r = do("excel", [
     {"action": "key",      "keys": "ctrl+z"},
     {"action": "close_app"},
 ], "close excel")
+time.sleep(1)
+desktop_wins = engine.get_desktop_windows()
+save_dialog = any("save" in (w.get("title") or "").lower() for w in desktop_wins)
+if save_dialog:
+    print("     save dialog detected — dismissing with 'n'")
+    import subprocess
+    subprocess.run(["powershell", "-Command",
+        "[System.Windows.Forms.SendKeys]::SendWait('n')"], capture_output=True)
+    time.sleep(0.5)
+close_r = next((x for x in r if x.get("action") == "close_app"), {})
+check("close_app ok", close_r.get("status") == "ok", close_r.get("detail"))
+
+# ── 16. Close PowerPoint without saving ──────────────────────────────────────
+print("\n[16] Close PowerPoint without saving")
+r = do("powerpoint", [
+    {"action": "key",      "keys": "ctrl+z"},
+    {"action": "key",      "keys": "ctrl+z"},
+    {"action": "close_app"},
+], "close powerpoint")
 time.sleep(1)
 desktop_wins = engine.get_desktop_windows()
 save_dialog = any("save" in (w.get("title") or "").lower() for w in desktop_wins)

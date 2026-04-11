@@ -80,11 +80,6 @@
     "title_hint": "MSACCESS"
   },
   {
-    "name": "Blend for Visual Studio",
-    "exe": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\IDE\\Blend.exe",
-    "title_hint": "Blend"
-  },
-  {
     "name": "Excel",
     "exe": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
     "title_hint": "EXCEL"
@@ -128,11 +123,6 @@
     "name": "Visual Studio Installer",
     "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\setup.exe",
     "title_hint": "setup"
-  },
-  {
-    "name": "Visual Studio",
-    "exe": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\IDE\\devenv.exe",
-    "title_hint": "devenv"
   },
   {
     "name": "Word",
@@ -250,36 +240,6 @@
     "title_hint": "unins000"
   },
   {
-    "name": "Add IncrediBuild Components",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Install.exe",
-    "title_hint": "Install"
-  },
-  {
-    "name": "Build History",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildHistory.exe",
-    "title_hint": "BuildHistory"
-  },
-  {
-    "name": "Build Monitor",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildMonitor.exe",
-    "title_hint": "BuildMonitor"
-  },
-  {
-    "name": "IncrediBuild Agent Settings",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildSettings.exe",
-    "title_hint": "BuildSettings"
-  },
-  {
-    "name": "IncrediBuild Agent Tray-Icon",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildTrayIcon.exe",
-    "title_hint": "BuildTrayIcon"
-  },
-  {
-    "name": "Test Network Connectivity",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NetworkTest.exe",
-    "title_hint": "NetworkTest"
-  },
-  {
     "name": "Uninstall KMSpico",
     "exe": "C:\\Program Files\\KMSpico\\UninsHs.exe",
     "title_hint": "UninsHs"
@@ -323,41 +283,6 @@
     "name": "Vulkan Cube",
     "exe": "D:\\vulkan-sdk\\Bin\\vkcube.exe",
     "title_hint": "vkcube"
-  },
-  {
-    "name": "Application Verifier (X64)",
-    "exe": "C:\\Windows\\System32\\appverif.exe",
-    "title_hint": "appverif"
-  },
-  {
-    "name": "Application Verifier (WOW)",
-    "exe": "C:\\Windows\\SysWOW64\\appverif.exe",
-    "title_hint": "appverif"
-  },
-  {
-    "name": "Windows App Cert Kit",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\appcertui.exe",
-    "title_hint": "appcertui"
-  },
-  {
-    "name": "GPUView",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\gpuview\\GPUView.exe",
-    "title_hint": "GPUView"
-  },
-  {
-    "name": "Windows Performance Analyzer",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpa.exe",
-    "title_hint": "wpa"
-  },
-  {
-    "name": "Windows Performance Recorder",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\WPRUI.exe",
-    "title_hint": "WPRUI"
-  },
-  {
-    "name": "Windows Software Development Kit",
-    "exe": "C:\\WINDOWS\\explorer.exe",
-    "title_hint": "explorer"
   },
   {
     "name": "Windows PowerShell ISE (x86)",
@@ -433,16 +358,6 @@
     "name": "Adobe Reader XI (11.0.10)",
     "exe": "C:\\Program Files (x86)\\Adobe\\Reader 11.0\\Reader\\AcroTextExtractor.exe",
     "title_hint": "AcroTextExtractor"
-  },
-  {
-    "name": "Windows Software Development Kit - Windows 10.0.22621.5040",
-    "exe": "C:\\ProgramData\\Package Cache\\{b72d4013-dd88-405a-9f9d-e88c278dcefe}\\winsdksetup.exe",
-    "title_hint": "winsdksetup"
-  },
-  {
-    "name": "Windows Software Development Kit - Windows 10.0.26100.7705",
-    "exe": "C:\\ProgramData\\Package Cache\\{c0b93b80-d0a4-47fc-a4d1-21a4008a63ca}\\winsdksetup.exe",
-    "title_hint": "winsdksetup"
   },
   {
     "name": "llama.cpp",
@@ -2425,46 +2340,6 @@
     "title_hint": "reader_sl"
   },
   {
-    "name": "adb",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\adb.exe",
-    "title_hint": "adb"
-  },
-  {
-    "name": "etc1tool",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\etc1tool.exe",
-    "title_hint": "etc1tool"
-  },
-  {
-    "name": "fastboot",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\fastboot.exe",
-    "title_hint": "fastboot"
-  },
-  {
-    "name": "hprof-conv",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\hprof-conv.exe",
-    "title_hint": "hprof-conv"
-  },
-  {
-    "name": "make_f2fs",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\make_f2fs.exe",
-    "title_hint": "make_f2fs"
-  },
-  {
-    "name": "make_f2fs_casefold",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\make_f2fs_casefold.exe",
-    "title_hint": "make_f2fs_casefold"
-  },
-  {
-    "name": "mke2fs",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\mke2fs.exe",
-    "title_hint": "mke2fs"
-  },
-  {
-    "name": "sqlite3",
-    "exe": "C:\\Program Files (x86)\\Android\\android-sdk\\platform-tools\\sqlite3.exe",
-    "title_hint": "sqlite3"
-  },
-  {
     "name": "pipanel",
     "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\ink\\pipanel.exe",
     "title_hint": "pipanel"
@@ -2473,11 +2348,6 @@
     "name": "TabTip32",
     "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\ink\\TabTip32.exe",
     "title_hint": "TabTip32"
-  },
-  {
-    "name": "VSLauncher",
-    "exe": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\MSEnv\\VSLauncher.exe",
-    "title_hint": "VSLauncher"
   },
   {
     "name": "msinfo32",
@@ -2508,271 +2378,6 @@
     "name": "make",
     "exe": "C:\\Program Files (x86)\\GnuWin32\\bin\\make.exe",
     "title_hint": "make"
-  },
-  {
-    "name": "hhc",
-    "exe": "C:\\Program Files (x86)\\HTML Help Workshop\\hhc.exe",
-    "title_hint": "hhc"
-  },
-  {
-    "name": "build-cache-redis-server",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\build-cache-redis-server.exe",
-    "title_hint": "build-cache-redis-server"
-  },
-  {
-    "name": "BuildAbout",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildAbout.exe",
-    "title_hint": "BuildAbout"
-  },
-  {
-    "name": "BuildCacheService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildCacheService.exe",
-    "title_hint": "BuildCacheService"
-  },
-  {
-    "name": "BuildConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole.exe",
-    "title_hint": "BuildConsole"
-  },
-  {
-    "name": "BuildConsole32",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole32.exe",
-    "title_hint": "BuildConsole32"
-  },
-  {
-    "name": "BuildConsole64",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildConsole64.exe",
-    "title_hint": "BuildConsole64"
-  },
-  {
-    "name": "BuildDataExtractor",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildDataExtractor.exe",
-    "title_hint": "BuildDataExtractor"
-  },
-  {
-    "name": "BuildFile",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildFile.exe",
-    "title_hint": "BuildFile"
-  },
-  {
-    "name": "BuildService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildService.exe",
-    "title_hint": "BuildService"
-  },
-  {
-    "name": "BuildSystem",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\BuildSystem.exe",
-    "title_hint": "BuildSystem"
-  },
-  {
-    "name": "CLWrapGL",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CLWrapGL.exe",
-    "title_hint": "CLWrapGL"
-  },
-  {
-    "name": "CoordinatorService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CoordinatorService.exe",
-    "title_hint": "CoordinatorService"
-  },
-  {
-    "name": "CPUInfo",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CPUInfo.exe",
-    "title_hint": "CPUInfo"
-  },
-  {
-    "name": "CTRBuild",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CTRBuild.exe",
-    "title_hint": "CTRBuild"
-  },
-  {
-    "name": "CtrlBreak",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\CtrlBreak.exe",
-    "title_hint": "CtrlBreak"
-  },
-  {
-    "name": "eps_binaries_x86",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\eps_binaries_x86.exe",
-    "title_hint": "eps_binaries_x86"
-  },
-  {
-    "name": "IbBuildProxy",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbBuildProxy.exe",
-    "title_hint": "IbBuildProxy"
-  },
-  {
-    "name": "IbConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole.exe",
-    "title_hint": "IbConsole"
-  },
-  {
-    "name": "IbConsole32",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole32.exe",
-    "title_hint": "IbConsole32"
-  },
-  {
-    "name": "IbConsole64",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbConsole64.exe",
-    "title_hint": "IbConsole64"
-  },
-  {
-    "name": "IBCustomStep",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IBCustomStep.exe",
-    "title_hint": "IBCustomStep"
-  },
-  {
-    "name": "IbTaskRunner",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTaskRunner.exe",
-    "title_hint": "IbTaskRunner"
-  },
-  {
-    "name": "IbTestConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTestConsole.exe",
-    "title_hint": "IbTestConsole"
-  },
-  {
-    "name": "IbTestWait",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\IbTestWait.exe",
-    "title_hint": "IbTestWait"
-  },
-  {
-    "name": "ib_cert_validator_64",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ib_cert_validator_64.exe",
-    "title_hint": "ib_cert_validator_64"
-  },
-  {
-    "name": "ICLWrap",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ICLWrap.exe",
-    "title_hint": "ICLWrap"
-  },
-  {
-    "name": "LicenseService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\LicenseService.exe",
-    "title_hint": "LicenseService"
-  },
-  {
-    "name": "LicenseServiceConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\LicenseServiceConsole.exe",
-    "title_hint": "LicenseServiceConsole"
-  },
-  {
-    "name": "machineid",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\machineid.exe",
-    "title_hint": "machineid"
-  },
-  {
-    "name": "MailSpawn",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\MailSpawn.exe",
-    "title_hint": "MailSpawn"
-  },
-  {
-    "name": "SolutionConverter",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\SolutionConverter.exe",
-    "title_hint": "SolutionConverter"
-  },
-  {
-    "name": "VersionRollback",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VersionRollback.exe",
-    "title_hint": "VersionRollback"
-  },
-  {
-    "name": "VS15AddIn",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VS15AddIn.exe",
-    "title_hint": "VS15AddIn"
-  },
-  {
-    "name": "VSICafeBuild",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\VSICafeBuild.exe",
-    "title_hint": "VSICafeBuild"
-  },
-  {
-    "name": "xgConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole.exe",
-    "title_hint": "xgConsole"
-  },
-  {
-    "name": "xgConsole32",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole32.exe",
-    "title_hint": "xgConsole32"
-  },
-  {
-    "name": "xgConsole64",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgConsole64.exe",
-    "title_hint": "xgConsole64"
-  },
-  {
-    "name": "xgCoordConsole",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgCoordConsole.exe",
-    "title_hint": "xgCoordConsole"
-  },
-  {
-    "name": "xgHandle",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgHandle.exe",
-    "title_hint": "xgHandle"
-  },
-  {
-    "name": "xgHandle64",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgHandle64.exe",
-    "title_hint": "xgHandle64"
-  },
-  {
-    "name": "xgLogTask",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgLogTask.exe",
-    "title_hint": "xgLogTask"
-  },
-  {
-    "name": "xgMemInfo",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgMemInfo.exe",
-    "title_hint": "xgMemInfo"
-  },
-  {
-    "name": "xgSubmit",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgSubmit.exe",
-    "title_hint": "xgSubmit"
-  },
-  {
-    "name": "xgTrayIcon",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgTrayIcon.exe",
-    "title_hint": "xgTrayIcon"
-  },
-  {
-    "name": "xgWait",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\xgWait.exe",
-    "title_hint": "xgWait"
-  },
-  {
-    "name": "endpointService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\eps\\endpointService.exe",
-    "title_hint": "endpointService"
-  },
-  {
-    "name": "Manager",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Manager\\Manager.exe",
-    "title_hint": "Manager"
-  },
-  {
-    "name": "ManagerService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\Manager\\ManagerService.exe",
-    "title_hint": "ManagerService"
-  },
-  {
-    "name": "Manager",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ManagerInstallBackup\\Manager\\Manager.exe",
-    "title_hint": "Manager"
-  },
-  {
-    "name": "ManagerService",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\ManagerInstallBackup\\Manager\\ManagerService.exe",
-    "title_hint": "ManagerService"
-  },
-  {
-    "name": "NUnit2TestExplore",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NUnit2Discovery\\NUnit2TestExplore.exe",
-    "title_hint": "NUnit2TestExplore"
-  },
-  {
-    "name": "NUnit2TestExplore86",
-    "exe": "C:\\Program Files (x86)\\IncrediBuild\\NUnit2Discovery\\NUnit2TestExplore86.exe",
-    "title_hint": "NUnit2TestExplore86"
   },
   {
     "name": "ExtExport",
@@ -3055,16 +2660,6 @@
     "title_hint": "XLICONS"
   },
   {
-    "name": "signtool",
-    "exe": "C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce\\SignTool\\signtool.exe",
-    "title_hint": "signtool"
-  },
-  {
-    "name": "Launcher",
-    "exe": "C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce Bootstrapper\\Engine\\Launcher.exe",
-    "title_hint": "Launcher"
-  },
-  {
     "name": "feedback",
     "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\feedback.exe",
     "title_hint": "feedback"
@@ -3115,94 +2710,9 @@
     "title_hint": "dump64a"
   },
   {
-    "name": "Microsoft.VisualStudio.GitHubProtocolHandler",
-    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\GitHubProtocolHandler\\Microsoft.VisualStudio.GitHubProtocolHandler.exe",
-    "title_hint": "Microsoft.VisualStudio.GitHubProtocolHandler"
-  },
-  {
-    "name": "Microsoft.VisualStudio.VsWebProtocolSelector",
-    "exe": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\VsWebProtocolSelector\\Microsoft.VisualStudio.VsWebProtocolSelector.exe",
-    "title_hint": "Microsoft.VisualStudio.VsWebProtocolSelector"
-  },
-  {
-    "name": "VisualStudio.Remoted.Simulator",
-    "exe": "C:\\Program Files (x86)\\Visual Studio\\Shared\\RemotedSimulator\\VisualStudio.Remoted.Simulator.exe",
-    "title_hint": "VisualStudio.Remoted.Simulator"
-  },
-  {
     "name": "MpCmdRun",
     "exe": "C:\\Program Files (x86)\\Windows Defender\\MpCmdRun.exe",
     "title_hint": "MpCmdRun"
-  },
-  {
-    "name": "aitstatic",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\aitstatic.exe",
-    "title_hint": "aitstatic"
-  },
-  {
-    "name": "appcert",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\appcert.exe",
-    "title_hint": "appcert"
-  },
-  {
-    "name": "makeappx",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\makeappx.exe",
-    "title_hint": "makeappx"
-  },
-  {
-    "name": "microsoft.windows.softwarelogo.appxlauncher",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\microsoft.windows.softwarelogo.appxlauncher.exe",
-    "title_hint": "microsoft.windows.softwarelogo.appxlauncher"
-  },
-  {
-    "name": "microsoft.windows.softwarelogo.taskengine",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\microsoft.windows.softwarelogo.taskengine.exe",
-    "title_hint": "microsoft.windows.softwarelogo.taskengine"
-  },
-  {
-    "name": "rmlogotest",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\rmlogotest.exe",
-    "title_hint": "rmlogotest"
-  },
-  {
-    "name": "signtool",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\\signtool.exe",
-    "title_hint": "signtool"
-  },
-  {
-    "name": "createdump",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\createdump.exe",
-    "title_hint": "createdump"
-  },
-  {
-    "name": "symcachegen",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\symcachegen.exe",
-    "title_hint": "symcachegen"
-  },
-  {
-    "name": "wpaexporter",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpaexporter.exe",
-    "title_hint": "wpaexporter"
-  },
-  {
-    "name": "wpr",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\wpr.exe",
-    "title_hint": "wpr"
-  },
-  {
-    "name": "xbootmgr",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xbootmgr.exe",
-    "title_hint": "xbootmgr"
-  },
-  {
-    "name": "xbootmgrsleep",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xbootmgrsleep.exe",
-    "title_hint": "xbootmgrsleep"
-  },
-  {
-    "name": "xperf",
-    "exe": "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\xperf.exe",
-    "title_hint": "xperf"
   },
   {
     "name": "wab",
