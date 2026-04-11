@@ -1,18 +1,46 @@
-# 🌸 Airi — AI Desktop Assistant
+<div align="center">
 
-Airi is a friendly, local-first AI assistant that helps you control your Windows PC through natural language. Powered by Qwen3-VL-2B, it runs entirely on your machine with no cloud API required.
+<img src="public/logo.png" alt="Airi Logo" width="80" />
+
+# Airi
+
+**Local-first AI desktop assistant for Windows**
+
+Control your PC, automate apps, browse the web, and chat — all with natural language. Runs entirely on your machine.
+
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE.txt)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D4?logo=windows)](https://github.com/varshney-ansh/airi/releases)
+[![Electron](https://img.shields.io/badge/Electron-40-47848F?logo=electron)](https://electronjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python)](https://python.org)
+
+[Download](#-download) · [Quick Start](#-quick-start) · [Features](#-features) · [Contributing](#-contributing)
+
+</div>
+
+---
+
+![Airi Screenshot](screenshots/1.png)
+
+<div align="center">
+  <img src="screenshots/2.png" width="32%" />
+  <img src="screenshots/3.png" width="32%" />
+  <img src="screenshots/4.png" width="32%" />
+</div>
 
 ---
 
 ## ✨ Features
 
-- **Natural language chat** — Real-time streaming responses with Qwen3-VL-2B
-- **Windows app control** — Open, inspect, and automate any installed app
-- **Browser automation** — Navigate sites, fill forms, extract data via Playwright
-- **Document & image analysis** — Upload PDFs, Word docs, images — RAG is automatic
-- **Memory** — Remember user preferences and facts across sessions (local Qdrant)
-- **Thinking mode** — Qwen3's reasoning mode for complex tasks
-- **Fully local** — No cloud, no API keys, no data leaves your machine
+- **Natural language chat** — Streaming responses powered by Qwen3-VL-2B running locally
+- **Windows automation** — Launch, inspect, and control any installed app via UI Automation
+- **Browser automation** — Navigate sites, fill forms, extract data with Playwright
+- **File management** — List, open, copy, move, search files with path aliases
+- **Document & image analysis** — Upload PDFs, Word docs, images for instant RAG
+- **Persistent memory** — Remembers preferences and facts across sessions (local Qdrant)
+- **Thinking mode** — Qwen3's extended reasoning for complex multi-step tasks
+- **Fully local** — No cloud, no API keys required, nothing leaves your machine
+- **Remote LLM support** — Optionally connect to OpenAI, Ollama, or any OpenAI-compatible API
 
 ---
 
@@ -20,28 +48,45 @@ Airi is a friendly, local-first AI assistant that helps you control your Windows
 
 | Layer | Tech |
 |---|---|
-| Desktop shell | Electron |
-| Frontend | Next.js 16, React 19, Tailwind CSS |
-| UI components | ShadCN, Radix UI, Fluent UI |
+| Desktop shell | Electron 40 |
+| Frontend | Next.js 16, React 19, Tailwind CSS v4 |
+| UI | Fluent UI, ShadCN, Framer Motion |
 | Agent backend | Python, FastAPI, Qwen-Agent |
 | LLM inference | llama.cpp (`llama-server`) |
-| Browser automation | Playwright + playwright-stealth |
+| Vision model | Qwen3-VL-2B-Instruct |
+| Embeddings | embeddinggemma-300m |
+| Browser automation | Playwright |
+| Windows automation | FlaUI (UIA3) |
 | Vector DB | Qdrant (local) |
 | Memory | mem0 (local) |
 | Auth | Auth0 |
+| Database | MongoDB Atlas + local electron-store |
 
 ---
 
-## 📋 Prerequisites
+## 📦 Download
 
+Grab the latest installer from [Releases](https://github.com/varshney-ansh/airi/releases):
+
+```
+Airi-Setup-0.1.0.exe   (~574 MB, includes llama.cpp + all deps)
+```
+
+Silent install (for scripting / Microsoft Store):
+```
+Airi-Setup-0.1.0.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Windows 10 (1809+) or Windows 11, x64
 - Node.js v18+
 - Python 3.10+
-- [llama.cpp](https://github.com/ggml-org/llama.cpp) (`winget install llama.cpp` on Windows)
 - Git
-
----
-
-## 🚀 Setup
 
 ### 1. Clone
 
@@ -50,19 +95,20 @@ git clone https://github.com/varshney-ansh/airi.git
 cd airi
 ```
 
-### 2. Install JS dependencies
+### 2. Environment
+
+```bash
+cp .env.example .env.local
+# Fill in your Auth0 and MongoDB credentials
+```
+
+### 3. Install dependencies
 
 ```bash
 npm install
-```
 
-### 3. Install Python dependencies
-
-```bash
 python -m venv .venv
-.venv\Scripts\activate.bat       # Windows
-# source .venv/bin/activate       # macOS/Linux
-
+.venv\Scripts\activate
 pip install -r requirements.txt
 playwright install chromium
 ```
@@ -70,23 +116,22 @@ playwright install chromium
 ### 4. Start the LLM server
 
 ```bash
-llama-server -hf Qwen/Qwen3-VL-2B-Instruct-GGUF:Q8_0 ^
-  --port 11434 ^
-  --ctx-size 32768 ^
-  --jinja ^
-  --embedding
+# llama.cpp binaries are included in deps/llama-cpp/
+deps\llama-cpp\llama-server.exe ^
+  -hf Qwen/Qwen3-VL-2B-Instruct-GGUF:Q4_K_M ^
+  --port 11434 --ctx-size 32768 --jinja
 ```
 
-> You can swap the model for any OpenAI-compatible GGUF. The agent backend points to `http://127.0.0.1:11434/v1`.
+> Models are cached to `models/` on first run. Swap for any OpenAI-compatible GGUF.
 
-### 5. Run in development
+### 5. Run
 
 ```bash
-.venv\Scripts\activate.bat
+.venv\Scripts\activate
 npm run dev
 ```
 
-This starts the Next.js dev server and Electron concurrently. The app opens at `http://localhost:3000`.
+The app opens automatically. The Next.js dev server runs on `http://localhost:3000`.
 
 ---
 
@@ -95,38 +140,38 @@ This starts the Next.js dev server and Electron concurrently. The app opens at `
 ```
 airi/
 ├── agent-server/
-│   ├── agent.py              # FastAPI server + Qwen agent + all tools
-│   ├── test_mem0.py          # mem0 memory integration tests
-│   ├── user_stuff/           # Uploaded files for RAG (auto-created)
-│   ├── context/              # App metadata (auto-generated)
-│   └── .mem0_db/             # Local Qdrant vector DB (auto-created)
+│   ├── agent.py          # FastAPI server + Qwen-Agent + all tools
+│   ├── flaui.py          # FlaUI Windows automation engine
+│   ├── win.py            # Windows utility helpers
+│   └── agent.spec        # PyInstaller spec for bundling
 ├── electron/
-│   ├── main.js               # Electron entry — spawns llama-server + agent.py
-│   └── preload.js
+│   ├── main.js           # Electron entry — spawns llama-server, agent, searxng
+│   ├── preload.js        # Context bridge
+│   └── model-download.js # Auto model download on first launch
 ├── src/
-│   ├── app/
-│   │   ├── api/agent/        # Next.js API route — proxies to agent backend
-│   │   └── app/[chatId]/     # Chat interface
-│   ├── component/            # App-specific components (chat, sidebar)
-│   └── lib/
-│       ├── agent-api.js      # Streaming NDJSON client
-│       └── auth0.js
-├── ui-components/            # Reusable UI components
-├── requirements.txt
+│   ├── app/              # Next.js app router pages
+│   │   ├── page.jsx      # Main chat dashboard
+│   │   ├── login/        # Auth0 login + onboarding
+│   │   └── library/      # Chat history library
+│   ├── component/        # App-specific components
+│   │   ├── chatMain/     # Chat interface + agent loader
+│   │   ├── chatInput/    # Input bar with file upload
+│   │   ├── chatItem/     # Message bubbles
+│   │   └── appsidebar.jsx
+│   ├── context/          # React context (ChatContext)
+│   └── lib/              # Auth0, avatar, API helpers
+├── ui-components/        # Reusable design system components
+├── installer/
+│   ├── airi-installer.iss  # Inno Setup script
+│   └── build-installer.bat
+├── scripts/              # Build helper scripts
+├── deps/
+│   ├── llama-cpp/        # llama.cpp Windows binaries
+│   └── flaui/            # FlaUI .NET assemblies
+├── public/               # Icons, fonts
+├── requirements.txt      # Python dependencies
 └── package.json
 ```
-
----
-
-## 📜 Available Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start Next.js + Electron together |
-| `npm run dev:next` | Next.js only |
-| `npm run dev:electron` | Electron only (requires Next.js running) |
-| `npm run build` | Production build |
-| `python test_mem0.py` | Run mem0 memory integration tests |
 
 ---
 
@@ -134,108 +179,85 @@ airi/
 
 The agent (`agent-server/agent.py`) exposes these tools to the LLM:
 
-| Tool | When to Use |
+| Tool | Description |
 |---|---|
-| `search_win_app_by_name(name)` | First step to find any Windows app |
-| `start_app_session(app_id)` | Launch app after getting AppId |
-| `inspect_ui_elements(app_id)` | See what's clickable in the app |
-| `list_element_names(app_id)` | Get list of element names |
-| `get_element_details(app_id, element_name)` | Find exact position of element |
-| `stop_app_session(app_id)` | Close app when done |
-| `browser_automation(task)` | Web tasks (search, forms, navigation) |
-| `web_search(query)` | Find current info online |
-| `manage_memory(action, content)` | Save/search user facts — action: `save` \| `search` \| `delete_session` |
+| `windows_launch` | Launch any installed Windows app |
+| `windows_inspect` | Get UI element tree of a running app |
+| `windows_do` | Execute batch UI actions (click, type, scroll, etc.) |
+| `file_op` | File system operations (list, open, copy, move, delete, search) |
+| `list_installed_apps` | Query the pre-built app index |
+| `add_memory` | Save a fact to long-term memory |
+| `search_memories` | Semantic search over stored memories |
+| `get_memories` | Retrieve all memories for the current user |
+| `browser_*` | Playwright browser automation tools |
+| `web_search` | SearXNG-powered web search |
 
 ---
 
-## 💡 Memory System
+## ⚙️ Configuration
 
-Airi uses **mem0** for persistent memory:
+### LLM Settings
 
-- **Session-scoped** — `run_id=session_id` — cleared when chat ends
-- **User-scoped** — `user_id` — persists across sessions
-- **Local Qdrant** — no cloud, all data stays on your machine
+Edit `agent-server/settings.json` (created on first run) or use the in-app Settings panel:
 
-**Example usage:**
-```python
-# Save a fact
-mem_client.add(
-    [{"role": "user", "content": "User prefers dark mode"}],
-    user_id="user_123",
-    run_id="session_001",
-    infer=False,
-)
-
-# Search for relevant facts
-memories = mem_client.search("dark mode", user_id="user_123", threshold=0.2)
+```json
+{
+  "model_server": "http://127.0.0.1:11434/v1",
+  "model": "default",
+  "api_key": "none",
+  "thinking_enabled": true,
+  "theme": "Night"
+}
 ```
 
+To use a remote API (OpenAI, Ollama, etc.), set `model_server` to the remote URL — the local llama-server will not start.
+
+### Memory
+
+Memories are stored locally in `%APPDATA%\Airi\.mem0_db` (Qdrant). Nothing is sent to the cloud.
+
 ---
 
-## 🧪 Testing
+## 🏗 Building
 
-Run the mem0 integration test to verify memory works:
-
+### Development build
 ```bash
-.venv\Scripts\activate.bat
+npm run dev
+```
+
+### Production Electron build
+```bash
+npm run build:electron
+```
+
+### Inno Setup installer (requires [Inno Setup 6](https://jrsoftware.org/isdl.php))
+```bash
+npm run build:inno
+# or
+installer\build-installer.bat
+```
+
+### Bundle Python agent
+```bash
 cd agent-server
-..\.venv\Scripts\python.exe test_mem0.py
-```
-
-Expected output: `✓ ALL TESTS PASSED`
-
----
-
-## 🛠️ Configuration
-
-### LLM Config (`agent-server/agent.py`)
-
-```python
-llm_cfg = {
-    "model": "default",
-    "model_server": "http://127.0.0.1:11434/v1",
-    "generate_cfg": {
-        "temperature": 0.5,
-        "top_p": 0.9,
-        "top_k": 20,
-        "max_tokens": 2048,
-        "repetition_penalty": 1.1,
-        "extra_body": {"enable_thinking": True},  # Qwen3 reasoning mode
-    }
-}
-```
-
-### Mem0 Config
-
-```python
-mem0_config = {
-    "vector_store": {
-        "provider": "qdrant",
-        "config": {"path": ".mem0_db", "collection_name": "airi_memory"}
-    },
-    "llm": { ... },
-    "embedder": {
-        "provider": "openai",
-        "config": {
-            "model": "embeddinggemma-300m-Q4_0",
-            "openai_base_url": "http://127.0.0.1:11445/v1",
-            "embedding_dims": 768,
-        }
-    }
-}
+pyinstaller agent.spec
 ```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repo and create a branch: `git checkout -b feature/your-feature`
-2. Make your changes and test locally with `npm run dev`
-3. Commit using [Conventional Commits](https://www.conventionalcommits.org/): `git commit -m "feat: add X"`
-4. Push and open a Pull Request against `main`
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+
+1. Fork the repo and create a branch: `git checkout -b feat/your-feature`
+2. Make your changes and test with `npm run dev`
+3. Follow [Conventional Commits](https://www.conventionalcommits.org/): `git commit -m "feat: add X"`
+4. Open a Pull Request against `main`
+
+For bugs, open an [issue](https://github.com/varshney-ansh/airi/issues) with steps to reproduce.
 
 ---
 
 ## 📄 License
 
-MIT
+[MIT](LICENSE.txt) — © 2026 Slew Inc.
