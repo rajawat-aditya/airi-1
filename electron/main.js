@@ -12,6 +12,7 @@ const { nativeImage } = require('electron');
 const { spawn } = require('child_process');
 const { MongoClient } = require('mongodb');
 const { createHandler } = require('next-electron-rsc');
+const { ensureModels } = require('./model-download');
 
 // Redirect console to a log file in packaged mode so we can debug
 if (IS_PACKAGED_EARLY) {
@@ -500,6 +501,7 @@ app.whenReady().then(async () => {
     });
     setupDb();
     buildInstalledAppsJson();
+    await ensureModels(MODELS_DIR);
     startAgentServer();
     startLlama();
     startEmbeddingServer();
